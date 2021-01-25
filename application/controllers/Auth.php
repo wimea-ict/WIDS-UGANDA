@@ -11,7 +11,6 @@ class Auth extends CI_Controller {
 			$_SESSION['site_lang'] ="English";
 		}
 
-
 		echo $_SESSION['site_lang'];
 	}
 	public function __construct() {
@@ -20,163 +19,41 @@ class Auth extends CI_Controller {
 		$this->config->set_item('theme',$this->config->item('country'));
 		$this->load->library('session');
 
-
 		if(!empty($this->config->item('country'))){
-    // echo $this->config->item('country')." is the country"; exit; 
 			$this->load->database();
 			$this->load->model('Advisory_model');
 			$this->load->model('Season_model');
-
+			$this->load->model('Monthly_model');
 			$this->load->model('Updates_model');
 			$this->load->model('Decadal_forecast_model');
 			$this->load->model('Daily_forecast_model');
 			$this->load->model('Language_model');
-	 $this->load->model('Division_model');//Forecast_time_model
-	 $this->load->model('Forecast_time_model');
-	 $this->load->model('City_model');
-	 $this->load->model('Landing_model');
-	 $this->load->model('Major_model');
-	 $this->load->model('Minor_model');
-	 $this->load->library(array('ion_auth', 'form_validation'));
-     $this->load->helper(array('url', 'language'));//Major_model
-     $this->load->model('victoria_model');
-
-     $this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
+      	 $this->load->model('Division_model');//Forecast_time_model
+      	 $this->load->model('Forecast_time_model');
+      	 $this->load->model('City_model');
+      	 $this->load->model('Landing_model');
+      	 $this->load->model('Major_model');
+      	 $this->load->model('Minor_model');
+      	 $this->load->library(array('ion_auth', 'form_validation'));
+           $this->load->helper(array('url', 'language'));//Major_model
+           $this->load->model('victoria_model');
+           $this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
 
       //$this->lang->load('auth');
- }
+        }
 
-}
-
-// -------------------------------------
-
-// function add_count($slug)
-//     {
-//         // load cookie helper
-//         $this->load->helper('cookie');
-//         // this line will return the cookie which has slug name
-//         $check_visitor = $this->input->cookie(urldecode($slug), FALSE);
-//         // this line will return the visitor ip address
-//         $ip = $this->input->ip_address();
-//         // if the visitor visit this article for first time then //
-//         // //set new cookie and update article_views column ..
-//         // //you might be notice we used slug for cookie name and ip
-//         // //address for value to distinguish between articles views
-
-// // $cookie = array("name" => urldecode($slug), "value" => "$ip", "expire" => 36000, "secure" => false);
-// //          $this->input->set_cookie($cookie);
-// //             $this->news_model->update_counter(urldecode($slug));    
-//         if ($check_visitor == false) {
-//             $cookie = array("name" => urldecode($slug), "value" => "$ip", "expire" => 7200, "secure" => false);
-//             // gettype($cookie);
-//             $this->input->set_cookie($cookie);
-//             $this->news_model->update_counter(urldecode($slug));
-//         }
-//     }
-
-
-
-
-
-
-
-
-
-
-// function switchLang($language = "") {
-
-//         $language = ($language != "") ? $language : "english";
-//         $this->session->set_userdata('site_lang', $language);
-
-//         redirect($_SERVER['HTTP_REFERER']);
-
-//     }
+     }
 
 // -----------------------------------
     // redirect if needed, otherwise display the user list
-public function index($page = 'request_service') { 
+     public function index($page = 'request_service') { 
 
+       $country = $this->config->item('country');		
+       if(empty($country)){
 
-	
+        $step= $this->input->post('step'); 
 
-
-        // $this->session->set_userdata('site_lang', strtolower($_SESSION['selected_g']));
-	 	//$this->switchLang('luganda');
-	 		// 	$data['language'] = $this->lang->line('msg_language');
-				// $data['request'] = $this->lang->line('msg_request');
-				// $data['english'] = $this->lang->line('msg_english'); 
-				// $data['luganda'] = $this->lang->line('msg_luganda');     
-				// $data['Agriculture_Food_security'] = $this->lang->line('msg_Agriculture_&_Food_security');
-				// $data['select_your_ditrict'] = $this->lang->line('msg_select_your_ditrict');
-				// $data['select_ditrict'] = $this->lang->line('msg_select_ditrict');
-				// $data['ditrict'] = $this->lang->line('msg_ditrict');
-				// $data['select_subCategory'] = $this->lang->line('msg_select_subCategory');
-				// $data['select_Category'] = $this->lang->line('msg_select_Category');
-				// $data['Planting_Advice'] = $this->lang->line('msg_Planting_Advice');
-				// $data['weather_forecast'] = $this->lang->line('msg_weather_forecast');
-				// $data['request_service_form'] = $this->lang->line('msg_request_service_form');
-				// $data['pest_disease'] = $this->lang->line('msg_pest_disease');
-				// $data['disaster_advice'] = $this->lang->line('msg_disaster_advice');
-				// $data['select_disaster_advice'] = $this->lang->line('msg_select_disaster_advice');
-				// $data['forecast_advice'] = $this->lang->line('msg_forecast_advice');
-				// $data['suggest_forecast_basing'] = $this->lang->line('msg_suggest_forecast_basing');
-				// $data['harvesting_advice'] = $this->lang->line('msg_harvesting_advice');
-				// $data['suggest_forecast'] = $this->lang->line('msg_suggest_forecast');
-				// $data['select_period'] = $this->lang->line('msg_select_period');
-				// $data['water_advice'] = $this->lang->line('msg_water_advice');
-				// $data['water_advisory'] = $this->lang->line('msg_water_advisory');
-				// $data['health_advisory'] = $this->lang->line('msg_health_advisory');
-				// $data['health_advice'] = $this->lang->line('msg_health_advice');
-				// $data['welcome_wid'] = $this->lang->line('msg_welcome_wid'); 
-				// $data['disaster_preparedness'] = $this->lang->line('msg_disaster_preparedness');
-				// $data['select_option'] = $this->lang->line('msg_select_option');
-				// $data['today'] = $this->lang->line('msg_today');
-				// $data['seasonal'] = $this->lang->line('msg_seasonal');
-				// $data['dekadal'] = $this->lang->line('msg_dekadal');
-				// $data['wind_strength'] = $this->lang->line('msg_wind_strength');
-				// $data['wind_direction'] = $this->lang->line('msg_wind_direction');
-				// $data['climatic_zone'] = $this->lang->line('msg_climatic_zone');
-				// $data['category'] = $this->lang->line('msg_category');
-				// $data['messages'] = $this->lang->line('msg_messages');
-				// $data['advisory_read'] = $this->lang->line('msg_advisory_read');
-				// $data['sub_zone'] = $this->lang->line('msg_sub_zone');
-				// $data['food_advisory'] = $this->lang->line('msg_food_advisory');
-				// $data['create_new_user'] = $this->lang->line('msg_create_new_user');
-				// $data['first_names'] = $this->lang->line('msg_first_names');
-				// $data['last_names'] = $this->lang->line('msg_last_names');
-				// $data['phone_numbers'] = $this->lang->line('msg_phone_numbers');
-				// $data['choose_username'] = $this->lang->line('msg_choose_username');
-				// $data['disaster_advisory'] = $this->lang->line('msg_disaster_advisory');
-				// $data['agriculture_advisory'] = $this->lang->line('msg_agriculture_advisory');
-
-
-		// $language_selected = '';
-		// if ($this->input->post('language')) {
-		// 	$language_selected = $this->input->post('language');
-		// 	if($language_selected == 'Luganda') {
-		// 		$this->lang->load('message', 'luganda');
-		// 	} else if($language_selected == 'hi') {
-		// 		$this->lang->load('message', 'hindi');
-		// 	} else if($language_selected == 'nl') {
-		// 		$this->lang->load('message', 'dutch');
-		// 	} else if($language_selected == 'fr') {
-		// 		$this->lang->load('message', 'french');
-		// 	} else {
-		// 		$this->lang->load('message', 'english');
-		// 	}
-		// } else {
-		// 	$this->lang->load('message', 'english');
-		// }
-
-		// $data['lang_txt'] = $language_selected == '' ? 'English' : $language_selected;
-
-
-	$country = $this->config->item('country');		
-	if(empty($country)){
-
-		$step= $this->input->post('step'); 
-
-		if(!isset($step))
+        if(!isset($step))
 	        	$this->load->view('installer/index',$data);// has hidden variable step 1
 	        else if($step==1){
 
@@ -191,14 +68,12 @@ public function index($page = 'request_service') {
 	        	$this->session->set_userdata($newdata);
 
 			//set up connection to the db	
-	      //  echo $this->session->userdata('database_name')." in the session ";
+         //INSTALLER SETTINGS
 	        	$content = file_get_contents(APPPATH .'config/database.php');
 
 	        	$file_content = str_replace("'username' => ''","'username' => '".$this->session->userdata('database_username')."'",$content);
 			//insert the content back
 	        	$write_result = file_put_contents(APPPATH .'config/database.php',$file_content);
-
-
 	        	$content = file_get_contents(APPPATH .'config/database.php');
 	        	$file_content = str_replace("'password' => ''","'password' => '".$this->session->userdata('database_password')."'",$content);
 			//insert the content back
@@ -210,7 +85,7 @@ public function index($page = 'request_service') {
 	        	$write_result = file_put_contents(APPPATH .'config/database.php',$file_content);	
 
 
-		    //cresate the database 
+		    //create the database 
 	        	$link = mysqli_connect('localhost', $this->session->userdata('database_username'), $this->session->userdata('database_password'));
 	        	if (!$link) {
 	        		die('Could not connect: ' . mysql_error());
@@ -223,17 +98,6 @@ public function index($page = 'request_service') {
 		   mysqli_select_db($link, $this->session->userdata('database_name'));///select the database
 		   $this->create_tables($link,$this->session->userdata('systemusername'), $this->session->userdata('systempassword'), $this->session->userdata('system_email'),$this->session->userdata('country'));  
 
-		  //open the libraries so that they can load database connection
-			//$library_loader = file_get_contents(BASEPATH .'/core/Loader.php');
-			//$new_content = str_replace("/* database"," ",$library_loader);
-		    //insert the content back
-			//$write_new_content = file_put_contents(BASEPATH .'/core/Loader.php',$new_content);
-
-			//remove the closing comment
-			//$library_loader = file_get_contents(BASEPATH .'/core/Loader.php');
-			//$closing = str_replace("database */"," ",$library_loader);
-		    //insert the content back
-			//$write_new_content = file_put_contents(BASEPATH .'/core/Loader.php',$closing);
 
 		   $country = $this->session->userdata('country');			
 		   $write_result = file_put_contents(APPPATH .'config/config.php', "$"."config['country'] = '".$country."';",FILE_APPEND);
@@ -300,6 +164,12 @@ public function index($page = 'request_service') {
          		$data['divide'] = $season_home;
 
          		$data['seasonal_data_home'] = $this->Season_model->get_season_data($season_home, $random, $session_lang);
+
+
+         		//monthly_forecast_updates form
+         		$data['monthly_data_home'] = $this->Monthly_model->get_monthly_data();
+         		$data['monthly_advice_home'] = $this->Monthly_model->get_home_advice();
+
          		$data['dekadal_forecast_data'] = $this->Decadal_forecast_model->get_dekadal_forecast_area($random);
          		$data['divisio_name'] = $this->Season_model->get_current_division($random); 
 
@@ -488,441 +358,758 @@ public function index($page = 'request_service') {
 
         } //closing else, which loads the site 
         
-    }
-}
+     }
+  }
 
-	//=========================for creating tables===========================================
-public function create_tables($link,$u,$p,$email,$country){
-	$q = array();
+	//=====for creating tables===================
+  public function create_tables($link,$u,$p,$email,$country){
+    $q = array();
 
-	array_push($q,"CREATE TABLE `advice` (
-		`id_advice` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		`advice_name` varchar(100) NOT NULL,
-		`advice_des` varchar(100) NOT NULL
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+      //---------------Table 1--------------
+    array_push($q,"CREATE TABLE `advice` (
+     `id_advice` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+     `advice_name` varchar(100) NOT NULL,
+     `advice_des` varchar(100) NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+     //---------Table 2------------------------
+    array_push($q,"
+     CREATE TABLE `advisory` (
+     `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+     `sector` int(5) NOT NULL,
+     `forecast_id` int(11) NOT NULL,
+     `advice` text NOT NULL,
+     `message_summary` text,
+     `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+     `region_id` int(11) NOT NULL
+     ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+     ");
+     //------------Table 3------------------
+    $enc_password = md5($p);
+    array_push($q,"CREATE TABLE `alerts` (
+     `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+     `name` varchar(45) DEFAULT NULL,
+     `description` text,
+     `issuetime` timestamp NULL DEFAULT NULL,
+     `region_id` int(11) NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+     //------------------Table 4 -------------
+    array_push($q,"CREATE TABLE `area_decadal_forecast` (
+     `id` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     `region_id` int(10) NOT NULL,
+     `subregion_id` int(10) NOT NULL,
+     `dekadal_id` bigint(16) NOT NULL,
+     `mapurl` varchar(100) NOT NULL,
+     `general_info` text NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-	array_push($q,"
-		CREATE TABLE `advisory` (
-		`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		`sector` int(5) NOT NULL,
-		`forecast_id` int(11) NOT NULL,
-		`advice` text NOT NULL,
-		`message_summary` text,
-		`TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		`region_id` int(11) NOT NULL
-		) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-		");
+     //------------------Table 5 ----------------
+    array_push($q,"CREATE TABLE `seasonal_forecast` (
+     `id` bigint(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     `overview` text,
+     `year` int(4) NOT NULL,
+     `general_forecast` text NOT NULL,
+     `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     `issuetime` date NOT NULL,
+     `season_id` int(11) NOT NULL,
+     `map` varchar(100) NOT NULL
+     ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+     ");
+     //------------------Table 6 ----------------
+    array_push($q,"
 
-	$enc_password = md5($p);
-	array_push($q,"CREATE TABLE `alerts` (
-		`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		`name` varchar(45) DEFAULT NULL,
-		`description` text,
-		`issuetime` timestamp NULL DEFAULT NULL,
-		`region_id` int(11) NOT NULL
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+     CREATE TABLE `area_seasonal_forecast` (
+     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     `forecast_id` int(10) NOT NULL,
+     `region_id` int(4) NOT NULL,
+     `subregion_id` int(4) NOT NULL,
+     `expected_peak` varchar(25) NOT NULL,
+     `peakdesc` varchar(32) NOT NULL,
+     `onset_period` varchar(35) NOT NULL,
+     `onsetdesc` varchar(23) NOT NULL,
+     `end_period` varchar(23) NOT NULL,
+     `enddesc` varchar(23) NOT NULL,
+     `overall_comment` text NOT NULL,
+     `general_info` text,
+     `language_id` int(11) NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+     //------------------Table 7 -----------
+    array_push($q,"CREATE TABLE IF NOT EXISTS `city` (
+      `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      `city_name` varchar(45) NOT NULL,
+      `major_city` int(1) NOT NULL default 0,
+      `division_id` varchar(45) NOT NULL
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-	array_push($q,"CREATE TABLE `area_decadal_forecast` (
-		`id` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`region_id` int(10) NOT NULL,
-		`subregion_id` int(10) NOT NULL,
-		`dekadal_id` bigint(16) NOT NULL,
-		`mapurl` varchar(100) NOT NULL,
-		`general_info` text NOT NULL
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+//------------------Table 8 -----------
+    array_push($q,"
+      INSERT INTO `city` (`id`, `city_name`,`division_id`,`major_city`) VALUES
+      ('1','Kiboga','1','1'),
+      ('2','Mubende','2','1'),
+      ('3','Rakai','3','1'),
+      ('4','Buvuma','10','1');"); 
+
+ //-------------Table 9 ---------------------
+    array_push($q,"
+      CREATE TABLE `ci_news` (
+      `ne_id` NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      `ne_title` varchar(300) NOT NULL,
+      `ne_slug` varchar(50) NOT NULL,
+      `ne_desc` text NOT NULL COMMENT 'نص الخبر',
+      `ne_img` varchar(255) NOT NULL,
+      `ne_views` int(11) NOT NULL,
+      `ne_created` varchar(50) NOT NULL
+   ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+
+//-----------Table 10 -----------------
+    array_push($q,"CREATE TABLE `daily_advisory` (
+      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      `sector` int(5) NOT NULL,
+      `forecast_id` int(11) NOT NULL,
+      `advice` text NOT NULL,
+      `message_summary` text,
+      `dateadded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+//-----------Table 11 -----------------
+    array_push($q,"CREATE TABLE `daily_forecast` (
+      `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      `language_id` int(11) NOT NULL,
+      `weather` text,
+      `date` date DEFAULT NULL,
+      `time` varchar(11) DEFAULT NULL,
+      `issuedate` date NOT NULL,
+      `validitytime` varchar(30) DEFAULT NULL,
+      `dutyforecaster` varchar(300) NOT NULL,
+      `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;   ");
+//-----------Table 12 -----------------
+    array_push($q,"
+      CREATE TABLE `daily_forecast_data` (
+      `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      `mean_temp` text,
+      `max_temp` double DEFAULT NULL,
+      `min_temp` double DEFAULT NULL,
+      `wind` int(11) DEFAULT NULL,
+      `wind_direction` text,
+      `wind_strength` text,
+      `region_id` int(10) NOT NULL,
+      `division_id` int(10) DEFAULT NULL,
+      `weather_cat_id` varchar(11) DEFAULT NULL,
+      `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      `forecast_id` int(11) NOT NULL,
+      `period` int(11) DEFAULT NULL
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+   ");
+
+//-----------Table 13 -----------------
+    array_push($q," CREATE TABLE `decadal_forecast` (
+      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      `date_from` date NOT NULL,
+      `date_to` date NOT NULL,
+      `issuedate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+      `volume` int(9) NOT NULL,
+      `general_info` text NOT NULL,
+      `max_temp` int(11) NOT NULL,
+      `min_temp` int(11) NOT NULL,
+      `mean_temp` int(11) NOT NULL,
+      `issue` varchar(30) NOT NULL,
+      `rainfall` text NOT NULL
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+//-----------Table 14 -----------------
+    array_push($q,"CREATE TABLE IF NOT EXISTS `feedback` (
+      `record_id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      `forecast_type` int(11) NOT NULL
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+//-----------Table 15 -----------------
+    array_push($q,"CREATE TABLE `forecast_time` (
+      `id` int(4) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      `period_name` varchar(20) NOT NULL,
+      `to_time` varchar(10) NOT NULL,
+      `from_time` varchar(10) NOT NULL,
+      `timeadded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+//-----------Table 16 -----------------
+    array_push($q,"INSERT INTO `forecast_time` (`id`, `period_name`, `to_time`, `from_time`, `timeadded`) VALUES
+      (1, 'Early morning', '6:00 am ', '12:00 am', '2019-09-08 06:22:57'),
+      (2, 'Late morning', '12:00 pm', '6:00 am', '2019-09-07 16:22:57'),
+      (3, 'Late Afternoon', '6:00 pm', '12:00 pm', '2019-09-08 07:07:57'),
+      (4, 'Evening', '12:00 am', '6:00 pm', '2020-01-30 17:21:13'),
+      (5, '24 Hrs', '6:00 pm', '6:00 pm', '2020-01-30 17:21:13'),
+      (10, 'Afternoon', '6:00 pm', '12:00 pm', '2020-08-27 10:03:50');");
+
+//-----------Table 17 -----------------
+    array_push($q,"CREATE TABLE `impacts` (
+      `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      `description` varchar(234) NOT NULL,
+      `date_added` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+//-----------Table 18 -----------------
+    array_push($q,"CREATE TABLE `impact_forecast` (
+       `id` int(24) NOT NULL,
+       `impact_id` int(24) NOT NULL,
+       `forecast_id` int(24) NOT NULL,
+       `type` varchar(100) NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+//-------------Table 19 -------------
+    array_push($q,"CREATE TABLE `landing_site` (
+      `id` int(11) NOT NULL,
+      `site_name` varchar(100) NOT NULL,
+      `district_id` int(11) NOT NULL
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+//-------------Table 20 -------------
+    array_push($q,"INSERT INTO `landing_site` (`id`, `site_name`, `district_id`) VALUES
+      (1, 'KIGUNGU', 1),
+      (2, 'GREEN FIELDS', 1),
+      (3, 'BUGONGA', 1),
+      (4, 'KASENYI', 1),
+      (5, 'GERENGE', 1),
+      (6, 'NAKIWOGO', 1),
+      (7, 'BUSABALA', 1),
+      (8, 'KIWULWE', 1),
+      (9, 'KAGULUBE', 1),
+      (10, 'GULWE', 1),
+      (11, 'KINYWANTE', 1),
+      (12, 'KYANJAZI', 1),
+      (13, 'KAVA ENNYANJA', 1),
+      (14, 'KITUUFU', 1),
+      (15, 'BUGIRI', 1),
+      (16, 'BUGANGA', 1),
+      (17, 'KKOJA', 1),
+      (18, 'SEMALUULU', 1),
+      (19, 'KIBAMBA', 1),
+      (20, 'GGABA', 2),
+      (21, 'PORT BELL', 2),
+      (22, 'SSENYONDO', 3),
+      (23, 'KATEMBO', 3),
+      (24, 'LWALAARO', 3),
+      (25, 'KAMALIBA', 4),
+      (26, 'KAMUWUNGA', 4),
+      (27, 'LUTOBOKA', 5),
+      (28, 'MWENA', 5),
+      (29, 'KAGOONYA', 5),
+      (30, 'KISUJJU', 5),
+      (31, 'KASEKULO', 5),
+      (32, 'LUKU', 5),
+      (33, 'BUGOMA', 5),
+      (34, 'KAAZI', 5),
+      (35, 'KAMMESE', 5),
+      (36, 'KACHANGA', 5),
+      (37, 'KAAYA', 5),
+      (38, 'MISONZI', 5),
+      (39, 'BBOSA', 5),
+      (40, 'BANDA', 5),
+      (41, 'KITOBO', 5),
+      (42, 'JAANA', 5),
+      (43, 'NTOWA', 5),
+      (44, 'LWANABATYA', 5),
+      (45, 'BUBEKE', 5),
+      (46, 'BUYANGE', 5),
+      (47, 'NKESE', 5),
+      (48, 'MAKONZI', 6),
+      (49, 'BUKAKKATA', 6),
+      (50, 'LAMBU', 6),
+      (51, 'KAZIRU', 6),
+      (52, 'DDIMU', 6),
+      (53, 'NAMIREMBE', 6),
+      (54, 'MALEMBO', 7),
+      (55, 'ZZINGA', 7),
+      (56, 'MUSAMBWA', 7),
+      (57, 'KYABASIMBA', 7),
+      (58, 'KASENSERO', 7),
+      (59, 'LUKUNYU', 7),
+      (60, 'NKOSE', 8),
+      (61, 'LUJAAMBWA', 8),
+      (62, 'KYAGALANYI', 8),
+      (63, 'NAKATIBA', 8),
+      (64, 'KASAMBA', 8),
+      (65, 'MIYANA', 8),
+      (66, 'KACHUNGWA', 8),
+      (67, 'BUSINDI', 8),
+      (68, 'KISABA', 8),
+      (69, 'NAKIRANGA', 8),
+      (70, 'DAJJE', 8),
+      (71, 'MAWAALA', 8),
+      (72, 'KANANAASI', 8),
+      (73, 'KIYINDI', 9),
+      (74, 'SENYI', 9),
+      (75, 'MAYUGE', 9),
+      (76, 'MASESE', 10),
+      (77, 'LUKALE', 11),
+      (78, 'LUFU', 11),
+      (79, 'NAMAKEBA', 11),
+      (80, 'KIKONGO', 11),
+      (81, 'LUKOMA', 11),
+      (82, 'MUBAALE', 11),
+      (83, 'KILONGO', 11),
+      (84, 'YUBWE', 11),
+      (85, 'KACHANGA', 11),
+      (86, 'NAMUGOMBE', 11),
+      (87, 'KILEWE', 11),
+      (88, 'LUBYA', 11),
+      (89, 'NAMITI', 11),
+      (90, 'NAMUTALE', 11),
+      (91, 'WAKIRERE', 11),
+      (92, 'LINGIRA', 11),
+      (93, 'LIIBU', 11),
+      (94, 'NKATA', 11),
+      (95, 'KIWOLOLO', 11),
+      (96, 'KITAMIIRO', 11),
+      (97, 'NAMAKEBA', 11),
+      (98, 'MUWAMA', 11),
+      (99, 'ZZINGA', 11),
+      (100, 'SSIRIBA', 11),
+      (101, 'LYABAANA', 11),
+      (102, 'MAKALAGA', 11),
+      (103, 'MAJANJI', 12),
+      (104, 'MADUWA', 12),
+      (105, 'BUGOTO', 13),
+      (106, 'WAKAWAKA', 13),
+      (107, 'BWONOHA', 14),
+      (108, 'NAMONI', 14),
+      (109, 'LWANIKA', 14),
+      (110, 'MALINDI', 14),
+      (111, 'LUKAGABO', 14),
+      (112, 'KABUUKA', 14),
+      (113, 'JAGUSI', 14),
+      (114, 'SAGITI', 14),
+      (115, 'BUMBA', 14),
+      (116, 'NAMUGONGO', 14),
+      (117, 'NANGO', 14),
+      (118, 'WAMALA', 14),
+      (119, 'SSERINYABBI', 14),
+      (120, 'LUGALA', 15),
+      (121, 'BUMERU A', 15),
+      (122, 'BUMERU B', 15),
+      (123, 'SINGIRA', 15),
+      (124, 'GOLOOFA', 15),
+      (125, 'KANDEEGE', 15),
+      (126, 'MANINGA', 15),
+      (127, 'HAAMA', 15),
+      (128, 'MIGINGO', 16);");
+//----------Table 21-------------
+    array_push($q,"CREATE TABLE `language` (
+      `id` int(4) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      `name` varchar(30) NOT NULL
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+//----------Table 22-------------
+    array_push($q,"
+      INSERT INTO `language` (`id`, `name`) VALUES
+      (1, 'English'),
+      (2, 'Luganda');");
+//----------Table 23-------------
+    array_push($q,"CREATE TABLE `main_regions` (
+     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     `region_name` varchar(50) NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+//----------Table 24-------------
+    array_push($q,"INSERT INTO `main_regions` (`id`, `region_name`) VALUES
+     (1, 'Western '),
+     (2, 'Central Region and Lake Victoria Basin'),
+     (3, 'Eastern '),
+     (5, 'Northern ');");
+//---------Table 25 --------------
+    array_push($q,"
+      CREATE TABLE `major_sector` (
+      `id` int(11) NOT NULL,
+      `language_id` int(11) NOT NULL,
+      `sector_name` varchar(45) NOT NULL
+      ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+      ");
+
+//---------Table 26 --------------
+    array_push($q,"INSERT INTO `major_sector` (`id`, `language_id`, `sector_name`) VALUES
+      (1, 1, 'Agriculture and food security'),
+      (2, 1, 'Health'),
+      (3, 1, 'Construction '),
+      (4, 1, 'Waters'),
+      (5, 1, 'weather'),
+      (6, 1, 'Disaster Management '),
+      (8, 4, 'Ekitongole ky’ebyobulimi n’obungi bw’emmere'),
+      (9, 4, 'Ekitongole ky’ebigwa bitalaze n’ebibamba'),
+      (10, 4, 'Ekitongole ky’amazzi '),
+      (11, 4, 'Ekitundu ky’ebyobulamu'),
+      (12, 6, 'Ey\'ebyobulimi n\'ebyokulya'),
+      (13, 6, 'Ey\'ekujunanizibwa okufushya ebigwererezi'),
+      (14, 6, 'Ey\'eby\'amaizi'),
+      (15, 6, 'Ey\'eby\'obwomeezi'),
+      (16, 10, 'Esitongole sye bikwawo nibitalakire'),
+      (17, 10, 'Obulamu'),
+      (18, 10, 'Amachi'),
+      (19, 4, 'Ekitongole ky\'emirimu n\'enguudo'),
+      (20, 9, 'Ebyobuhingi'),
+      (21, 9, 'Eby\'amagara'),
+      (22, 5, 'Ebigema kubyokulima n\'okwelinda endhala'),
+      (23, 5, 'Ate kubyobulamu'),
+      (24, 5, 'Ebigema kuntambula n\'enguudu'),
+      (25, 14, 'Dogtic ma mako peko ma ngole atura'),
+      (26, 14, 'Dogtic ma mako gedo '),
+      (27, 14, 'Pi Yotkom'),
+      (28, 14, 'Idog tic me Pur ki Gwoko dero cam'),
+      (29, 12, 'Ocoko ma Azakozu'),
+      (30, 12, 'Yii Dria'),
+      (31, 12, 'Alata Dria'),
+      (32, 12, 'Ega Nyaka Ezozu Azini Nyaka Tambazu Ri'),
+      (33, 13, 'Busiku butundubikhe'),
+      (34, 13, 'Bye kameetsi'),
+      (35, 13, 'Bye bubwombekhi, tsingudo ni ingenda'),
+      (36, 13, 'Bye bulamu'),
+      (37, 13, 'Bye bulimi ni khuuba ni biilyo bibiiyikinikha'),
+      (38, 9, 'Eby\'amatungo');");
+//------------Table 27 ----------
+    array_push($q,"CREATE TABLE `menu` (
+      `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      `name` varchar(255) NOT NULL,
+      `link` varchar(255) NOT NULL,
+      `icon` varchar(255) NOT NULL,
+      `is_active` int(11) NOT NULL,
+      `is_parent` int(11) NOT NULL,
+      `descrpition` varchar(100) NOT NULL
+   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+//------------Table 28 ----------
+    array_push($q,"INSERT INTO `menu` (`id`, `name`, `link`, `icon`, `is_active`, `is_parent`, `descrpition`) VALUES
+      (1, 'Forecasts', '', 'fa fa-line-chart', 1, 0, 'forecast'),
+      (2, 'Dekadal forecast', '/index.php/Dekadal_forecast/index', 'fa fa-cloud', 1, 1, 'one'),
+      (3, 'Daily Forecast', '/index.php/Daily_forecast/index', 'fa fa-cloud', 1, 1, 'one'),
+      (4, 'Seasonal Forecast', '/index.php/Season', 'fa fa-cloud', 1, 1, 'one'),
+      (8, 'Advisories', '/index.php/Advisory/index', 'fa fa-check-square-o', 1, 0, 'one'),
+      (12, 'Forecast Advice', '/index.php/user_feedback/index', 'ion-android-mail', 1, 5, 'one'),
+      (14, 'forecast graphs', '/index.php/graph/index', 'ion-arrow-graph-up-right', 0, 0, 'one'),
+      (15, 'user feedback', '/index.php/User_feedback', 'fa fa-comments', 1, 0, 'one'),
+      (16, 'STATISTICS', '/index.php/graph/index', 'fa fa-bar-chart', 1, 0, 'one'),
+      (17, 'feedback', '/index.php/graph/feedback', '', 1, 16, 'one'),
+      (18, 'ussd requests', 'index.php/graph/ussdRequest', '', 1, 16, 'one'),
+      (19, 'ussd request trend', 'index.php/graph/trend', '', 1, 16, 'one'),
+      (20, 'Admin Structures', '/index.php/Division/index', 'fa fa-sitemap', 1, 0, ''),
+      (21, 'Region', '/index.php/Region', '', 1, 20, 'one'),
+      (22, 'District', '/index.php/Division', '', 1, 20, 'one'),
+      (23, 'City', '/index.php/City/index', '', 0, 20, 'one'),
+      (24, 'Sectors', '/index.php/Sector', 'glyphicon glyphicon-grain', 1, 0, ''),
+      (25, 'Major Sector', '/index.php/Major_Sector', '', 1, 24, 'one'),
+      (26, 'Minor Sector', '/index.php/Minor_sector', '', 1, 24, 'one'),
+      (27, 'Daily Forecast Time', '/index.php/Daily_forecast_time/index', 'fa fa-cloud', 1, 1, 'one'),
+      (31, 'Possible Impacts', '/index.php/Impacts', 'fa fa-compress', 1, 0, ''),
+      (32, 'Seasons', '/index.php/Season_names', 'fa fa-cloud', 1, 0, ''),
+      (33, 'Possible Advisories', '/index.php/Possible_advisories', 'fa fa-check-square', 1, 0, ''),
+      (34, 'Seasonal Terminologies', '/index.php/Terminologies/index', '', 0, 0, ''),
+      (35, 'SUB-REGIONS', '/index.php/Sub_region', '', 1, 20, 'one'),
+      (36, 'Daily Advisory', '/index.php/Advisory/daily', '', 1, 8, 'one'),
+      (37, 'Dekadal Advisory', '/index.php/Advisory/dekadal', '', 1, 8, 'one'),
+      (38, 'Seasonal Advisory', '/index.php/Advisory/index', '', 1, 8, 'one'),
+      (39, 'USSD Menu Settings', '/index.php/USSD', 'fa fa-tablet', 1, 43, 'one'),
+      (40, 'User Management', '/index.php/Landing/Users', 'fa fa-users', 1, 0, 'User management'),
+      (41, 'Victoria Forecast', '/index.php/Victoria', 'fa fa-cloud', 1, 1, 'one'),
+      (42, 'Broadcast Message', '/index.php/Season/broadcast', 'glyphicon glyphicon-signal', 1, 43, 'one'),
+      (43, 'USSD MANAGEMENT', '/index.php/Landing/Users', 'fa fa-tablet', 1, 0, 'one'),
+      (44, 'USSD DAILY USERS', '/index.php/USSD/DailyUsers', 'fa fa-bar-chart', 1, 43, 'one'),
+      (45, 'USSD USER FEEDBACK', '/index.php/USSD/UserFeedback', 'fa fa-comments-o', 1, 43, 'one'),
+      (46, 'DISTRICT COVERAGE', '/index.php/district_coverage', 'ion ion-android-globe', 1, 43, 'one'),
+      (47, 'USSD HOURLY USERS', '/index.php/USSD/ussd_hourly_users', 'fa fa-bar-chart', 1, 43, 'one'),
+      (48, 'FREQUENT USSD USERS', '/index.php/Landing/frequent_users', 'fa fa-bar-chart', 1, 43, 'one'),
+      (49, 'USSD REQUESTED SECTORS', 'index.php/graph/requested_sectors', '', 1, 16, 'one'),
+      (50, 'USSD SUBSCRIBERS', 'index.php/USSD/Subscriptions', 'fa fa-user', 1, 53, 'one'),
+      (51, 'Web Visits', 'index.php/graph/web_visits', '', 1, 16, 'one'),
+      (52, 'USSD Session tracking', 'index.php/graph/ussd_sessions', '', 1, 16, 'one'),
+      (53, 'USSD SUBSCRIPTIONS', '/index.php/Landing/Users', 'fa fa-tablet', 1, 0, 'one'),
+      (54, 'Monthly Forecast', '/index.php/monthly_forecast', 'fa fa-cloud', 1, 1, 'one'),
+      (55, 'SUBSCRIPTION MESSAGES', 'index.php/USSD/Subscription_messages', 'icon-envelope', 1, 53, 'one'),
+      (56, 'Voice Message Requests', '/index.php/USSD/Voice', 'fa fa-bar-chart', 1, 43, 'one');
+
+      ");
+     //---------------Table 29 -----------
+array_push($q,"CREATE TABLE `victoria_area_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `vic_area` int(11) NOT NULL,
+  `highlights` varchar(255) NOT NULL,
+  `time` varchar(255) NOT NULL,
+  `time_frame` int(20) NOT NULL,
+  `time_date` date DEFAULT NULL,
+  `wind_strength` int(11) NOT NULL,
+  `wind_direction` int(12) NOT NULL,
+  `wave_height` int(11) NOT NULL,
+  `weather` int(11) NOT NULL,
+  `rainfall_dist` int(11) NOT NULL,
+  `visibility` int(11) NOT NULL,
+  `harzard` varchar(255) NOT NULL,
+  `forecast_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
 
-	array_push($q,"CREATE TABLE `seasonal_forecast` (
-		`id` bigint(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`overview` text,
-		`year` int(4) NOT NULL,
-		`general_forecast` text NOT NULL,
-		`created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		`issuetime` date NOT NULL,
-		`season_id` int(11) NOT NULL,
-		`map` varchar(100) NOT NULL
-		) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-		");
+     //---------------Table 30 -----------
+array_push($q,"CREATE TABLE `season_months` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `season_name` varchar(80) NOT NULL,
+  `month_from` varchar(80) NOT NULL,
+  `month_to` varchar(80) NOT NULL,
+  `abbreviation` varchar(80) NOT NULL,
+  `time_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-	array_push($q,"
+     //---------------Table 31 -----------
+array_push($q,"INSERT INTO `season_months` (`id`, `season_name`, `month_from`, `month_to`, `abbreviation`, `time_added`) VALUES
+  (1, 'September to December', 'SEPT', 'DEC', 'SOND', '2019-09-09 14:44:58'),
+  (2, 'March to May', 'March', 'May', 'MAM', '2019-09-09 14:47:27'),
+  (3, 'June to July', 'June', 'July', 'JJA', '2019-09-12 02:16:08'),
+  (4, 'January to Feb', 'January', 'Feb', 'JF', '2019-09-14 07:37:46');
+  ");	
+ //---------------Table 32 -----------
+array_push($q,"CREATE TABLE `region` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `region_name` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-		CREATE TABLE `area_seasonal_forecast` (
-		`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`forecast_id` int(10) NOT NULL,
-		`region_id` int(4) NOT NULL,
-		`subregion_id` int(4) NOT NULL,
-		`expected_peak` varchar(25) NOT NULL,
-		`peakdesc` varchar(32) NOT NULL,
-		`onset_period` varchar(35) NOT NULL,
-		`onsetdesc` varchar(23) NOT NULL,
-		`end_period` varchar(23) NOT NULL,
-		`enddesc` varchar(23) NOT NULL,
-		`overall_comment` text NOT NULL,
-		`general_info` text,
-		`language_id` int(11) NOT NULL
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+array_push($q,"INSERT INTO `region` (`id`, `region_name`) VALUES
+   (1, 'Eastern Lake Victoria basin'),
+   (2, 'Central Lake Victoria basin'),
+   (3, 'Western Lake Victoria basin'),
+   (4, 'Western parts of Central'),
+   (5, 'Eastern parts of Central'),
+   (6, 'Mid-western'),
+   (7, 'Northern Rwenzori'),
+   (8, 'Southern Rwenzori'),
+   (9, 'Kigezi Highlands'),
+   (10, 'Southwestern'),
+   (11, 'West Nile'),
+   (12, 'Central Northern'),
+   (13, 'Northern Kyoga'),
+   (14, 'Eastern Kyoga'),
+   (15, 'Northeastern'),
+   (16, 'Mt. Elgon highlands'),
+   (17, 'Eastern Lowlands'),
+   (18, 'South and Central Western');");
+ //---------------Table 33 -----------
 
-
-	array_push($q,"CREATE TABLE `victoria_area_data` (
-		`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`vic_area` int(11) NOT NULL,
-		`highlights` varchar(255) NOT NULL,
-		`time` varchar(255) NOT NULL,
-		`time_frame` int(20) NOT NULL,
-		`time_date` date DEFAULT NULL,
-		`wind_strength` int(11) NOT NULL,
-		`wind_direction` int(12) NOT NULL,
-		`wave_height` int(11) NOT NULL,
-		`weather` int(11) NOT NULL,
-		`rainfall_dist` int(11) NOT NULL,
-		`visibility` int(11) NOT NULL,
-		`harzard` varchar(255) NOT NULL,
-		`forecast_id` int(11) NOT NULL
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-	
-
-
-	array_push($q,"CREATE TABLE `season_months` (
-		`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		`season_name` varchar(80) NOT NULL,
-		`month_from` varchar(80) NOT NULL,
-		`month_to` varchar(80) NOT NULL,
-		`abbreviation` varchar(80) NOT NULL,
-		`time_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-	array_push($q,"INSERT INTO `season_months` (`id`, `season_name`, `month_from`, `month_to`, `abbreviation`, `time_added`) VALUES
-		(1, 'September to December', 'SEPT', 'DEC', 'SOND', '2019-09-09 14:44:58'),
-		(2, 'March to May', 'March', 'May', 'MAM', '2019-09-09 14:47:27'),
-		(3, 'June to July', 'June', 'July', 'JJA', '2019-09-12 02:16:08'),
-		(4, 'January to Feb', 'January', 'Feb', 'JF', '2019-09-14 07:37:46');
-		");	
-
-	array_push($q,"CREATE TABLE `region` (
-		`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		`region_name` varchar(45) NOT NULL
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-	array_push($q,"INSERT INTO `region` (`id`, `region_name`) VALUES
-		(1, 'Northern'),
-		(2, 'Western'),
-		(3, 'Eastern'),
-		(4, 'Central'),
-		(5, 'Southern');");
+array_push($q,"CREATE TABLE `sub_region` (
+ `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ `sub_region_name` varchar(80) NOT NULL,
+ `region_id` int(11) NOT NULL,
+ `main_region_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
 
-	array_push($q,"CREATE TABLE `sub_region` (
-		`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		`sub_region_name` varchar(80) NOT NULL,
-		`region_id` int(11) NOT NULL
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-	//------------check country----------------------	
-	if($country=="Nigeria"){
-		array_push($q,"
-			INSERT INTO `sub_region` (`id`, `sub_region_name`,`region_id`) VALUES
-			(1, 'North Central','1'),
-			(2, 'North East','1'),
-			(3, 'North West','1'),
-			(4, 'South East','5'),
-			(5, 'South South','5'),
-			(6, 'South West','5');");			
+	//---------------Table 34 -----------	
+array_push($q,"
+   INSERT INTO `sub_region` (`id`, `sub_region_name`, `region_id`, `main_region_id`) VALUES
+   (1, 'All Regions', 20, NULL),
+   (2, 'South Western', 1, 1),
+   (3, 'Western Central', 1, 1),
+   (4, 'Northern and Southern parts of central', 2, NULL),
+   (5, 'Central and Western Lake Victoria Basin', 2, 2),
+   (6, 'Eastern parts of Central', 2, 2),
+   (7, 'Eastern Lake Victoria and South Eastern', 2, 2),
+   (8, 'Eastern Central', 3, 3),
+   (9, 'North Eastern', 3, 3),
+   (10, 'Central Northern Parts', 5, 5),
+   (11, 'North Western', 5, 5),
+   (12, 'Eastern Northern Parts', 5, 5),
+   (13, 'South Eastern', 18, 3),
+   (14, 'Western parts of Central', 1, 2);");						
 
-	}else if($country=="Ghana"){
-		array_push($q,"
-			INSERT INTO `sub_region` (`id`, `sub_region_name`,`region_id`) VALUES
-			(1, 'North East','1'),
-			(2, 'Western North','2'),
-			(3, 'Upper West Region','1'),
-			(4, 'Brong-Ahafo Region','5');");			
+	//---------------Table 35 ----------- 
+array_push($q,"CREATE TABLE `division` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `division_name` varchar(45) NOT NULL,
+  `division_type` varchar(45) NOT NULL,
+  `region_id` int(8) NOT NULL,
+  `sub_region_id` int(11) DEFAULT NULL,
+  `main_region` int(11) DEFAULT NULL,
+  `lat` double DEFAULT NULL,
+  `lng` double DEFAULT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  ");
 
+//---------------Table 36 ----------- 
+array_push($q,"CREATE TABLE `ussdmenulanguage` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `language` varchar(100) NOT NULL,
+  `language_text_table` varchar(255) NOT NULL,
+  `forecast_table` varchar(100) NOT NULL,
+  `daily` varchar(100) NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  ");
 
-	}else if($country=="South Sudan"){
-		array_push($q,"
-			INSERT INTO `sub_region` (`id`, `sub_region_name`,`region_id`) VALUES
-			(1, 'Greater Upper Nile','1'),
-			(2, 'Equatoria','5'),
-			(3, 'Bahr El Ghazal','1');");				
+//---------------Table 37 ----------- 
+array_push($q,"CREATE TABLE `seasonal_updates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `season_id` int(11) NOT NULL,
+  `month` varchar(40) NOT NULL,
+  `issue_time` date NOT NULL,
+  `rainfall_outlook` text NOT NULL,
+  `further_outlook` text NOT NULL,
+  `advisories` text,
+  `impacts` text NOT NULL,
+  `conclusion` text,
+  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-	}else {
-		array_push($q,"
-			INSERT INTO `sub_region` (`id`, `sub_region_name`,`region_id`) VALUES
-			(1, 'Western Parts of Uganda','1'),
-			(2, 'Eastern Parts of Central','4'),
-			(3, 'Central and Western Lake Victoria','4'),
-			(4, 'Eastern Lake Victoria Basin','4'),
-			(5, 'South Western','2'),
-			(6, 'Central Western','2'),
-			(7, 'South Eastern','3'),
-			(8, 'Eastern central','3'),
-			(9, 'North Western','1');");						
-
-	}
-	//---------------the end-----------------------------
-	array_push($q,"CREATE TABLE `division` (
-		`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`division_name` varchar(45) NOT NULL,
-		`division_type` varchar(45) NOT NULL,
-		`region_id` int(8) NOT NULL,
-		`sub_region_id` int(11) DEFAULT NULL,
-		`main_region` int(11) DEFAULT NULL,
-		`lat` double DEFAULT NULL,
-		`lng` double DEFAULT NULL
-		) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-		");
-
-
-	array_push($q,"CREATE TABLE `ussdmenulanguage` (
-		`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`language` varchar(100) NOT NULL,
-		`language_text_table` varchar(255) NOT NULL,
-		`forecast_table` varchar(100) NOT NULL,
-		`daily` varchar(100) NOT NULL
-		) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-		");
+//---------------Table 38 ----------- 
+array_push($q,"CREATE TABLE `voice` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `language_id` int(11) NOT NULL,
+  `voice_name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
 
-	array_push($q,"CREATE TABLE `seasonal_updates` (
-		`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`season_id` int(11) NOT NULL,
-		`month` varchar(40) NOT NULL,
-		`issue_time` date NOT NULL,
-		`rainfall_outlook` text NOT NULL,
-		`further_outlook` text NOT NULL,
-		`advisories` text,
-		`impacts` text NOT NULL,
-		`conclusion` text,
-		`date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-	array_push($q,"CREATE TABLE `voice` (
-		`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`language_id` int(11) NOT NULL,
-		`voice_name` varchar(100) NOT NULL
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+//---------------Table 39 ----------- 
+array_push($q,"CREATE TABLE `ussd_transactions_2021` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `phone` varchar(15) NOT NULL,
+  `sessionId` varchar(200) NOT NULL,
+  `language` varchar(200) DEFAULT NULL,
+  `district` varchar(200) DEFAULT NULL,
+  `product` varchar(200) DEFAULT NULL,
+  `period_selected` varchar(200) DEFAULT NULL,
+  `advisory` varchar(200) DEFAULT NULL,
+  `msg_type` varchar(200) DEFAULT NULL,
+  `confirmation` varchar(200) DEFAULT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
 
-
-	array_push($q,"CREATE TABLE `ussd_transactions_2021` (
-		`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`phone` varchar(15) NOT NULL,
-		`sessionId` varchar(200) NOT NULL,
-		`language` varchar(200) DEFAULT NULL,
-		`district` varchar(200) DEFAULT NULL,
-		`product` varchar(200) DEFAULT NULL,
-		`period_selected` varchar(200) DEFAULT NULL,
-		`advisory` varchar(200) DEFAULT NULL,
-		`msg_type` varchar(200) DEFAULT NULL,
-		`confirmation` varchar(200) DEFAULT NULL,
-		`date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-	array_push($q,"CREATE TABLE `main_regions` (
-		`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`region_name` varchar(50) NOT NULL
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-
-
-	array_push($q,"INSERT INTO `main_regions` (`id`, `region_name`) VALUES
-		(1, 'Western '),
-		(2, 'Central Region and Lake Victoria Basin'),
-		(3, 'Eastern '),
-		(5, 'Northern ');");
-
-
-
-
-
-
-
-
-	if($country=="Nigeria"){
-		
-		array_push($q," INSERT INTO `division` (`id`, `division_name`,`division_type`,`region_id`) VALUES
-			('1','Benue','State','1'),
-			('2','Kogi','State','1'),
-			('3','Nasarawa','State','1'),
-			('4','Adamawa','State','2'),
-			('5','Kaduna','State','3');");  
-
-		array_push($q,"INSERT INTO `ussdmenulanguage` (`id`, `language`, `language_text_table`, `forecast_table`, `daily`) VALUES
-			(1, 'English', 'ussdmenu', 'seasonal_forecast', 'daily_forecast_data'),
-			(4, 'Other_language', 'ussdmenuluganda', 'seasonal_forecast_luganda', 'daily_forecast_data_luganda');");
-
-	}else if($country=="Ghana"){
-
-		array_push($q," INSERT INTO `division` (`id`, `division_name`,`division_type`,`region_id`) VALUES
-			('1','Aowin','District','2'),
-			('2','Bia West','District','2'),
-			('3','Bia East','District','2'),
-			('4','Juabeso','District','2'),
-			('5','Suaman','District','2'),
-			('6','Yunyoo-Nasuan','District','1'),
-			('7','West Mamprusi','District','2'),
-			('8','Mamprugu Moagduri','District','2'),
-			('9','East Mamprusi','District','2'),
-			('10','Chereponi','District','2');");   
-
-		array_push($q,"INSERT INTO `ussdmenulanguage` (`id`, `language`, `language_text_table`, `forecast_table`, `daily`) VALUES
-			(1, 'English', 'ussdmenu', 'seasonal_forecast', 'daily_forecast_data'),
-			(4, 'Other_language', 'ussdmenuluganda', 'seasonal_forecast_luganda', 'daily_forecast_data_luganda');"); 
-
-	}else if($country=="South Sudan"){
-		array_push($q," INSERT INTO `division` (`id`, `division_name`,`division_type`,`region_id`) VALUES
-			('1','Jonglei','States','1'),
-			('2','Fangak','States','1'),
-			('3','Bieh','States','1'),
-			('4','Akobo','States','1'),
-			('5','Maiwut','States','1'),
-			('6','Central Upper Nile ','States','1'),
-			('7','Jubek','States','2'),
-			('8','Terekeka','States','2'),
-			('9','Gbudwe ','States','2'),
-			('10','Kapoeta ','States','2');	"); 
-
-		array_push($q,"INSERT INTO `ussdmenulanguage` (`id`, `language`, `language_text_table`, `forecast_table`, `daily`) VALUES
-			(1, 'English', 'ussdmenu', 'seasonal_forecast', 'daily_forecast_data'),
-			(4, 'Other_language', 'ussdmenuluganda', 'seasonal_forecast_luganda', 'daily_forecast_data_luganda');");
-
-
-	}else {
-		array_push($q,"    INSERT INTO `division` (`id`, `division_name`, `division_type`, `region_id`, `sub_region_id`, `main_region`, `lat`, `lng`) VALUES
-			(1, 'KAMPALA', 'District', 2, 5, 2, 0.315556, 32.565556),
-			(2, 'KISORO', 'District', 9, 2, 1, -1.283639, 29.688249),
-			(3, 'KABALE', 'District', 9, 2, 1, -1.326111, 30.003889),
-			(4, 'RUKUNGIRI', 'District', 9, 2, 1, -0.841111, 29.941944),
-			(5, 'KANUNGU', 'District', 9, 2, 1, -0.9575, 29.789722),
-			(6, 'NTUNGAMO', 'District', 10, 2, 1, -0.879444, 30.264167),
-			(7, 'MBARARA', 'District', 10, 2, 1, -0.630583, 30.658179),
-			(8, 'KIRUHURA', 'District', 10, 2, 1, -0.235556, 30.8725),
-			(9, 'ISINGIRO', 'District', 10, 2, 1, -0.868637, 30.830189),
-			(10, 'IBANDA', 'District', 10, 2, 1, -0.153889, 30.531944),
-			(11, 'BUSHENYI', 'District', 10, 2, 1, -0.585278, 30.211389),
-			(12, 'BUHWEJU', 'District', 10, 2, 1, -0.350269, 30.300291),
-			(13, 'SHEEMA', 'District', 10, 2, 1, -0.626019, 30.435935),
-			(14, 'RUBIRIZI', 'District', 10, 2, 1, -0.298889, 30.133611),
-			(15, 'KASESE', 'District', 8, 2, 1, 0.23, 29.988333),
-			(16, 'BUNDIBUGYO', 'District', 7, 3, 1, 0.708474, 30.063418),
-			(17, 'NTOROKO', 'District', 7, 3, 1, 1.041111, 30.481111),
-			(18, 'KABAROLE', 'District', 7, 3, 1, 0.661959, 30.282684),
-			(19, 'KYENJOJO', 'District', 7, 3, 1, 0.632778, 30.621389),
-			(20, 'KYEGEGWA', 'District', 7, 3, 1, 0.502222, 31.041389),
-			(21, 'KAMWENGE', 'District', 7, 3, 1, 0.211111, 30.420833),
-			(22, 'KIBAALE', 'District', 6, 3, 1, 0.8, 31.066667),
-			(23, 'HOIMA', 'District', 6, 3, 1, 1.435556, 31.343611),
-			(24, 'BULIISA', 'District', 6, 3, 1, 2.117807, 31.411633),
-			(25, 'MASINDI', 'District', 6, 3, 1, 1.674444, 31.715),
-			(26, 'MOYO', 'District', 11, 11, 5, 3.660883, 31.724736),
-			(27, 'ARUA', 'District', 11, 11, 5, 3.020129, 30.911052),
-			(28, 'MARACHA', 'District', 11, 11, 5, 3.270421, 30.955322),
-			(29, 'NEBBI', 'District', 11, 11, 5, 2.478259, 31.088935),
-			(30, 'ADJUMANI', 'District', 12, 11, 5, 3.377862, 31.790897),
-			(31, 'YUMBE', 'District', 11, 11, 5, 3.465057, 31.246893),
-			(32, 'KOBOKO', 'District', 11, 11, 5, 3.413637, 30.959935),
-			(33, 'ZOMBO', 'District', 11, 11, 5, 2.51355, 30.909094),
-			(34, 'RAKAI', 'District', 3, 4, 2, -0.72, 31.483889),
-			(35, 'LYANTONDE', 'District', 3, 4, 2, -0.403056, 31.157222),
-			(36, 'BUKOMANSIMBI', 'District', 3, 5, 2, -0.157778, 31.604167),
-			(37, 'SEMBABULE', 'District', 3, 4, 2, -0.077222, 31.456667),
-			(38, 'MUBENDE', 'District', 4, 4, 2, 0.589167, 31.36),
-			(39, 'KIBOGA', 'District', 4, 4, 2, 0.916111, 31.774167),
-			(40, 'KYANKWANZI', 'District', 4, 4, 2, 1.200615, 31.800625),
-			(41, 'NAKASEKE', 'District', 5, 4, 2, 0.751667, 32.385),
-			(42, 'NAKASONGOLA', 'District', 5, 4, 2, 1.308889, 32.456389),
-			(43, 'MUKONO', 'District', 2, 6, 2, 0.353333, 32.755278),
-			(44, 'LUWEERO', 'District', 5, 4, 2, 0.849167, 32.473056),
-			(45, 'BUIKWE', 'District', 2, 6, 2, 0.3375, 33.010556),
-			(46, 'KAYUNGA', 'District', 2, 6, 2, 0.7025, 32.888611),
-			(47, 'KALANGALA', 'District', 2, 5, 2, -0.308889, 32.225),
-			(48, 'BUVUMA', 'District', 2, 6, 2, 0.222155, 33.206081),
-			(49, 'WAKISO', 'District', 2, 5, 2, 0.404444, 32.459444),
-			(50, 'MASAKA', 'District', 3, 4, 2, -0.312724, 31.715937),
-			(51, 'MPIGI', 'District', 2, 5, 2, 0.225, 32.313611),
-			(52, 'KALUNGU', 'District', 3, 5, 2, -0.166667, 31.756944),
-			(53, 'GOMBA', 'District', 4, 5, 2, 0.203333, 32.088056),
-			(54, 'MITYANA', 'District', 4, 5, 2, 0.4175, 32.022778),
-			(55, 'JINJA', 'District', 1, 7, 2, 0.424444, 33.204167),
-			(56, 'MAYUGE', 'District', 1, 7, 2, 0.457812, 33.480622),
-			(57, 'BUGIRI', 'District', 1, 7, 2, 0.571389, 33.741667),
-			(58, 'BUSIA', 'District', 1, 7, 2, 0.454444, 34.075833),
-			(59, 'KAMULI', 'District', 4, 13, 3, 0.947222, 33.119722),
-			(60, 'IGANGA', 'District', 1, 13, 3, 0.609167, 33.468611),
-			(61, 'LUUKA', 'District', 4, 13, 3, 0.700756, 33.300202),
-			(62, 'NAMUTUMBA', 'District', 17, 13, 3, 0.836305, 33.685763),
-			(63, 'BUYENDE', 'District', 4, 13, 3, 1.151667, 33.155),
-			(64, 'KALIRO', 'District', 17, 13, 3, 0.894873, 33.504792),
-			(65, 'TORORO', 'District', 1, 7, 2, 0.692991, 34.180853),
-			(66, 'PALLISA', 'District', 17, 8, 3, 1.145, 33.709444),
-			(67, 'MBALE', 'District', 16, 8, 3, 1.074804, 34.177352),
-			(68, 'SIRONKO', 'District', 16, 8, 3, 1.234913, 34.256757),
-			(69, 'MANAFWA', 'District', 16, 8, 3, 0.978421, 34.374301),
-			(70, 'BUDUDA', 'District', 16, 8, 3, 1.011178, 34.331123),
-			(71, 'KAPCHORWA', 'District', 16, 8, 3, 1.396509, 34.450929),
-			(72, 'KUMI', 'District', 14, 8, 3, 1.460833, 33.936111),
-			(73, 'KABERAMAIDO', 'District', 14, 8, 3, 1.738889, 33.159444),
-			(74, 'SOROTI', 'District', 14, 8, 3, 1.685556, 33.616389),
-			(75, 'SERERE', 'District', 14, 8, 3, 1.494167, 33.455278),
-			(76, 'AMOLATAR', 'District', 13, 12, 5, 1.615556, 32.839722),
-			(77, 'BUTALEJA', 'District', 17, 13, 3, 0.916554, 33.956315),
-			(78, 'BULAMBULI', 'District', 16, 8, 3, 1.166667, 34.383333),
-			(79, 'KWEEN', 'District', 16, 8, 3, 1.416667, 34.533333),
-			(80, 'BUKWO', 'District', 17, 8, 3, 1.259167, 34.753889),
-			(81, 'BUKEDEA', 'District', 4, 8, 3, 1.316944, 34.050556),
-			(82, 'NGORA', 'District', 14, 8, 3, 1.431389, 33.777222),
-			(83, 'KATAKWI', 'District', 14, 9, 3, 1.891111, 33.966111),
-			(84, 'KAPELEBYONG', 'District', 14, 9, 3, 2.52922, 34.659753),
-			(85, 'MOROTO', 'District', 15, 9, 3, 2.52922, 34.659753),
-			(86, 'KOTIDO', 'District', 15, 9, 3, 2.980556, 34.133056),
-			(87, 'NAKAPIRIPIRIT', 'District', 15, 9, 3, 1.916667, 34.783333),
-			(88, 'ABIM', 'District', 18, 9, 3, 2.701667, 33.676111),
-			(89, 'NAPAK', 'District', 15, 9, 3, 2.251391, 34.250124),
-			(90, 'AMUDAT', 'District', 15, 9, 3, 1.95, 34.95),
-			(91, 'AMURIA', 'District', 14, 9, 3, 2.003611, 33.651111),
-			(92, 'KABONG', 'District', 15, 9, 3, 3.483611, 34.149167),
-			(93, 'APAC', 'District', 13, 12, 5, 1.975556, 32.538611),
-			(94, 'LIRA', 'District', 13, 12, 5, 2.235, 32.909722),
-			(95, 'ALEBTONG', 'District', 13, 12, 5, 2.244722, 33.254722),
-			(96, 'KITGUM', 'District', 12, 12, 5, 3.292284, 32.877828),
-			(97, 'OTUKE', 'District', 13, 12, 5, 2.500375, 33.50065),
-			(98, 'PADER', 'District', 12, 12, 5, 3.05, 33.216667),
-			(99, 'AMURU', 'District', 12, 10, 5, 2.813879, 31.938684),
-			(100, 'AGAGO', 'District', 12, 12, 5, 2.833825, 33.33361),
-			(101, 'LAMWO', 'District', 12, 10, 5, 3.529719, 32.801604),
-			(102, 'NWOYA', 'District', 12, 10, 5, 2.634225, 32.001065),
-			(103, 'OYAM', 'District', 13, 10, 5, 2.235002, 32.38495),
-			(104, 'KOLE', 'District', 5, 12, 5, 2.400151, 32.800343),
-			(105, 'DOKOLO', 'District', 13, 12, 5, 1.898333, 33.1775),
-			(106, 'KIRYANDONGO', 'District', 6, 3, 1, 1.876334, 32.062246),
-			(107, 'NAMAYINGO', 'District', 1, 7, 2, 0.239833, 33.884908),
-			(108, 'LWENGO', 'District', 3, 5, 2, -0.416111, 31.408056),
-			(109, 'GULU', 'District', 12, 10, 5, 2.774569, 32.29899),
-			(110, 'KIBUKU', 'District', 17, 8, 3, 1.043333, 33.7975),
-			(111, 'PAKWACH', 'District', 11, 11, 5, 2.460932, 31.494934),
-			(112, 'BUTEBO', 'District', 17, 8, 3, NULL, NULL),
-			(113, 'KYOTERA', 'District', 3, 4, 2, NULL, NULL),
-			(114, 'BUNYANGABU', 'District', 7, 3, 1, NULL, NULL),
-			(115, 'NABILATUK', 'District', 15, 9, 3, NULL, NULL),
-			(116, 'BUGWERI', 'District', 1, 7, 2, NULL, NULL),
-			(117, 'RWAMPARA', 'District', 10, 2, 1, NULL, NULL),
-			(118, 'BUDAKA', 'District', 17, 8, 3, NULL, NULL),
-			(121, 'OMORO', 'District', 12, 10, 5, NULL, NULL),
-			(122, 'NAMISINDWA', 'District', 16, 8, 3, NULL, NULL),
-			(123, 'KASANDA', 'District', 4, 4, 2, NULL, NULL),
-			(126, 'OBONGI', 'District', 11, 11, 5, NULL, NULL),
-			(127, 'MADI-OKOLLO', 'District', 11, 11, 5, NULL, NULL),
-			(128, 'KARENGA', 'District', 15, 9, 3, NULL, NULL),
-			(129, 'LUSOT', 'District', 15, 9, 3, NULL, NULL),
-			(130, 'KAKUMIRO', 'District', 6, 4, 2, NULL, NULL),
-			(131, 'KAGADI', 'District', 6, 3, 1, NULL, NULL),
-			(132, 'RUBANDA', 'District', 9, 2, 1, NULL, NULL),
-			(133, 'RUKIGA', 'District', 9, 2, 1, NULL, NULL),
-			(134, 'KITAGWENDA', 'District', 7, 2, 1, NULL, NULL),
-			(135, 'MITOOMA', 'District', 10, 2, 1, NULL, NULL),
-			(137, 'KIKUUBE', 'District', 6, 3, 1, NULL, NULL),
-			(138, 'KALAKI', 'District', 13, 8, 3, NULL, NULL),
-			(139, 'BUTAMBALA', 'District', 4, 5, 2, NULL, NULL),
-			(140, 'KAZO', 'District', 10, 7, 2, NULL, NULL);	"); 
-
+//---------------Table 40 ----------- 
+  array_push($q,"    INSERT INTO `division` (`id`, `division_name`, `division_type`, `region_id`, `sub_region_id`, `main_region`, `lat`, `lng`) VALUES
+   (1, 'KAMPALA', 'District', 2, 5, 2, 0.315556, 32.565556),
+   (2, 'KISORO', 'District', 9, 2, 1, -1.283639, 29.688249),
+   (3, 'KABALE', 'District', 9, 2, 1, -1.326111, 30.003889),
+   (4, 'RUKUNGIRI', 'District', 9, 2, 1, -0.841111, 29.941944),
+   (5, 'KANUNGU', 'District', 9, 2, 1, -0.9575, 29.789722),
+   (6, 'NTUNGAMO', 'District', 10, 2, 1, -0.879444, 30.264167),
+   (7, 'MBARARA', 'District', 10, 2, 1, -0.630583, 30.658179),
+   (8, 'KIRUHURA', 'District', 10, 2, 1, -0.235556, 30.8725),
+   (9, 'ISINGIRO', 'District', 10, 2, 1, -0.868637, 30.830189),
+   (10, 'IBANDA', 'District', 10, 2, 1, -0.153889, 30.531944),
+   (11, 'BUSHENYI', 'District', 10, 2, 1, -0.585278, 30.211389),
+   (12, 'BUHWEJU', 'District', 10, 2, 1, -0.350269, 30.300291),
+   (13, 'SHEEMA', 'District', 10, 2, 1, -0.626019, 30.435935),
+   (14, 'RUBIRIZI', 'District', 10, 2, 1, -0.298889, 30.133611),
+   (15, 'KASESE', 'District', 8, 2, 1, 0.23, 29.988333),
+   (16, 'BUNDIBUGYO', 'District', 7, 3, 1, 0.708474, 30.063418),
+   (17, 'NTOROKO', 'District', 7, 3, 1, 1.041111, 30.481111),
+   (18, 'KABAROLE', 'District', 7, 3, 1, 0.661959, 30.282684),
+   (19, 'KYENJOJO', 'District', 7, 3, 1, 0.632778, 30.621389),
+   (20, 'KYEGEGWA', 'District', 7, 3, 1, 0.502222, 31.041389),
+   (21, 'KAMWENGE', 'District', 7, 3, 1, 0.211111, 30.420833),
+   (22, 'KIBAALE', 'District', 6, 3, 1, 0.8, 31.066667),
+   (23, 'HOIMA', 'District', 6, 3, 1, 1.435556, 31.343611),
+   (24, 'BULIISA', 'District', 6, 3, 1, 2.117807, 31.411633),
+   (25, 'MASINDI', 'District', 6, 3, 1, 1.674444, 31.715),
+   (26, 'MOYO', 'District', 11, 11, 5, 3.660883, 31.724736),
+   (27, 'ARUA', 'District', 11, 11, 5, 3.020129, 30.911052),
+   (28, 'MARACHA', 'District', 11, 11, 5, 3.270421, 30.955322),
+   (29, 'NEBBI', 'District', 11, 11, 5, 2.478259, 31.088935),
+   (30, 'ADJUMANI', 'District', 12, 11, 5, 3.377862, 31.790897),
+   (31, 'YUMBE', 'District', 11, 11, 5, 3.465057, 31.246893),
+   (32, 'KOBOKO', 'District', 11, 11, 5, 3.413637, 30.959935),
+   (33, 'ZOMBO', 'District', 11, 11, 5, 2.51355, 30.909094),
+   (34, 'RAKAI', 'District', 3, 4, 2, -0.72, 31.483889),
+   (35, 'LYANTONDE', 'District', 3, 4, 2, -0.403056, 31.157222),
+   (36, 'BUKOMANSIMBI', 'District', 3, 5, 2, -0.157778, 31.604167),
+   (37, 'SEMBABULE', 'District', 3, 4, 2, -0.077222, 31.456667),
+   (38, 'MUBENDE', 'District', 4, 4, 2, 0.589167, 31.36),
+   (39, 'KIBOGA', 'District', 4, 4, 2, 0.916111, 31.774167),
+   (40, 'KYANKWANZI', 'District', 4, 4, 2, 1.200615, 31.800625),
+   (41, 'NAKASEKE', 'District', 5, 4, 2, 0.751667, 32.385),
+   (42, 'NAKASONGOLA', 'District', 5, 4, 2, 1.308889, 32.456389),
+   (43, 'MUKONO', 'District', 2, 6, 2, 0.353333, 32.755278),
+   (44, 'LUWEERO', 'District', 5, 4, 2, 0.849167, 32.473056),
+   (45, 'BUIKWE', 'District', 2, 6, 2, 0.3375, 33.010556),
+   (46, 'KAYUNGA', 'District', 2, 6, 2, 0.7025, 32.888611),
+   (47, 'KALANGALA', 'District', 2, 5, 2, -0.308889, 32.225),
+   (48, 'BUVUMA', 'District', 2, 6, 2, 0.222155, 33.206081),
+   (49, 'WAKISO', 'District', 2, 5, 2, 0.404444, 32.459444),
+   (50, 'MASAKA', 'District', 3, 4, 2, -0.312724, 31.715937),
+   (51, 'MPIGI', 'District', 2, 5, 2, 0.225, 32.313611),
+   (52, 'KALUNGU', 'District', 3, 5, 2, -0.166667, 31.756944),
+   (53, 'GOMBA', 'District', 4, 5, 2, 0.203333, 32.088056),
+   (54, 'MITYANA', 'District', 4, 5, 2, 0.4175, 32.022778),
+   (55, 'JINJA', 'District', 1, 7, 2, 0.424444, 33.204167),
+   (56, 'MAYUGE', 'District', 1, 7, 2, 0.457812, 33.480622),
+   (57, 'BUGIRI', 'District', 1, 7, 2, 0.571389, 33.741667),
+   (58, 'BUSIA', 'District', 1, 7, 2, 0.454444, 34.075833),
+   (59, 'KAMULI', 'District', 4, 13, 3, 0.947222, 33.119722),
+   (60, 'IGANGA', 'District', 1, 13, 3, 0.609167, 33.468611),
+   (61, 'LUUKA', 'District', 4, 13, 3, 0.700756, 33.300202),
+   (62, 'NAMUTUMBA', 'District', 17, 13, 3, 0.836305, 33.685763),
+   (63, 'BUYENDE', 'District', 4, 13, 3, 1.151667, 33.155),
+   (64, 'KALIRO', 'District', 17, 13, 3, 0.894873, 33.504792),
+   (65, 'TORORO', 'District', 1, 7, 2, 0.692991, 34.180853),
+   (66, 'PALLISA', 'District', 17, 8, 3, 1.145, 33.709444),
+   (67, 'MBALE', 'District', 16, 8, 3, 1.074804, 34.177352),
+   (68, 'SIRONKO', 'District', 16, 8, 3, 1.234913, 34.256757),
+   (69, 'MANAFWA', 'District', 16, 8, 3, 0.978421, 34.374301),
+   (70, 'BUDUDA', 'District', 16, 8, 3, 1.011178, 34.331123),
+   (71, 'KAPCHORWA', 'District', 16, 8, 3, 1.396509, 34.450929),
+   (72, 'KUMI', 'District', 14, 8, 3, 1.460833, 33.936111),
+   (73, 'KABERAMAIDO', 'District', 14, 8, 3, 1.738889, 33.159444),
+   (74, 'SOROTI', 'District', 14, 8, 3, 1.685556, 33.616389),
+   (75, 'SERERE', 'District', 14, 8, 3, 1.494167, 33.455278),
+   (76, 'AMOLATAR', 'District', 13, 12, 5, 1.615556, 32.839722),
+   (77, 'BUTALEJA', 'District', 17, 13, 3, 0.916554, 33.956315),
+   (78, 'BULAMBULI', 'District', 16, 8, 3, 1.166667, 34.383333),
+   (79, 'KWEEN', 'District', 16, 8, 3, 1.416667, 34.533333),
+   (80, 'BUKWO', 'District', 17, 8, 3, 1.259167, 34.753889),
+   (81, 'BUKEDEA', 'District', 4, 8, 3, 1.316944, 34.050556),
+   (82, 'NGORA', 'District', 14, 8, 3, 1.431389, 33.777222),
+   (83, 'KATAKWI', 'District', 14, 9, 3, 1.891111, 33.966111),
+   (84, 'KAPELEBYONG', 'District', 14, 9, 3, 2.52922, 34.659753),
+   (85, 'MOROTO', 'District', 15, 9, 3, 2.52922, 34.659753),
+   (86, 'KOTIDO', 'District', 15, 9, 3, 2.980556, 34.133056),
+   (87, 'NAKAPIRIPIRIT', 'District', 15, 9, 3, 1.916667, 34.783333),
+   (88, 'ABIM', 'District', 18, 9, 3, 2.701667, 33.676111),
+   (89, 'NAPAK', 'District', 15, 9, 3, 2.251391, 34.250124),
+   (90, 'AMUDAT', 'District', 15, 9, 3, 1.95, 34.95),
+   (91, 'AMURIA', 'District', 14, 9, 3, 2.003611, 33.651111),
+   (92, 'KABONG', 'District', 15, 9, 3, 3.483611, 34.149167),
+   (93, 'APAC', 'District', 13, 12, 5, 1.975556, 32.538611),
+   (94, 'LIRA', 'District', 13, 12, 5, 2.235, 32.909722),
+   (95, 'ALEBTONG', 'District', 13, 12, 5, 2.244722, 33.254722),
+   (96, 'KITGUM', 'District', 12, 12, 5, 3.292284, 32.877828),
+   (97, 'OTUKE', 'District', 13, 12, 5, 2.500375, 33.50065),
+   (98, 'PADER', 'District', 12, 12, 5, 3.05, 33.216667),
+   (99, 'AMURU', 'District', 12, 10, 5, 2.813879, 31.938684),
+   (100, 'AGAGO', 'District', 12, 12, 5, 2.833825, 33.33361),
+   (101, 'LAMWO', 'District', 12, 10, 5, 3.529719, 32.801604),
+   (102, 'NWOYA', 'District', 12, 10, 5, 2.634225, 32.001065),
+   (103, 'OYAM', 'District', 13, 10, 5, 2.235002, 32.38495),
+   (104, 'KOLE', 'District', 5, 12, 5, 2.400151, 32.800343),
+   (105, 'DOKOLO', 'District', 13, 12, 5, 1.898333, 33.1775),
+   (106, 'KIRYANDONGO', 'District', 6, 3, 1, 1.876334, 32.062246),
+   (107, 'NAMAYINGO', 'District', 1, 7, 2, 0.239833, 33.884908),
+   (108, 'LWENGO', 'District', 3, 5, 2, -0.416111, 31.408056),
+   (109, 'GULU', 'District', 12, 10, 5, 2.774569, 32.29899),
+   (110, 'KIBUKU', 'District', 17, 8, 3, 1.043333, 33.7975),
+   (111, 'PAKWACH', 'District', 11, 11, 5, 2.460932, 31.494934),
+   (112, 'BUTEBO', 'District', 17, 8, 3, NULL, NULL),
+   (113, 'KYOTERA', 'District', 3, 4, 2, NULL, NULL),
+   (114, 'BUNYANGABU', 'District', 7, 3, 1, NULL, NULL),
+   (115, 'NABILATUK', 'District', 15, 9, 3, NULL, NULL),
+   (116, 'BUGWERI', 'District', 1, 7, 2, NULL, NULL),
+   (117, 'RWAMPARA', 'District', 10, 2, 1, NULL, NULL),
+   (118, 'BUDAKA', 'District', 17, 8, 3, NULL, NULL),
+   (121, 'OMORO', 'District', 12, 10, 5, NULL, NULL),
+   (122, 'NAMISINDWA', 'District', 16, 8, 3, NULL, NULL),
+   (123, 'KASANDA', 'District', 4, 4, 2, NULL, NULL),
+   (126, 'OBONGI', 'District', 11, 11, 5, NULL, NULL),
+   (127, 'MADI-OKOLLO', 'District', 11, 11, 5, NULL, NULL),
+   (128, 'KARENGA', 'District', 15, 9, 3, NULL, NULL),
+   (129, 'LUSOT', 'District', 15, 9, 3, NULL, NULL),
+   (130, 'KAKUMIRO', 'District', 6, 4, 2, NULL, NULL),
+   (131, 'KAGADI', 'District', 6, 3, 1, NULL, NULL),
+   (132, 'RUBANDA', 'District', 9, 2, 1, NULL, NULL),
+   (133, 'RUKIGA', 'District', 9, 2, 1, NULL, NULL),
+   (134, 'KITAGWENDA', 'District', 7, 2, 1, NULL, NULL),
+   (135, 'MITOOMA', 'District', 10, 2, 1, NULL, NULL),
+   (137, 'KIKUUBE', 'District', 6, 3, 1, NULL, NULL),
+   (138, 'KALAKI', 'District', 13, 8, 3, NULL, NULL),
+   (139, 'BUTAMBALA', 'District', 4, 5, 2, NULL, NULL),
+   (140, 'KAZO', 'District', 10, 7, 2, NULL, NULL);	"); 
+//---------------Table 41 ----------- 
 array_push($q,"INSERT INTO `ussdmenulanguage` (`id`, `language`, `language_text_table`, `forecast_table`, `daily`) VALUES
 	(1, 'English', 'ussdmenu', 'seasonal_forecast', 'daily_forecast_data'),
 	(4, 'Luganda', 'ussdmenuluganda', 'seasonal_forecast_luganda', 'daily_forecast_data_luganda'),
@@ -936,51 +1123,9 @@ array_push($q,"INSERT INTO `ussdmenulanguage` (`id`, `language`, `language_text_
 	(13, 'Lumasaba (Lugisu)', 'ussdmenulugisu', 'seasonal_forecast_lugisu', 'daily_forecast_data_lugisu'),
 	(14, 'Acholi', 'ussdmenuacholi', 'seasonal_forecast_acholi', 'daily_forecast_data_acholi');");
 
-}
-
-array_push($q,"CREATE TABLE IF NOT EXISTS `city` (
-	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	`city_name` varchar(45) NOT NULL,
-	`major_city` int(1) NOT NULL default 0,
-	`division_id` varchar(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-if($country=='Nigeria'){
-	array_push($q,"INSERT INTO `city` (`id`, `city_name`,`division_id`,`major_city`) VALUES
-		('1','Agatu','1','1'),
-		('2','Obi','1','1'),
-		('3','Ohimini','1','1'),
-		('4','Igalamela-Odolu','2','1'),
-		('5','Olamaboro','2','0')");
-
-}
-else if($country=="Ghana"){
-	array_push($q,"
-		INSERT INTO `city` (`id`, `city_name`,`division_id`,`major_city`) VALUES
-		('1','Sekondi-Takoradi','1','1'),
-		('2','Tarkwa','1','1'),
-		('3',' Wiawso','1','1'),
-		('4','Sekondi-Takoradi','2','1'),
-		('5',' Tarkwa','2','0'); ");
 
 
-}else if($country=="South Sudan"){
-	array_push($q,"INSERT INTO `city` (`id`, `city_name`,`division_id`,`major_city`) VALUES
-		('1','Duk Padiet','1','1'),
-		('2','Twic Center','1','1'),
-		('3',' Bor East ','1','1'),
-		('4','Waat','3','1'); ");								
-
-}else{
-	array_push($q,"
-		INSERT INTO `city` (`id`, `city_name`,`division_id`,`major_city`) VALUES
-		('1','Kiboga','1','1'),
-		('2','Mubende','2','1'),
-		('3','Rakai','3','1'),
-		('4','Buvuma','10','1');");			
-}
-
-
+//---------------Table 42 ----------- 
 array_push($q,"CREATE TABLE `seasonal_terminology` (
 	`id` int(4) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`terminology` varchar(34) NOT NULL,
@@ -988,7 +1133,7 @@ array_push($q,"CREATE TABLE `seasonal_terminology` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
 
-
+//---------------Table 43 ----------- 
 array_push($q,"CREATE TABLE `contacts` (
 	`contact_id` int(5) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`contact_group_id` int(5) NOT NULL DEFAULT '0',
@@ -1000,7 +1145,7 @@ array_push($q,"CREATE TABLE `contacts` (
 	`contact_status` enum('0','1') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-
+//---------------Table 44 ----------- 
 array_push($q,"CREATE TABLE `weather_impacts` (
 	`ps` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`weather_type` varchar(23) NOT NULL,
@@ -1008,15 +1153,15 @@ array_push($q,"CREATE TABLE `weather_impacts` (
 	`state` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-
+//---------------Table 45 ----------- 
 array_push($q,"CREATE TABLE `weather_category` (
-  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `cat_name` varchar(100) NOT NULL,
-  `img` varchar(50) NOT NULL,
-  `widget` varchar(100) NOT NULL,
-  `svg_data` varchar(1000) NULL
+	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`cat_name` varchar(100) NOT NULL,
+	`img` varchar(50) NOT NULL,
+	`widget` varchar(100) NOT NULL,
+	`svg_data` varchar(1000) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
+//---------------Table 46 SVG NOT ADDED-----------
 array_push($q,"INSERT INTO `weather_category` (`id`, `cat_name`, `img`, `widget`) VALUES
 	(1, 'heavy rain', 'img/rain.PNG', 'heavyrain'),
 	(2, 'light thunder showers', 'img/thunderstorm.PNG', 'thundershowers'),
@@ -1032,7 +1177,7 @@ array_push($q,"INSERT INTO `weather_category` (`id`, `cat_name`, `img`, `widget`
 	(12, 'light isolated showers', 'img/showers.ico', 'lightrain'),
 	(13, 'partly cloudy', 'img/partlyCloudy.png', 'partlysunny');");
 
-
+//---------------Table 47 -----------
 
 array_push($q,"CREATE TABLE IF NOT EXISTS `contacts` (
 	`contact_id` int(5) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -1045,109 +1190,7 @@ array_push($q,"CREATE TABLE IF NOT EXISTS `contacts` (
 	`contact_status` enum('0','1') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-array_push($q,"CREATE TABLE `daily_forecast` (
-  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `language_id` int(11) NOT NULL,
-  `weather` text,
-  `date` date DEFAULT NULL,
-  `time` varchar(11) DEFAULT NULL,
-  `issuedate` date NOT NULL,
-  `validitytime` varchar(30) DEFAULT NULL,
-  `dutyforecaster` varchar(300) NOT NULL,
-  `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;	");
-
-array_push($q,"
-CREATE TABLE `daily_forecast_data` (
-  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `mean_temp` text,
-  `max_temp` double DEFAULT NULL,
-  `min_temp` double DEFAULT NULL,
-  `wind` int(11) DEFAULT NULL,
-  `wind_direction` text,
-  `wind_strength` text,
-  `region_id` int(10) NOT NULL,
-  `division_id` int(10) DEFAULT NULL,
-  `weather_cat_id` varchar(11) DEFAULT NULL,
-  `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `forecast_id` int(11) NOT NULL,
-  `period` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-	");
-
-
-array_push($q," CREATE TABLE `decadal_forecast` (
-	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`date_from` date NOT NULL,
-	`date_to` date NOT NULL,
-	`issuedate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-	`volume` int(9) NOT NULL,
-	`general_info` text NOT NULL,
-	`max_temp` int(11) NOT NULL,
-	`min_temp` int(11) NOT NULL,
-	`mean_temp` int(11) NOT NULL,
-	`issue` varchar(30) NOT NULL,
-	`rainfall` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-array_push($q,"CREATE TABLE IF NOT EXISTS `feedback` (
-	`record_id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	`forecast_type` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-array_push($q,"CREATE TABLE `forecast_time` (
-	`id` int(4) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	`period_name` varchar(20) NOT NULL,
-	`to_time` varchar(10) NOT NULL,
-	`from_time` varchar(10) NOT NULL,
-	`timeadded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-
-array_push($q,"INSERT INTO `forecast_time` (`id`, `period_name`, `to_time`, `from_time`, `timeadded`) VALUES
-	(1, 'Early Morning', '12:00 am ', '6:00 am', '2019-09-08 09:22:57'),
-	(2, 'Late Morning', '6:00 am', '12:00 pm', '2019-09-07 19:22:57'),
-	(3, 'Late Evening', '6:00 pm', '12:00 pm', '2019-09-08 10:07:57');");
-
-
-
-array_push($q,"CREATE TABLE `impacts` (
-	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	`description` varchar(234) NOT NULL,
-	`date_added` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-
-array_push($q,"CREATE TABLE `language` (
-	`id` int(4) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	`name` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-
-array_push($q,"
-	INSERT INTO `language` (`id`, `name`) VALUES
-	(1, 'English'),
-	(2, 'Luganda');");
-
-
-array_push($q,"
-	CREATE TABLE `major_sector` (
-	`id` int(11) NOT NULL,
-	`language_id` int(11) NOT NULL,
-	`sector_name` varchar(45) NOT NULL
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-	");
-
-
-array_push($q,"INSERT INTO `major_sector` (`id`, `language_id`, `sector_name`) VALUES
-	(1, 1, 'Agriculture and food security'),
-	(2, 1, 'Health'),
-	(3, 1, 'Construction '),
-	(4, 1, 'Waters'),
-	(5, 1, 'weather'),
-	(6, 1, 'Disaster Management ');");	
-
-
+//---------------Table 48 -----------
 array_push($q,"CREATE TABLE IF NOT EXISTS `seasonal_forecast` (
 	`id` bigint(10) NOT NULL,
 	`overview` text,
@@ -1159,24 +1202,25 @@ array_push($q,"CREATE TABLE IF NOT EXISTS `seasonal_forecast` (
 	`map` varchar(24) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
+//---------------Table 49 -----------
 array_push($q,"CREATE TABLE IF NOT EXISTS `weather_impacts` (
 	`ps` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`weather_type` varchar(23) NOT NULL,
 	`impact` text NOT NULL,
 	`state` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
+//---------------Table 50 -----------
 array_push($q,"CREATE TABLE `season` (
 	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`season_name` varchar(45) NOT NULL,
 	`month_from` varchar(45) NOT NULL,
 	`month_to` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
+//---------------Table 51 -----------
 array_push($q,"INSERT INTO `season` (`id`, `season_name`, `month_from`, `month_to`) VALUES
 	(1, 'MAM', 'March', 'May');");
 
-
+//---------------Table 52 -----------
 array_push($q,"CREATE TABLE `user_feedback` (
 	`id` int(20) NOT NULL,
 	`city_id` int(10) NOT NULL,
@@ -1189,6 +1233,7 @@ array_push($q,"CREATE TABLE `user_feedback` (
 	`datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
+//---------------Table 53 -----------
 array_push($q,"CREATE TABLE `users` (
 	`id` int(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`ip_address` varchar(15) DEFAULT NULL,
@@ -1211,71 +1256,71 @@ array_push($q,"CREATE TABLE `users` (
 	`pic` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 
+//---------------Table 54 -----------
 array_push($q, "INSERT INTO `users` (`username`, `usertype`,`password`,  `email`,`active`) VALUES ( 'admin','".$u."', '".$enc_password."', '".$email."','1')");
-
-
-array_push($q,"CREATE TABLE `menu` (
-	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	`link` varchar(255) NOT NULL,
-	`icon` varchar(255) NOT NULL,
-	`is_active` int(11) NOT NULL,
-	`is_parent` int(11) NOT NULL,
-	`descrpition` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
-array_push($q,"INSERT INTO `menu` (`id`, `name`, `link`, `icon`, `is_active`, `is_parent`, `descrpition`) VALUES
-	(1, 'Forecasts', '', 'ddd', 1, 0, 'forecast'),
-	(2, 'Dekadal forecast', '/index.php/Dekadal_forecast/index', 'fa fa-cloud', 1, 1, 'one'),
-	(3, 'Daily Forecast', '/index.php/Daily_forecast/index', 'fa fa-cloud', 1, 1, 'one'),
-	(4, 'Seasonal Forecast', '/index.php/season/index', 'fa fa-cloud', 1, 1, 'one'),
-	(8, 'Advisories', '/index.php/Advisory/index', 'ion-android-mail', 1, 0, 'one'),
-	(12, 'Forecast Advice', '/index.php/user_feedback/index', 'ion-android-mail', 1, 5, 'one'),
-	(14, 'forecast graphs', '/index.php/graph/index', 'ion-arrow-graph-up-right', 0, 0, 'one'),
-	(15, 'user feedback', '/index.php/user_feedback/readfeedback', 'ion-android-mail', 1, 0, 'one'),
-	(16, 'STATISTICS', '/index.php/graph/index', 'ion-arrow-graph-up-right', 0, 0, 'statistics'),
-	(17, 'feedback', '/index.php/User_feedback/index', '', 0, 0, 'statistics'),
-	(18, 'ussd requests', 'index.php/graph/ussdRequest', '', 1, 20, 'ussd requests'),
-	(19, 'ussd request trend', 'index.php/graph/trend', '', 1, 20, 'ussd request trend'),
-	(20, 'Administrative Structures', '/index.php/Division/index', '', 1, 0, ''),
-	(21, 'Region', '/index.php/Region/index', '', 1, 20, 'one'),
-	(22, 'Division', '/index.php/Division/index', '', 1, 20, 'one'),
-	(23, 'City', '/index.php/City/index', '', 1, 20, 'one'),
-	(24, 'Sectors', '/index.php/Sector/index', '', 1, 0, ''),
-	(25, 'Major Sector', '/index.php/Major_Sector/index', '', 1, 24, 'one'),
-	(26, 'Minor Sector', '/index.php/Minor_sector/index', '', 1, 24, 'one'),
-	(27, 'Daily Forecast Time', '/index.php/Daily_forecast_time/index', 'fa fa-cloud', 1, 1, 'one'),
-	(31, 'Possible Impacts', '/index.php/Impacts/index', '', 1, 0, ''),
-	(32, 'Seasons', '/index.php/Season_names/index', '', 1, 0, ''),
-	(33, 'Possible Advisories', '/index.php/Possible_advisories/index', '', 1, 0, ''),
-	(34, 'Seasonal Terminologies', '/index.php/Terminologies/index', '', 1, 0, ''),
-	(35, 'SUB-REGIONS', '/index.php/Sub_region/index', '', 1, 20, 'one'),
-	(36, 'Daily Advisory', '/index.php/Advisory/daily', '', 1, 8, 'one'),
-	(37, 'Dekadal Advisory', '/index.php/Advisory/dekadal', '', 1, 8, 'one'),
-	(38, 'Seasonal Advisory', '/index.php/Advisory/index', '', 1, 8, 'one');
-	");
-
+//---------------Table 55 -----------
 array_push($q,"CREATE TABLE `minor_sector` (
 	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`minor_name` varchar(45) NOT NULL,
 	`major_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1");
 
+//---------------Table 56 -----------
 array_push($q,"
 	INSERT INTO `minor_sector` (`id`, `minor_name`, `major_id`) VALUES
-	(1, 'Animal Husbandry ', 8),
-	(2, 'Harvesting', 1),
-	(3, 'Planting', 1);
+(1, 'Animal husbandry ', 1),
+(2, 'Harvesting', 1),
+(3, 'Planting', 1),
+(4, 'Water', 4),
+(6, 'Health', 2),
+(7, 'Crop', 1),
+(8, 'Livestock ', 1),
+(9, 'Fisheries', 1),
+(10, 'Bee farming', 1),
+(11, 'Disaster Management', 6),
+(12, 'Weather', 5),
+(13, 'Infrastructure, works & transport', 5),
+(14, 'Eby\'obulimi bw\'emmere', 8),
+(15, 'Eby\'amazzi', 10),
+(16, 'Eby\'obulamu', 11),
+(17, 'Ebigwa bitalaze ', 9),
+(18, 'Eby\'obulimi n\'ebyokulya', 12),
+(19, 'Eyekujunanizibwa okufushya ebigwererezi', 13),
+(20, 'Ey\'ebyamaizi', 14),
+(21, 'Ey\'eby\'obwomeezi', 15),
+(22, 'Esitongole sye bikwawo nibitalakire', 16),
+(23, 'Obulamu', 17),
+(24, 'Amachi', 18),
+(25, 'Ekitongole ky\'emirimu ne\'nguudo', 19),
+(26, 'Ebyobuhingi', 20),
+(27, 'Eby\'amagara', 21),
+(28, 'Ebigema kubyokulima n\'okwelinda endhala', 22),
+(29, 'Kubyobulamu', 23),
+(30, 'Ebigema kuntambula n\'enguudu', 24),
+(31, 'Mako peko ma ngole atura', 25),
+(32, 'Mako gedo ', 26),
+(33, 'Pi Yotkom', 27),
+(34, 'Idog tic me Pur ki Gwoko dero cam', 2),
+(35, 'Yii Dria', 30),
+(36, 'Ocoko ma Azakozu', 29),
+(37, 'Alata Dria', 31),
+(38, 'Ega Nyaka Ezozu Azini Nyaka Tambazu Ri', 32),
+(39, 'Busiku butundubikhe', 33),
+(40, 'Bye kameetsi', 34),
+(41, 'Bye bubwombekhi, tsingudo ni ingenda', 35),
+(42, 'Bye bulamu', 36),
+(43, 'Bye bulimi ni khuuba ni biilyo bibiiyikinikha', 37),
+(44, 'Eby\'amatungo', 38);
 	");
 
-
+//---------------Table 57 -----------
 array_push($q,"CREATE TABLE `possible_advisories` (
 	`pos` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`cat` text NOT NULL,
 	`advise` text NOT NULL,
 	`state` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
+//---------------Table 58 -----------
 array_push($q,"INSERT INTO `possible_advisories` (`pos`, `cat`, `advise`, `state`) VALUES
 	(1, '1', 'Use irregular light rains for early land preparation and securing inputs like seed, fertilizer, chemicals.', 'normal'),
 	(2, '1', 'Timely planting of improved varieties such as Beans (NABE 15-23 series), maize (Longe 5, 7H, 10H-11H).', 'normal'),
@@ -1283,22 +1328,14 @@ array_push($q,"INSERT INTO `possible_advisories` (`pos`, `cat`, `advise`, `state
 	(4, '3', 'Soil and water conservation practices e.g. trenches, grass bunds, mulching to enhance soil moisture retention and control erosion.', 'above'),
 	(5, '1', 'Enhance good agronomic practices (proper spacing, fertilizer use, weeding).', 'above');");
 
-
+//---------------Table 59 -----------
 array_push($q,"CREATE TABLE `possible_impacts` (
 	`id` int(7) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`impact` text NOT NULL,
 	`state` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-//-------------new tables-------------------
-array_push($q,"CREATE TABLE `daily_advisory` (
-	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`sector` int(5) NOT NULL,
-	`forecast_id` int(11) NOT NULL,
-	`advice` text NOT NULL,
-	`message_summary` text,
-	`dateadded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
+//---------------Table 60 -----------
 array_push($q,"CREATE TABLE `data` (
 	`id` int(11) NOT NULL,
 	`days_of_the_week` varchar(10) NOT NULL,
@@ -1307,6 +1344,7 @@ array_push($q,"CREATE TABLE `data` (
 	`d03` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
+//---------------Table 61 -----------
 array_push($q,"
 	INSERT INTO `data` (`id`, `days_of_the_week`, `d01`, `d02`, `d03`) VALUES
 	(1, 'Monday', 9.91858, 1.60976, 3.32214),
@@ -1320,7 +1358,7 @@ array_push($q,"
 	(9, 'Thursday', 12.36614, 0, 0.66021),
 	(10, 'Friday', 11.67441, 0, 9.31397);
 	");
-
+//---------------Table 62 -----------
 array_push($q,"CREATE TABLE `dekadal_advisory` (
 	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`sector` int(5) NOT NULL,
@@ -1331,41 +1369,39 @@ array_push($q,"CREATE TABLE `dekadal_advisory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
 
-
+//---------------Table 63 -----------
 array_push($q,"CREATE TABLE `victoria_area` (
 	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-
-
+//---------------Table 64 -----------
 array_push($q,"INSERT INTO `victoria_area` (`id`, `name`) VALUES
 	(1, 'Entebbe and Northwest'),
 	(2, 'Kyotera and Southwest'),
 	(3, 'Buvuma and Northeast'),
 	(4, 'Migingo and Southeast');");
 
-
+//---------------Table 65 -----------
 array_push($q,"CREATE TABLE `wind_strength` (
 	`id` int(11) NOT NULL,
 	`name` varchar(255) NOT NULL,
 	`image_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-
-
+//---------------Table 66 -----------
 array_push($q,"INSERT INTO `wind_strength` (`id`, `name`, `image_name`) VALUES
 	(1, 'Light', 'wind_strength_light.png'),
 	(2, 'Moderate', 'wind_strength_moderate.png');");
 
-
+//---------------Table 67 -----------
 array_push($q,"CREATE TABLE `wind_direction` (
 	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`name` varchar(255) NOT NULL,
 	`image_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-
+//---------------Table 68 -----------
 array_push($q,"INSERT INTO `wind_direction` (`id`, `name`, `image_name`) VALUES
 	(1, 'South', 'wind_direction_south.png'),
 	(2, 'South East', 'wind_direction_southeast.png'),
@@ -1377,14 +1413,14 @@ array_push($q,"INSERT INTO `wind_direction` (`id`, `name`, `image_name`) VALUES
 	(8, 'North East', 'wind_direction_northeast.PNG'),
 	(9, 'East', 'wind_direction_east.PNG');");
 
-
+//---------------Table 69 -----------
 array_push($q,"CREATE TABLE `weather_cond` (
 	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`name` varchar(255) NOT NULL,
 	`image_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-
+//---------------Table 70 -----------
 array_push($q,"INSERT INTO `weather_cond` (`id`, `name`, `image_name`) VALUES
 	(1, 'Light Rain', 'weather_light_rain.png'),
 	(2, 'Clear Skies', 'weather_clear_skies.png'),
@@ -1401,29 +1437,32 @@ array_push($q,"INSERT INTO `weather_cond` (`id`, `name`, `image_name`) VALUES
 	(13, 'Isolated thunder rain', 'weather_isolatedthunderrain.PNG'),
 	(14, 'Isolated rain', 'weather_isolatedrain.PNG');");
 
+//---------------Table 71 -----------
 array_push($q,"CREATE TABLE `wave_height` (
 	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`name` varchar(30) NOT NULL,
 	`image_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-
+//---------------Table 72 -----------
 array_push($q,"INSERT INTO `wave_height` (`id`, `name`, `image_name`) VALUES
 	(1, 'Small', 'wave_height_small.png'),
 	(2, 'Moderate', 'wave_height_moderate.png');");
 
+//---------------Table 73 -----------
 array_push($q,"CREATE TABLE `rainfall_dist` (
-	`id` int(11) NOT NULL,
+	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`name` varchar(50) NOT NULL,
 	`image_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
+//---------------Table 74 -----------
 array_push($q,"INSERT INTO `rainfall_dist` (`id`, `name`, `image_name`) VALUES
 	(1, 'Few', 'rainfall_dist_few.png'),
 	(2, 'Many', 'rainfall_dist_many.png');");
 
 
-
+//---------------Table 75 -----------
 array_push($q,"CREATE TABLE `visibility` (
 	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
@@ -1431,24 +1470,24 @@ array_push($q,"CREATE TABLE `visibility` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
 
-
+//---------------Table 76 -----------
 array_push($q,"INSERT INTO `visibility` (`id`, `name`, `image_name`) VALUES
 	(1, 'Good', 'visibility_good.png'),
 	(2, 'Moderate', 'visibility_moderate.png');");
 
-
+//---------------Table 77 -----------
 array_push($q,"CREATE TABLE `victoria_periods` (
 	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-
+//---------------Table 78 -----------
 array_push($q,"INSERT INTO `victoria_periods` (`id`, `name`) VALUES
 	(1, 'Morning'),
 	(2, 'Afternoon'),
 	(3, 'Night before midnight'),
 	(4, 'Night after midnight');");
-
+//---------------Table 79 -----------
 array_push($q,"CREATE TABLE `victoria_data` (
 	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`language_id` int(11) DEFAULT NULL,
@@ -1458,14 +1497,14 @@ array_push($q,"CREATE TABLE `victoria_data` (
 	`advice` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-
+//---------------Table 81 -----------
 array_push($q,"CREATE TABLE `victoria_districts` (
-	`id` int(11) NOT NULL,
+	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`name` text NOT NULL,
 	`zone_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
-
+//---------------Table 82 -----------
 array_push($q,"INSERT INTO `victoria_districts` (`id`, `name`, `zone_id`) VALUES
 	(1, 'WAKISO', 1),
 	(2, 'KAMPALA', 1),
@@ -1484,147 +1523,160 @@ array_push($q,"INSERT INTO `victoria_districts` (`id`, `name`, `zone_id`) VALUES
 	(15, 'NAMAYINGO', 3),
 	(16, 'MIGINGO', 4);");
 
-array_push($q,"CREATE TABLE `landing_site` (
-  `id` int(11) NOT NULL,
-  `site_name` varchar(100) NOT NULL,
-  `district_id` int(11) NOT NULL
+
+//---------------Table 83 -----------
+array_push($q,"CREATE TABLE `ussdtransaction_new` (
+	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`phone` varchar(100) NOT NULL,
+	`sessionId` varchar(100) NOT NULL,
+	`menuvariable` varchar(255) DEFAULT NULL,
+	`menuvalue` varchar(255) DEFAULT NULL,
+	`date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`districtId` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
 
-array_push($q,"INSERT INTO `landing_site` (`id`, `site_name`, `district_id`) VALUES
-(1, 'KIGUNGU', 1),
-(2, 'GREEN FIELDS', 1),
-(3, 'BUGONGA', 1),
-(4, 'KASENYI', 1),
-(5, 'GERENGE', 1),
-(6, 'NAKIWOGO', 1),
-(7, 'BUSABALA', 1),
-(8, 'KIWULWE', 1),
-(9, 'KAGULUBE', 1),
-(10, 'GULWE', 1),
-(11, 'KINYWANTE', 1),
-(12, 'KYANJAZI', 1),
-(13, 'KAVA ENNYANJA', 1),
-(14, 'KITUUFU', 1),
-(15, 'BUGIRI', 1),
-(16, 'BUGANGA', 1),
-(17, 'KKOJA', 1),
-(18, 'SEMALUULU', 1),
-(19, 'KIBAMBA', 1),
-(20, 'GGABA', 2),
-(21, 'PORT BELL', 2),
-(22, 'SSENYONDO', 3),
-(23, 'KATEMBO', 3),
-(24, 'LWALAARO', 3),
-(25, 'KAMALIBA', 4),
-(26, 'KAMUWUNGA', 4),
-(27, 'LUTOBOKA', 5),
-(28, 'MWENA', 5),
-(29, 'KAGOONYA', 5),
-(30, 'KISUJJU', 5),
-(31, 'KASEKULO', 5),
-(32, 'LUKU', 5),
-(33, 'BUGOMA', 5),
-(34, 'KAAZI', 5),
-(35, 'KAMMESE', 5),
-(36, 'KACHANGA', 5),
-(37, 'KAAYA', 5),
-(38, 'MISONZI', 5),
-(39, 'BBOSA', 5),
-(40, 'BANDA', 5),
-(41, 'KITOBO', 5),
-(42, 'JAANA', 5),
-(43, 'NTOWA', 5),
-(44, 'LWANABATYA', 5),
-(45, 'BUBEKE', 5),
-(46, 'BUYANGE', 5),
-(47, 'NKESE', 5),
-(48, 'MAKONZI', 6),
-(49, 'BUKAKKATA', 6),
-(50, 'LAMBU', 6),
-(51, 'KAZIRU', 6),
-(52, 'DDIMU', 6),
-(53, 'NAMIREMBE', 6),
-(54, 'MALEMBO', 7),
-(55, 'ZZINGA', 7),
-(56, 'MUSAMBWA', 7),
-(57, 'KYABASIMBA', 7),
-(58, 'KASENSERO', 7),
-(59, 'LUKUNYU', 7),
-(60, 'NKOSE', 8),
-(61, 'LUJAAMBWA', 8),
-(62, 'KYAGALANYI', 8),
-(63, 'NAKATIBA', 8),
-(64, 'KASAMBA', 8),
-(65, 'MIYANA', 8),
-(66, 'KACHUNGWA', 8),
-(67, 'BUSINDI', 8),
-(68, 'KISABA', 8),
-(69, 'NAKIRANGA', 8),
-(70, 'DAJJE', 8),
-(71, 'MAWAALA', 8),
-(72, 'KANANAASI', 8),
-(73, 'KIYINDI', 9),
-(74, 'SENYI', 9),
-(75, 'MAYUGE', 9),
-(76, 'MASESE', 10),
-(77, 'LUKALE', 11),
-(78, 'LUFU', 11),
-(79, 'NAMAKEBA', 11),
-(80, 'KIKONGO', 11),
-(81, 'LUKOMA', 11),
-(82, 'MUBAALE', 11),
-(83, 'KILONGO', 11),
-(84, 'YUBWE', 11),
-(85, 'KACHANGA', 11),
-(86, 'NAMUGOMBE', 11),
-(87, 'KILEWE', 11),
-(88, 'LUBYA', 11),
-(89, 'NAMITI', 11),
-(90, 'NAMUTALE', 11),
-(91, 'WAKIRERE', 11),
-(92, 'LINGIRA', 11),
-(93, 'LIIBU', 11),
-(94, 'NKATA', 11),
-(95, 'KIWOLOLO', 11),
-(96, 'KITAMIIRO', 11),
-(97, 'NAMAKEBA', 11),
-(98, 'MUWAMA', 11),
-(99, 'ZZINGA', 11),
-(100, 'SSIRIBA', 11),
-(101, 'LYABAANA', 11),
-(102, 'MAKALAGA', 11),
-(103, 'MAJANJI', 12),
-(104, 'MADUWA', 12),
-(105, 'BUGOTO', 13),
-(106, 'WAKAWAKA', 13),
-(107, 'BWONOHA', 14),
-(108, 'NAMONI', 14),
-(109, 'LWANIKA', 14),
-(110, 'MALINDI', 14),
-(111, 'LUKAGABO', 14),
-(112, 'KABUUKA', 14),
-(113, 'JAGUSI', 14),
-(114, 'SAGITI', 14),
-(115, 'BUMBA', 14),
-(116, 'NAMUGONGO', 14),
-(117, 'NANGO', 14),
-(118, 'WAMALA', 14),
-(119, 'SSERINYABBI', 14),
-(120, 'LUGALA', 15),
-(121, 'BUMERU A', 15),
-(122, 'BUMERU B', 15),
-(123, 'SINGIRA', 15),
-(124, 'GOLOOFA', 15),
-(125, 'KANDEEGE', 15),
-(126, 'MANINGA', 15),
-(127, 'HAAMA', 15),
-(128, 'MIGINGO', 16);");
+//---------------Table 84 -----------
+array_push($q,"CREATE TABLE `category` (
+  `category_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `category_name` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
+//---------------Table 85 -----------
+array_push($q,"CREATE TABLE `sub_category` (
+  `subcategory_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `subcategory_name` varchar(100) DEFAULT NULL,
+  `subcategory_category_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
+//---------------Table 86 -----------
+array_push($q,"
+CREATE TABLE `monthly_advisories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  `sector_id` int(11) NOT NULL,
+  `forecast_id` int(11) NOT NULL,
+  `message_summary` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+//---------------Table 87 -----------
+array_push($q,"
+CREATE TABLE `monthly_forecast` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `month_from` varchar(40) NOT NULL,
+  `month_to` varchar(40) NOT NULL,
+  `issue_date` date NOT NULL,
+  `year` int(4) NOT NULL,
+  `summary` text NOT NULL,
+  `introduction` text NOT NULL,
+  `weather_outlook` text NOT NULL,
+  `forecast_map` varchar(400) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+//---------------Table 88 -----------
+array_push($q,"
+CREATE TABLE `monthly_impacts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `forecast_id` int(11) NOT NULL,
+  `impact` text NOT NULL,
+  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+");
+
+//---------------Table 89 -----------
+array_push($q,"
+CREATE TABLE `pageview` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `page` text NOT NULL,
+  `userip` text NOT NULL,
+  `date_visited` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `country` varchar(300) DEFAULT NULL,
+  `region` varchar(300) DEFAULT NULL,
+  `city` varchar(200) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+");
+//---------------Table 90 -----------
+array_push($q,"CREATE TABLE `totalview` (
+   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `totalvisit` bigint(20) NOT NULL DEFAULT '0',
+  `page` varchar(300) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
+
+//---------------Table 91 -----------
+array_push($q,"CREATE TABLE `ussdmenu` (
+  `menuname` varchar(200) DEFAULT NULL,
+  `menuid` int(11) NOT NULL,
+  `menudescription` varchar(300) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+//---------------Table 91 -----------
+array_push($q,"INSERT INTO `ussdmenu` (`menuname`, `menuid`, `menudescription`) VALUES
+('Submission-opt', 7, 'Confirm Submission'),
+('End', 8, 'You will receive a message shortly-Thank you for Contacting Us.'),
+('Cancel', 9, 'Request Canceled'),
+('district', 13, 'Please Enter Your District-Or Landing Site'),
+('invaliddistrict', 14, 'District Unknown\r\n'),
+('invalidinput', 15, 'Unknown Input Option-0. back'),
+('back', 16, 'back'),
+('response_format', 17, 'Please Choose a Response format-1. Text Message-2. Audio-0. Back'),
+('no_data', 18, 'Sorry, the selected forecast data is currently unavailable.-Please try again later-0. Enter district'),
+('sector', 19, 'Without advisory'),
+('voicecall', 20, 'You will receive a call shortly-Thank you for Contacting Us.'),
+('daily', 21, 'Daily Forecast'),
+('seasonal', 22, 'Seasonal Forecast'),
+('dekadal', 23, 'Ten Days Forecast'),
+('prod', 24, 'Select a product'),
+('wind', 25, 'Wind Strength'),
+('temp', 26, 'Temperature'),
+('sum', 27, 'Summary'),
+('wet', 28, 'Weather'),
+('advise', 29, 'Advisory for'),
+('early', 30, 'Early'),
+('mid', 31, 'Mid'),
+('start', 32, 'The rains shall start in'),
+('late', 33, 'Late'),
+('peak', 34, 'peak will be in'),
+('ends', 35, 'and end in'),
+('sects', 36, 'Select a Sector'),
+('feedbackdisp', 37, 'How can we best improve on our forecasts or services?-0. Back'),
+('feedbackrep', 38, 'Feedback recieved. Thank you for supporting us'),
+('feedback', 39, 'Give feedback'),
+('landing_site', 40, 'Please Enter Landing Site'),
+('site', 41, 'Enter Landing Site'),
+('landing_site', 42, 'Marine Forecast-Select a period'),
+('subscription', 43, 'Select a Forecast to Subscribe to-1. Daily Forecast-2. Seasonal Forecast'),
+('subscribe', 44, 'Subscribe'),
+('period', 45, 'Choose period to recieve-1. Daily-2. Weekly-3. Monthly-0. back'),
+('complete_subscription', 46, 'You have successfully Subscribed for weather updates, Thank you'),
+('complete_unsubscription', 47, 'You have Unsubscribed from all weather updates, Thank you'),
+('unsubscribe', 48, 'Unsubscribe'),
+('repeat', 49, 'You want '),
+('in', 50, 'in'),
+('for', 51, 'for'),
+('yes', 52, 'Yes'),
+('no', 53, 'No');");
+
+array_push($q,"CREATE TABLE `ussd_subscriptions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `session_id` varchar(100) NOT NULL,
+  `phone` varchar(50) NOT NULL,
+  `forecast` int(11) NOT NULL,
+  `district` int(11) NOT NULL,
+  `language_id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+array_push($q,"CREATE TABLE `ussd_subscriptions_messages` (
+  `id` int(11) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `message` varchar(1024) NOT NULL,
+  `district` varchar(50) NOT NULL,
+  `forecast` varchar(50) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 
 //PERFORM ALL MIGRATIONS HERE
-for($i=0;$i<80;$i++){   
+for($i=0;$i<94;$i++){   
 	$db =  mysqli_query($link ,$q[$i]);
 	if(!$db){
 		echo mysqli_error($link);
@@ -1937,491 +1989,491 @@ public function forgot_password() {
                 // if there were no errors
 			$this->session->set_flashdata('message', $this->ion_auth->messages());
                 redirect("auth/login", 'refresh'); //we should display a confirmation page here instead of the login page
-            } else {
-            	$this->session->set_flashdata('message', $this->ion_auth->errors());
-            	redirect("auth/forgot_password", 'refresh');
-            }
-        }
-    }
+             } else {
+                $this->session->set_flashdata('message', $this->ion_auth->errors());
+                redirect("auth/forgot_password", 'refresh');
+             }
+          }
+       }
 
     // reset password - final step for forgotten password
-    public function reset_password($code = NULL) {
-    	if (!$code) {
-    		show_404();
-    	}
+       public function reset_password($code = NULL) {
+        if (!$code) {
+         show_404();
+      }
 
-    	$user = $this->ion_auth->forgotten_password_check($code);
+      $user = $this->ion_auth->forgotten_password_check($code);
 
-    	if ($user) {
+      if ($user) {
             // if the code is valid then display the password reset form
 
-    		$this->form_validation->set_rules('new', $this->lang->line('reset_password_validation_new_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[new_confirm]');
-    		$this->form_validation->set_rules('new_confirm', $this->lang->line('reset_password_validation_new_password_confirm_label'), 'required');
+         $this->form_validation->set_rules('new', $this->lang->line('reset_password_validation_new_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[new_confirm]');
+         $this->form_validation->set_rules('new_confirm', $this->lang->line('reset_password_validation_new_password_confirm_label'), 'required');
 
-    		if ($this->form_validation->run() == false) {
+         if ($this->form_validation->run() == false) {
                 // display the form
                 // set the flash data error message if there is one
-    			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+          $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 
-    			$this->data['min_password_length'] = $this->config->item('min_password_length', 'ion_auth');
-    			$this->data['new_password'] = array(
-    				'name' => 'new',
-    				'id' => 'new',
-    				'type' => 'password',
-    				'pattern' => '^.{' . $this->data['min_password_length'] . '}.*$',
-    			);
-    			$this->data['new_password_confirm'] = array(
-    				'name' => 'new_confirm',
-    				'id' => 'new_confirm',
-    				'type' => 'password',
-    				'pattern' => '^.{' . $this->data['min_password_length'] . '}.*$',
-    			);
-    			$this->data['user_id'] = array(
-    				'name' => 'user_id',
-    				'id' => 'user_id',
-    				'type' => 'hidden',
-    				'value' => $user->id,
-    			);
-    			$this->data['csrf'] = $this->_get_csrf_nonce();
-    			$this->data['code'] = $code;
+          $this->data['min_password_length'] = $this->config->item('min_password_length', 'ion_auth');
+          $this->data['new_password'] = array(
+           'name' => 'new',
+           'id' => 'new',
+           'type' => 'password',
+           'pattern' => '^.{' . $this->data['min_password_length'] . '}.*$',
+        );
+          $this->data['new_password_confirm'] = array(
+           'name' => 'new_confirm',
+           'id' => 'new_confirm',
+           'type' => 'password',
+           'pattern' => '^.{' . $this->data['min_password_length'] . '}.*$',
+        );
+          $this->data['user_id'] = array(
+           'name' => 'user_id',
+           'id' => 'user_id',
+           'type' => 'hidden',
+           'value' => $user->id,
+        );
+          $this->data['csrf'] = $this->_get_csrf_nonce();
+          $this->data['code'] = $code;
 
                 // render
-    			$this->template->load_auth('auth/reset_password', $this->data);
-    		} else {
+          $this->template->load_auth('auth/reset_password', $this->data);
+       } else {
                 // do we have a valid request?
-    			if ($this->_valid_csrf_nonce() === FALSE || $user->id != $this->input->post('user_id')) {
+          if ($this->_valid_csrf_nonce() === FALSE || $user->id != $this->input->post('user_id')) {
 
                     // something fishy might be up
-    				$this->ion_auth->clear_forgotten_password_code($code);
+           $this->ion_auth->clear_forgotten_password_code($code);
 
-    				show_error($this->lang->line('error_csrf'));
-    			} else {
+           show_error($this->lang->line('error_csrf'));
+        } else {
                     // finally change the password
-    				$identity = $user->{$this->config->item('identity', 'ion_auth')};
+           $identity = $user->{$this->config->item('identity', 'ion_auth')};
 
-    				$change = $this->ion_auth->reset_password($identity, $this->input->post('new'));
+           $change = $this->ion_auth->reset_password($identity, $this->input->post('new'));
 
-    				if ($change) {
+           if ($change) {
                         // if the password was successfully changed
-    					$this->session->set_flashdata('message', $this->ion_auth->messages());
-    					redirect("auth/login", 'refresh');
-    				} else {
-    					$this->session->set_flashdata('message', $this->ion_auth->errors());
-    					redirect('auth/reset_password/' . $code, 'refresh');
-    				}
-    			}
-    		}
-    	} else {
+            $this->session->set_flashdata('message', $this->ion_auth->messages());
+            redirect("auth/login", 'refresh');
+         } else {
+            $this->session->set_flashdata('message', $this->ion_auth->errors());
+            redirect('auth/reset_password/' . $code, 'refresh');
+         }
+      }
+   }
+} else {
             // if the code is invalid then send them back to the forgot password page
-    		$this->session->set_flashdata('message', $this->ion_auth->errors());
-    		redirect("auth/forgot_password", 'refresh');
-    	}
-    }
+   $this->session->set_flashdata('message', $this->ion_auth->errors());
+   redirect("auth/forgot_password", 'refresh');
+}
+}
 
     // activate the user
-    public function activate($id, $code = false) {
-    	if ($code !== false) {
-    		$activation = $this->ion_auth->activate($id, $code);
-    	} else if ($this->ion_auth->is_admin()) {
-    		$activation = $this->ion_auth->activate($id);
-    	}
+public function activate($id, $code = false) {
+  if ($code !== false) {
+   $activation = $this->ion_auth->activate($id, $code);
+} else if ($this->ion_auth->is_admin()) {
+   $activation = $this->ion_auth->activate($id);
+}
 
-    	if ($activation) {
+if ($activation) {
             // redirect them to the auth page
-    		$this->session->set_flashdata('message', $this->ion_auth->messages());
-    		redirect("auth", 'refresh');
-    	} else {
+   $this->session->set_flashdata('message', $this->ion_auth->messages());
+   redirect("auth", 'refresh');
+} else {
             // redirect them to the forgot password page
-    		$this->session->set_flashdata('message', $this->ion_auth->errors());
-    		redirect("auth/forgot_password", 'refresh');
-    	}
-    }
+   $this->session->set_flashdata('message', $this->ion_auth->errors());
+   redirect("auth/forgot_password", 'refresh');
+}
+}
 
     // deactivate the user
-    public function deactivate($id = NULL) {
-    	if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+public function deactivate($id = NULL) {
+  if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
             // redirect them to the home page because they must be an administrator to view this
-    		return show_error('You must be an administrator to view this page.');
-    	}
+   return show_error('You must be an administrator to view this page.');
+}
 
-    	$id = (int) $id;
+$id = (int) $id;
 
-    	$this->load->library('form_validation');
-    	$this->form_validation->set_rules('confirm', $this->lang->line('deactivate_validation_confirm_label'), 'required');
-    	$this->form_validation->set_rules('id', $this->lang->line('deactivate_validation_user_id_label'), 'required|alpha_numeric');
+$this->load->library('form_validation');
+$this->form_validation->set_rules('confirm', $this->lang->line('deactivate_validation_confirm_label'), 'required');
+$this->form_validation->set_rules('id', $this->lang->line('deactivate_validation_user_id_label'), 'required|alpha_numeric');
 
-    	if ($this->form_validation->run() == FALSE) {
+if ($this->form_validation->run() == FALSE) {
             // insert csrf check
-    		$this->data['csrf'] = $this->_get_csrf_nonce();
-    		$this->data['user'] = $this->ion_auth->user($id)->row();
+   $this->data['csrf'] = $this->_get_csrf_nonce();
+   $this->data['user'] = $this->ion_auth->user($id)->row();
 
-    		$this->template->load_auth('auth/deactivate_user', $this->data);
-    	} else {
+   $this->template->load_auth('auth/deactivate_user', $this->data);
+} else {
             // do we really want to deactivate?
-    		if ($this->input->post('confirm') == 'yes') {
+   if ($this->input->post('confirm') == 'yes') {
                 // do we have a valid request?
-    			if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id')) {
-    				show_error($this->lang->line('error_csrf'));
-    			}
+    if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id')) {
+     show_error($this->lang->line('error_csrf'));
+  }
 
                 // do we have the right userlevel?
-    			if ($this->ion_auth->logged_in() && $this->ion_auth->is_admin()) {
-    				$this->ion_auth->deactivate($id);
-    			}
-    		}
+  if ($this->ion_auth->logged_in() && $this->ion_auth->is_admin()) {
+     $this->ion_auth->deactivate($id);
+  }
+}
 
             // redirect them back to the auth page
-    		redirect('auth', 'refresh');
-    	}
-    }
+redirect('auth', 'refresh');
+}
+}
 
     // create a new user
-    public function create_user() {
-    	$this->data['title'] = $this->lang->line('create_user_heading');
+public function create_user() {
+  $this->data['title'] = $this->lang->line('create_user_heading');
 
-    	if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
-    		redirect('auth', 'refresh');
-    	}
+  if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+   redirect('auth', 'refresh');
+}
 
-    	$tables = $this->config->item('tables', 'ion_auth');
-    	$identity_column = $this->config->item('identity', 'ion_auth');
-    	$this->data['identity_column'] = $identity_column;
+$tables = $this->config->item('tables', 'ion_auth');
+$identity_column = $this->config->item('identity', 'ion_auth');
+$this->data['identity_column'] = $identity_column;
 
         // validate form input
-    	$this->form_validation->set_rules('first_name', $this->lang->line('create_user_validation_fname_label'), 'required');
-    	$this->form_validation->set_rules('last_name', $this->lang->line('create_user_validation_lname_label'), 'required');
-    	if ($identity_column !== 'email') {
-    		$this->form_validation->set_rules('identity', $this->lang->line('create_user_validation_identity_label'), 'required|is_unique[' . $tables['users'] . '.' . $identity_column . ']');
-    		$this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'required|valid_email');
-    	} else {
-    		$this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'required|valid_email|is_unique[' . $tables['users'] . '.email]');
-    	}
-    	$this->form_validation->set_rules('phone', $this->lang->line('create_user_validation_phone_label'), 'trim');
-    	$this->form_validation->set_rules('company', $this->lang->line('create_user_validation_company_label'), 'trim');
-    	$this->form_validation->set_rules('password', $this->lang->line('create_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
-    	$this->form_validation->set_rules('password_confirm', $this->lang->line('create_user_validation_password_confirm_label'), 'required');
+$this->form_validation->set_rules('first_name', $this->lang->line('create_user_validation_fname_label'), 'required');
+$this->form_validation->set_rules('last_name', $this->lang->line('create_user_validation_lname_label'), 'required');
+if ($identity_column !== 'email') {
+   $this->form_validation->set_rules('identity', $this->lang->line('create_user_validation_identity_label'), 'required|is_unique[' . $tables['users'] . '.' . $identity_column . ']');
+   $this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'required|valid_email');
+} else {
+   $this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'required|valid_email|is_unique[' . $tables['users'] . '.email]');
+}
+$this->form_validation->set_rules('phone', $this->lang->line('create_user_validation_phone_label'), 'trim');
+$this->form_validation->set_rules('company', $this->lang->line('create_user_validation_company_label'), 'trim');
+$this->form_validation->set_rules('password', $this->lang->line('create_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
+$this->form_validation->set_rules('password_confirm', $this->lang->line('create_user_validation_password_confirm_label'), 'required');
 
-    	if ($this->form_validation->run() == true) {
-    		$email = strtolower($this->input->post('email'));
-    		$identity = ($identity_column === 'email') ? $email : $this->input->post('identity');
-    		$password = $this->input->post('password');
+if ($this->form_validation->run() == true) {
+   $email = strtolower($this->input->post('email'));
+   $identity = ($identity_column === 'email') ? $email : $this->input->post('identity');
+   $password = $this->input->post('password');
 
-    		$additional_data = array(
-    			'first_name' => $this->input->post('first_name'),
-    			'last_name' => $this->input->post('last_name'),
-    			'company' => $this->input->post('company'),
-    			'phone' => $this->input->post('phone'),
-    		);
-    	}
-    	if ($this->form_validation->run() == true && $this->ion_auth->register($identity, $password, $email, $additional_data)) {
+   $additional_data = array(
+    'first_name' => $this->input->post('first_name'),
+    'last_name' => $this->input->post('last_name'),
+    'company' => $this->input->post('company'),
+    'phone' => $this->input->post('phone'),
+ );
+}
+if ($this->form_validation->run() == true && $this->ion_auth->register($identity, $password, $email, $additional_data)) {
             // check to see if we are creating the user
             // redirect them back to the admin page
-    		$this->session->set_flashdata('message', $this->ion_auth->messages());
-    		redirect("auth", 'refresh');
-    	} else {
+   $this->session->set_flashdata('message', $this->ion_auth->messages());
+   redirect("auth", 'refresh');
+} else {
             // display the create user form
             // set the flash data error message if there is one
-    		$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+   $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
 
-    		$this->data['first_name'] = array(
-    			'name' => 'first_name',
-    			'id' => 'first_name',
-    			'type' => 'text',
-    			'value' => $this->form_validation->set_value('first_name'),
-    		);
-    		$this->data['last_name'] = array(
-    			'name' => 'last_name',
-    			'id' => 'last_name',
-    			'type' => 'text',
-    			'value' => $this->form_validation->set_value('last_name'),
-    		);
-    		$this->data['identity'] = array(
-    			'name' => 'identity',
-    			'id' => 'identity',
-    			'type' => 'text',
-    			'value' => $this->form_validation->set_value('identity'),
-    		);
-    		$this->data['email'] = array(
-    			'name' => 'email',
-    			'id' => 'email',
-    			'type' => 'text',
-    			'value' => $this->form_validation->set_value('email'),
-    		);
-    		$this->data['company'] = array(
-    			'name' => 'company',
-    			'id' => 'company',
-    			'type' => 'text',
-    			'value' => $this->form_validation->set_value('company'),
-    		);
-    		$this->data['phone'] = array(
-    			'name' => 'phone',
-    			'id' => 'phone',
-    			'type' => 'text',
-    			'value' => $this->form_validation->set_value('phone'),
-    		);
-    		$this->data['password'] = array(
-    			'name' => 'password',
-    			'id' => 'password',
-    			'type' => 'password',
-    			'value' => $this->form_validation->set_value('password'),
-    		);
-    		$this->data['password_confirm'] = array(
-    			'name' => 'password_confirm',
-    			'id' => 'password_confirm',
-    			'type' => 'password',
-    			'value' => $this->form_validation->set_value('password_confirm'),
-    		);
+   $this->data['first_name'] = array(
+    'name' => 'first_name',
+    'id' => 'first_name',
+    'type' => 'text',
+    'value' => $this->form_validation->set_value('first_name'),
+ );
+   $this->data['last_name'] = array(
+    'name' => 'last_name',
+    'id' => 'last_name',
+    'type' => 'text',
+    'value' => $this->form_validation->set_value('last_name'),
+ );
+   $this->data['identity'] = array(
+    'name' => 'identity',
+    'id' => 'identity',
+    'type' => 'text',
+    'value' => $this->form_validation->set_value('identity'),
+ );
+   $this->data['email'] = array(
+    'name' => 'email',
+    'id' => 'email',
+    'type' => 'text',
+    'value' => $this->form_validation->set_value('email'),
+ );
+   $this->data['company'] = array(
+    'name' => 'company',
+    'id' => 'company',
+    'type' => 'text',
+    'value' => $this->form_validation->set_value('company'),
+ );
+   $this->data['phone'] = array(
+    'name' => 'phone',
+    'id' => 'phone',
+    'type' => 'text',
+    'value' => $this->form_validation->set_value('phone'),
+ );
+   $this->data['password'] = array(
+    'name' => 'password',
+    'id' => 'password',
+    'type' => 'password',
+    'value' => $this->form_validation->set_value('password'),
+ );
+   $this->data['password_confirm'] = array(
+    'name' => 'password_confirm',
+    'id' => 'password_confirm',
+    'type' => 'password',
+    'value' => $this->form_validation->set_value('password_confirm'),
+ );
 
-    		$this->template->load_auth('auth/create_user', $this->data);
-    	}
-    }
+   $this->template->load_auth('auth/create_user', $this->data);
+}
+}
 
     // edit a user
-    public function edit_user($id) {
-    	$this->data['title'] = $this->lang->line('edit_user_heading');
+public function edit_user($id) {
+  $this->data['title'] = $this->lang->line('edit_user_heading');
 
-    	if (!$this->ion_auth->logged_in() || (!$this->ion_auth->is_admin() && !($this->ion_auth->user()->row()->id == $id))) {
-    		redirect('auth', 'refresh');
-    	}
+  if (!$this->ion_auth->logged_in() || (!$this->ion_auth->is_admin() && !($this->ion_auth->user()->row()->id == $id))) {
+   redirect('auth', 'refresh');
+}
 
-    	$user = $this->ion_auth->user($id)->row();
-    	$groups = $this->ion_auth->groups()->result_array();
-    	$currentGroups = $this->ion_auth->get_users_groups($id)->result();
+$user = $this->ion_auth->user($id)->row();
+$groups = $this->ion_auth->groups()->result_array();
+$currentGroups = $this->ion_auth->get_users_groups($id)->result();
 
         // validate form input
-    	$this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'required');
-    	$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'required');
-    	$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'required');
-    	$this->form_validation->set_rules('company', $this->lang->line('edit_user_validation_company_label'), 'required');
+$this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'required');
+$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'required');
+$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'required');
+$this->form_validation->set_rules('company', $this->lang->line('edit_user_validation_company_label'), 'required');
 
-    	if (isset($_POST) && !empty($_POST)) {
+if (isset($_POST) && !empty($_POST)) {
             // do we have a valid request?
-    		if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id')) {
-    			show_error($this->lang->line('error_csrf'));
-    		}
+   if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id')) {
+    show_error($this->lang->line('error_csrf'));
+ }
 
             // update the password if it was posted
-    		if ($this->input->post('password')) {
-    			$this->form_validation->set_rules('password', $this->lang->line('edit_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
-    			$this->form_validation->set_rules('password_confirm', $this->lang->line('edit_user_validation_password_confirm_label'), 'required');
-    		}
+ if ($this->input->post('password')) {
+    $this->form_validation->set_rules('password', $this->lang->line('edit_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
+    $this->form_validation->set_rules('password_confirm', $this->lang->line('edit_user_validation_password_confirm_label'), 'required');
+ }
 
-    		if ($this->form_validation->run() === TRUE) {
-    			$data = array(
-    				'first_name' => $this->input->post('first_name'),
-    				'last_name' => $this->input->post('last_name'),
-    				'company' => $this->input->post('company'),
-    				'phone' => $this->input->post('phone'),
-    			);
+ if ($this->form_validation->run() === TRUE) {
+    $data = array(
+     'first_name' => $this->input->post('first_name'),
+     'last_name' => $this->input->post('last_name'),
+     'company' => $this->input->post('company'),
+     'phone' => $this->input->post('phone'),
+  );
 
                 // update the password if it was posted
-    			if ($this->input->post('password')) {
-    				$data['password'] = $this->input->post('password');
-    			}
+    if ($this->input->post('password')) {
+     $data['password'] = $this->input->post('password');
+  }
 
 
 
                 // Only allow updating groups if user is admin
-    			if ($this->ion_auth->is_admin()) {
+  if ($this->ion_auth->is_admin()) {
                     //Update the groups user belongs to
-    				$groupData = $this->input->post('groups');
+     $groupData = $this->input->post('groups');
 
-    				if (isset($groupData) && !empty($groupData)) {
+     if (isset($groupData) && !empty($groupData)) {
 
-    					$this->ion_auth->remove_from_group('', $id);
+      $this->ion_auth->remove_from_group('', $id);
 
-    					foreach ($groupData as $grp) {
-    						$this->ion_auth->add_to_group($grp, $id);
-    					}
-    				}
-    			}
+      foreach ($groupData as $grp) {
+       $this->ion_auth->add_to_group($grp, $id);
+    }
+ }
+}
 
                 // check to see if we are updating the user
-    			if ($this->ion_auth->update($user->id, $data)) {
+if ($this->ion_auth->update($user->id, $data)) {
                     // redirect them back to the admin page if admin, or to the base url if non admin
-    				$this->session->set_flashdata('message', $this->ion_auth->messages());
-    				if ($this->ion_auth->is_admin()) {
-    					redirect('auth', 'refresh');
-    				} else {
+  $this->session->set_flashdata('message', $this->ion_auth->messages());
+  if ($this->ion_auth->is_admin()) {
+   redirect('auth', 'refresh');
+} else {
                         ////redirect('/', 'refresh');
-    				}
-    			} else {
+}
+} else {
                     // redirect them back to the admin page if admin, or to the base url if non admin
-    				$this->session->set_flashdata('message', $this->ion_auth->errors());
-    				if ($this->ion_auth->is_admin()) {
-    					redirect('auth', 'refresh');
-    				} else {
+  $this->session->set_flashdata('message', $this->ion_auth->errors());
+  if ($this->ion_auth->is_admin()) {
+   redirect('auth', 'refresh');
+} else {
                         ////redirect('/', 'refresh');
-    				}
-    			}
-    		}
-    	}
+}
+}
+}
+}
 
         // display the edit user form
-    	$this->data['csrf'] = $this->_get_csrf_nonce();
+$this->data['csrf'] = $this->_get_csrf_nonce();
 
         // set the flash data error message if there is one
-    	$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
 
         // pass the user to the view
-    	$this->data['user'] = $user;
-    	$this->data['groups'] = $groups;
-    	$this->data['currentGroups'] = $currentGroups;
+$this->data['user'] = $user;
+$this->data['groups'] = $groups;
+$this->data['currentGroups'] = $currentGroups;
 
-    	$this->data['first_name'] = array(
-    		'name' => 'first_name',
-    		'id' => 'first_name',
-    		'type' => 'text',
-    		'value' => $this->form_validation->set_value('first_name', $user->first_name),
-    	);
-    	$this->data['last_name'] = array(
-    		'name' => 'last_name',
-    		'id' => 'last_name',
-    		'type' => 'text',
-    		'value' => $this->form_validation->set_value('last_name', $user->last_name),
-    	);
-    	$this->data['company'] = array(
-    		'name' => 'company',
-    		'id' => 'company',
-    		'type' => 'text',
-    		'value' => $this->form_validation->set_value('company', $user->company),
-    	);
-    	$this->data['phone'] = array(
-    		'name' => 'phone',
-    		'id' => 'phone',
-    		'type' => 'text',
-    		'value' => $this->form_validation->set_value('phone', $user->phone),
-    	);
-    	$this->data['password'] = array(
-    		'name' => 'password',
-    		'id' => 'password',
-    		'type' => 'password'
-    	);
-    	$this->data['password_confirm'] = array(
-    		'name' => 'password_confirm',
-    		'id' => 'password_confirm',
-    		'type' => 'password'
-    	);
+$this->data['first_name'] = array(
+   'name' => 'first_name',
+   'id' => 'first_name',
+   'type' => 'text',
+   'value' => $this->form_validation->set_value('first_name', $user->first_name),
+);
+$this->data['last_name'] = array(
+   'name' => 'last_name',
+   'id' => 'last_name',
+   'type' => 'text',
+   'value' => $this->form_validation->set_value('last_name', $user->last_name),
+);
+$this->data['company'] = array(
+   'name' => 'company',
+   'id' => 'company',
+   'type' => 'text',
+   'value' => $this->form_validation->set_value('company', $user->company),
+);
+$this->data['phone'] = array(
+   'name' => 'phone',
+   'id' => 'phone',
+   'type' => 'text',
+   'value' => $this->form_validation->set_value('phone', $user->phone),
+);
+$this->data['password'] = array(
+   'name' => 'password',
+   'id' => 'password',
+   'type' => 'password'
+);
+$this->data['password_confirm'] = array(
+   'name' => 'password_confirm',
+   'id' => 'password_confirm',
+   'type' => 'password'
+);
 
-    	$this->template->load_auth('auth/edit_user', $this->data);
-    }
+$this->template->load_auth('auth/edit_user', $this->data);
+}
 
     // create a new group
-    public function create_group() {
-    	$this->data['title'] = $this->lang->line('create_group_title');
+public function create_group() {
+  $this->data['title'] = $this->lang->line('create_group_title');
 
-    	if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
-    		redirect('auth', 'refresh');
-    	}
+  if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+   redirect('auth', 'refresh');
+}
 
         // validate form input
-    	$this->form_validation->set_rules('group_name', $this->lang->line('create_group_validation_name_label'), 'required|alpha_dash');
+$this->form_validation->set_rules('group_name', $this->lang->line('create_group_validation_name_label'), 'required|alpha_dash');
 
-    	if ($this->form_validation->run() == TRUE) {
-    		$new_group_id = $this->ion_auth->create_group($this->input->post('group_name'), $this->input->post('description'));
-    		if ($new_group_id) {
+if ($this->form_validation->run() == TRUE) {
+   $new_group_id = $this->ion_auth->create_group($this->input->post('group_name'), $this->input->post('description'));
+   if ($new_group_id) {
                 // check to see if we are creating the group
                 // redirect them back to the admin page
-    			$this->session->set_flashdata('message', $this->ion_auth->messages());
-    			redirect("auth", 'refresh');
-    		}
-    	} else {
+    $this->session->set_flashdata('message', $this->ion_auth->messages());
+    redirect("auth", 'refresh');
+ }
+} else {
             // display the create group form
             // set the flash data error message if there is one
-    		$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+   $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
 
-    		$this->data['group_name'] = array(
-    			'name' => 'group_name',
-    			'id' => 'group_name',
-    			'type' => 'text',
-    			'value' => $this->form_validation->set_value('group_name'),
-    		);
-    		$this->data['description'] = array(
-    			'name' => 'description',
-    			'id' => 'description',
-    			'type' => 'text',
-    			'value' => $this->form_validation->set_value('description'),
-    		);
+   $this->data['group_name'] = array(
+    'name' => 'group_name',
+    'id' => 'group_name',
+    'type' => 'text',
+    'value' => $this->form_validation->set_value('group_name'),
+ );
+   $this->data['description'] = array(
+    'name' => 'description',
+    'id' => 'description',
+    'type' => 'text',
+    'value' => $this->form_validation->set_value('description'),
+ );
 
-    		$this->template->load_auth('auth/create_group', $this->data);
-    	}
-    }
+   $this->template->load_auth('auth/create_group', $this->data);
+}
+}
 
     // edit a group
-    public function edit_group($id) {
+public function edit_group($id) {
         // bail if no group id given
-    	if (!$id || empty($id)) {
-    		redirect('auth', 'refresh');
-    	}
+  if (!$id || empty($id)) {
+   redirect('auth', 'refresh');
+}
 
-    	$this->data['title'] = $this->lang->line('edit_group_title');
+$this->data['title'] = $this->lang->line('edit_group_title');
 
-    	if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
-    		redirect('auth', 'refresh');
-    	}
+if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+   redirect('auth', 'refresh');
+}
 
-    	$group = $this->ion_auth->group($id)->row();
+$group = $this->ion_auth->group($id)->row();
 
         // validate form input
-    	$this->form_validation->set_rules('group_name', $this->lang->line('edit_group_validation_name_label'), 'required|alpha_dash');
+$this->form_validation->set_rules('group_name', $this->lang->line('edit_group_validation_name_label'), 'required|alpha_dash');
 
-    	if (isset($_POST) && !empty($_POST)) {
-    		if ($this->form_validation->run() === TRUE) {
-    			$group_update = $this->ion_auth->update_group($id, $_POST['group_name'], $_POST['group_description']);
+if (isset($_POST) && !empty($_POST)) {
+   if ($this->form_validation->run() === TRUE) {
+    $group_update = $this->ion_auth->update_group($id, $_POST['group_name'], $_POST['group_description']);
 
-    			if ($group_update) {
-    				$this->session->set_flashdata('message', $this->lang->line('edit_group_saved'));
-    			} else {
-    				$this->session->set_flashdata('message', $this->ion_auth->errors());
-    			}
-    			redirect("auth", 'refresh');
-    		}
-    	}
+    if ($group_update) {
+     $this->session->set_flashdata('message', $this->lang->line('edit_group_saved'));
+  } else {
+     $this->session->set_flashdata('message', $this->ion_auth->errors());
+  }
+  redirect("auth", 'refresh');
+}
+}
 
         // set the flash data error message if there is one
-    	$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
 
         // pass the user to the view
-    	$this->data['group'] = $group;
+$this->data['group'] = $group;
 
-    	$readonly = $this->config->item('admin_group', 'ion_auth') === $group->name ? 'readonly' : '';
+$readonly = $this->config->item('admin_group', 'ion_auth') === $group->name ? 'readonly' : '';
 
-    	$this->data['group_name'] = array(
-    		'name' => 'group_name',
-    		'id' => 'group_name',
-    		'type' => 'text',
-    		'value' => $this->form_validation->set_value('group_name', $group->name),
-    		$readonly => $readonly,
-    	);
-    	$this->data['group_description'] = array(
-    		'name' => 'group_description',
-    		'id' => 'group_description',
-    		'type' => 'text',
-    		'value' => $this->form_validation->set_value('group_description', $group->description),
-    	);
+$this->data['group_name'] = array(
+   'name' => 'group_name',
+   'id' => 'group_name',
+   'type' => 'text',
+   'value' => $this->form_validation->set_value('group_name', $group->name),
+   $readonly => $readonly,
+);
+$this->data['group_description'] = array(
+   'name' => 'group_description',
+   'id' => 'group_description',
+   'type' => 'text',
+   'value' => $this->form_validation->set_value('group_description', $group->description),
+);
 
-    	$this->template->load_auth('auth/edit_group', $this->data);
-    }
+$this->template->load_auth('auth/edit_group', $this->data);
+}
 
 
    //function 
-    public function _get_csrf_nonce() {
-    	$this->load->helper('string');
-    	$key = random_string('alnum', 8);
-    	$value = random_string('alnum', 20);
-    	$this->session->set_flashdata('csrfkey', $key);
-    	$this->session->set_flashdata('csrfvalue', $value);
+public function _get_csrf_nonce() {
+  $this->load->helper('string');
+  $key = random_string('alnum', 8);
+  $value = random_string('alnum', 20);
+  $this->session->set_flashdata('csrfkey', $key);
+  $this->session->set_flashdata('csrfvalue', $value);
 
-    	return array($key => $value);
-    }
+  return array($key => $value);
+}
 
-    public function _valid_csrf_nonce() {
-    	if ($this->input->post($this->session->flashdata('csrfkey')) !== FALSE &&
-    		$this->input->post($this->session->flashdata('csrfkey')) == $this->session->flashdata('csrfvalue')) {
-    		return TRUE;
-    } else {
-    	return FALSE;
-    }
+public function _valid_csrf_nonce() {
+  if ($this->input->post($this->session->flashdata('csrfkey')) !== FALSE &&
+   $this->input->post($this->session->flashdata('csrfkey')) == $this->session->flashdata('csrfvalue')) {
+   return TRUE;
+} else {
+  return FALSE;
+}
 }
 
 

@@ -662,6 +662,23 @@
                     $this->load->view('subscriptions');
                   }
 
+                  //monthly forecast
+                  else if($change == 127){
+                    $this->load->view('monthly_forecast_list');
+                  }else if($change == 128){
+                    $this->load->view('monthly_forecast_form');
+                  }else if($change == 129){
+                    $this->load->view('monthly_read');
+                  }else if($change == 130){
+                    $this->load->view('monthly_advisories_form');
+                  }else if($change == 131){
+                    $this->load->view('monthly_advisories_list');
+                  }else if($change == 132){
+                    $this->load->view('impacts_list');
+                  }else if($change == 133){
+                    $this->load->view('monthly_impacts_form');
+                  }
+
                 ?>
                 
             </div><!-- /.content-wrapper -->

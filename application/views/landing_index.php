@@ -167,14 +167,14 @@ for ($i=30; $i >=0 ; $i--) {
                 <div class="info-box-content">
                        <?php
 
-                              $dd = "SELECT * FROM totalview";
-                              $ddd = $this->db->query($dd);
-                              foreach ($ddd->result_array() as $web_users) {
-                                $count_web_users = $web_users['totalvisit'];
-                              }
+                              // $dd = "SELECT * FROM totalview";
+                              // $ddd = $this->db->query($dd);
+                              // foreach ($ddd->result_array() as $web_users) {
+                              //   $count_web_users = $web_users['totalvisit'];
+                              // }
                                 ?>
                     <span class="info-box-text">Web Visits</span>
-                    <span class="info-box-number"><?php echo $count_web_users; ?></span>
+                    <span class="info-box-number"><?php //echo $count_web_users; ?></span>
                 </div>
                 <!-- /.info-box-content -->
             </div>

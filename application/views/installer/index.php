@@ -26,7 +26,7 @@
             <div class="form-group">
               <label for="exampleInputPassword1">System user Email</label>
               <!--  <input type="text" class="form-input" name="name" id="name" placeholder="System user password"/> -->
-              <input type="text" name="system_email" class="form-input" placeholder="Syetme User  Email" required>
+              <input type="text" name="system_email" class="form-input" placeholder="System User  Email eg admin@wids.com" required>
     
             </div>
 
@@ -39,19 +39,19 @@
             <div class="form-group">
 
              <label for="exampleInputEmail1">Database Name</label>
-             <input type="text" name="database_name" class="form-input" placeholder="Database name" required>
+             <input type="text" name="database_name" class="form-input" placeholder="Database name eg wids_uganda" required>
            </div>
            <div class="form-group">
 
             <label for="exampleInputEmail1">Database username:</label>
-            <input type="text" name="database_username" class="form-input"  placeholder="Database username" required>
+            <input type="text" name="database_username" class="form-input"  placeholder="Database username eg root" required>
 
           </div>
 
           <div class="form-group">
 
             <label for="exampleInputPassword1">Database Password:</label>
-            <input type="password" name="database_password" class="form-input" id="exampleInputPassword1" placeholder="Database password">
+            <input type="password" name="database_password" class="form-input" id="exampleInputPassword1" placeholder="Database password eg root1234">
             <input type='hidden' name="step" value="1">
           </div>
 
@@ -59,15 +59,13 @@
 
             <label for="exampleInputEmail1">Select Country for which you are installing the system:</label><br>
             <select class="form-input" id="country" name="country" required>
-              <option value="Nigeria">Nigeria</option>
-              <option value="Ghana">Ghana</option>
-              <option value="South Sudan">South Sudan</option>
+           
               <option value="Uganda">Uganda</option>
             </select>
           </div>
 
           <div class="form-group">
-            <input type="submit" name="submit" id="submit" class="form-submit" value="SUBMIT"/>
+            <input type="submit" name="submit" id="submit" class="form-submit" value="INSTALL NOW"/>
           </div>
         </form>
         

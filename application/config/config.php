@@ -23,10 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-//$config['base_url'] = 'http://41.93.45.109/dissemination/';
-//$config['base_url'] = 'http://'.$_SERVER['SERVER_ADDR'].'/wids/wids';
-//$config['base_url'] = 'http://localhost/dissemination/';
-$config['base_url'] = 'http://localhost/wids-web';
+$config['base_url'] = 'http://localhost/wids';
 
 /*
 |--------------------------------------------------------------------------
