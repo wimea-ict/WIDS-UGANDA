@@ -41,9 +41,11 @@ class Victoria extends CI_Controller
     public function saveforecast(){
         $f_date = strtotime($this->input->post('date1',TRUE));
         $iss_date = strtotime($this->input->post('date',TRUE));
-        $filename = $_FILES['img']['name'];
-        $dir = 'assets/frameworks/adminlte/img/'.$filename;
-        move_uploaded_file($_FILES['img']['tmp_name'], $dir);
+        // $filename = $_FILES['img']['name'];
+        // $dir = 'assets/frameworks/adminlte/img/'.$filename;
+        // move_uploaded_file($_FILES['img']['tmp_name'], $dir);
+
+        $filename = 'mng_28_08_2020.PNG';
 
         $datatoinsert = array(
              'language_id'  => $this->input->post('language',TRUE),

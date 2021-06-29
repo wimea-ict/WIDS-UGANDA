@@ -19,12 +19,8 @@ class Impacts extends CI_Controller
    public function index()
     { 
 	  $impacts = $this->Impacts_model->get_all();
-	  $data = array(
-            'impacts_data' => $impacts,
-			'change' => 69
-        );
-
-        $this->load->view('template', $data);
+	  $data = array('impacts_data' => $impacts,'change' => 69);
+      $this->load->view('template', $data);
 	
 	}
 	
@@ -73,16 +69,12 @@ public function word()
             $this->Impacts_model->update($id,$datatoinsert);
         } else {
 
-            $datatoinsert1 = array(
-       		 'description' => $this->input->post('description',TRUE));
-
-           $this->Impacts_model->insert($datatoinsert1);
+            $datatoinsert1 = array('description' => $this->input->post('description',TRUE));
+            $this->Impacts_model->insert($datatoinsert1);
            
         }
-		//=====================================================
 		
         $this->session->set_flashdata('message','<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Impacts record added Successfully!.</div>');
-
         redirect('index.php/Impacts');  
 	   
 	 }
@@ -91,7 +83,6 @@ public function word()
 	 public function update($id=NULL) 
      {
 	    $row = $this->Impacts_model->get_by_id($id);
-	 
 	    if ($row) { //if there is some data
             $data['change'] = 70;//referencing the form view
 			$data['impacts_data']= $row;
@@ -101,7 +92,6 @@ public function word()
         } else {
 		  $data = array(
 		      'change' => 69,
-		//'forecast_id' => $row->forecast_id,
 	    );
             $this->session->set_flashdata('message', '<font color="red" size="5">Record Not Found</font>');
            $this->load->view('template', $data);
@@ -112,10 +102,7 @@ public function word()
      	    $this->Impacts_model->delete($id);
      	 //if there is some data
      	    $impacts = $this->Impacts_model->get_all();
-            
             $this->session->set_flashdata('message','<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Impacts record deleted Successfully!.</div>');
-
-
         redirect('index.php/Impacts');		
 		
 	}

@@ -80,15 +80,37 @@ class Daily_forecast extends CI_Controller
         $this->load->view('template', $data);
     }
 
+    public function remaining_units()
+    {
+        
+        $c = curl_init();
+$apikey = '4fzssxnbw3zm'; // from https://pdftables.com/api
 
+curl_setopt($c, CURLOPT_URL, "https://pdftables.com/api/remaining?key=$apikey");
+curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($c, CURLOPT_FAILONERROR,true);
+curl_setopt($c, CURLOPT_ENCODING, "gzip,deflate");
+
+$result = curl_exec($c);
+//print($result);
+if (curl_errno($c) > 0) {
+    print('Error calling PDFTables: '.curl_error($c).PHP_EOL);
+} 
+curl_close($c);
+return $result;
+
+}
     public function pdf_uploader()
     {
+
         $data['change'] = 105;
+        $data['remaining_units'] = $this->remaining_units();
         $this->load->view('template', $data);
     }
      public function pdf_uploader24()
     {
         $data['change'] = 107;
+            $data['remaining_units'] = $this->remaining_units();
         $this->load->view('template', $data);
     }
 
@@ -495,8 +517,7 @@ function saveforecastdata(){
     $data = array(
                 'mean_temp' => $this->input->post('mean_temp',TRUE),
                 'max_temp' => $this->input->post('max_temp',TRUE),
-                'min_temp' => $this->input->post('min_temp',TRUE),
-                'wind' => $this->input->post('wind',TRUE),              
+                'min_temp' => $this->input->post('min_temp',TRUE),            
                 'wind_direction' => $this->input->post('wind_direction',TRUE),
                 'wind_strength' => $this->input->post('wind_strength',TRUE),
                 'region_id' => $this->input->post('region',TRUE),
@@ -535,7 +556,7 @@ function saveforecastdata(){
                 'date' => $date_time,
                 'time' => $this->input->post('time',TRUE),
                 'language_id' => $this->input->post('language',TRUE),
-                'dutyforecaster' => $this->input->post('dutyforecaster',TRUE),
+                'dutyforecaster' => $_SESSION['first_name'].' '.$_SESSION['last_name'],
                 'validitytime' => $this->input->post('validitytime',TRUE),
                 'issuedate' => $date_issue              
                 );

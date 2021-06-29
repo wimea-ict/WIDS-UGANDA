@@ -5,22 +5,20 @@ if (!defined('BASEPATH'))
 
 class Advisory extends CI_Controller
 {
-
-
     function __construct()
     {
         parent::__construct();
-	$this->config->set_item('theme',$this->config->item('country'));
+        $this->config->set_item('theme',$this->config->item('country'));
         $this->load->model('Advisory_model');
-		 $this->load->model('Major_model');
-         $this->load->model('Minor_model');
-         $this->load->model('Product_model');
-		  $this->load->model('Region_model');
-            $this->load->model('Sub_region_model');
-           $this->load->model('Decadal_forecast_model');
-            $this->load->model('Daily_forecast_model'); 
+        $this->load->model('Major_model');
+        $this->load->model('Minor_model');
+        $this->load->model('Product_model');
+        $this->load->model('Region_model');
+        $this->load->model('Sub_region_model');
+        $this->load->model('Decadal_forecast_model');
+        $this->load->model('Daily_forecast_model'); 
         $this->load->library('form_validation');
-        $this->load->library('session');//Major_model		
+        $this->load->library('session');//Major_model       
     }
 
     public function test(){
@@ -32,47 +30,44 @@ class Advisory extends CI_Controller
     {
         $id= $this->uri->segment(3);
         $_SESSION['parent_id'] = $id;
-            $advisory = $this->Advisory_model->get_all($id);
+        $advisory = $this->Advisory_model->get_all($id);
         $data = array(
             'change' => 5,
             'forecast_id' => $id,
             'advisory_data' => $advisory
-        );
-
+            );
         $this->load->view('template', $data);
     }
 
     // Replace whole function
     public function read()
     {
-    //echo $id;
-    //exit;
         $id = $this->uri->segment(3);
     //change messageluganda
-    $data = array(
-        'change' => 8,
-        'advisory_read' => $this->Advisory_model->get_by_id_replaced($id),
-        'rem' => "show"
-    );
+        $data = array(
+            'change' => 8,
+            'advisory_read' => $this->Advisory_model->get_by_id_replaced($id),
+            'rem' => "show"
+           );
         $this->load->view('template', $data);
     }
 
     public function daily()
     {
-    $data = array(
+        $data = array(
             'change' => 84,
             'get_all_advisory' => $this->Daily_forecast_model->get_all_advisory()
-        );
+           );
 
         $this->load->view('template', $data);
     }
 
     public function daily1()
     {
-    $data = array(
+        $data = array(
             'change' => 84,
             'get_all_advisory' => $this->Daily_forecast_model->get_all_advisory($this->uri->segment(3))
-        );
+           );
 
         $this->load->view('template', $data);
     }
@@ -80,9 +75,9 @@ class Advisory extends CI_Controller
     {
         $selected = $this->input->post('selected_sector');
         $sub_region = $this->Sub_region_model->sub_regions_used();
-       $data = array(
-           'selected' =>$selected ,
-           'error' => '',
+        $data = array(
+            'selected' =>$selected ,
+            'error' => '',
             'button' => 'Submit',
             'id' => set_value('id'),
             'type' => set_value('type'),
@@ -91,41 +86,43 @@ class Advisory extends CI_Controller
             'audio' => set_value('audio'),
             'sub_region_data' =>  $sub_region,
             'change' => 6
-    );
-       $data['languages'] = $this->Product_model->get_langs()->result(); 
-    $data['category'] = $this->Product_model->get_category()->result();
-	$data['region_data']=  $sub_region;
-	$data['sector_data']= $this->Minor_model->get_categories()->result();
-    $data['forecast_id']= $this->uri->segment(3);
+           );
+        $data['languages'] = $this->Product_model->get_langs()->result(); 
+        $data['category'] = $this->Product_model->get_category()->result();
+        $data['region_data']=  $sub_region;
+        $data['sector_data']= $this->Minor_model->get_categories()->result();
+        $data['forecast_id']= $this->uri->segment(3);
 
-    $data['sub_regions'] = $this->Advisory_model->get_regions();
+        $data['sub_regions'] = $this->Advisory_model->get_regions();
     //print_r($data);exit();
-    $this->load->view('template', $data);
-    }
-    
-        public function dekadal()
-    {
-    
-    $data = array(
-            'change' => 82,
-            'get_all_advisory' => $this->Decadal_forecast_model->get_all_advisory()
-        );
-
         $this->load->view('template', $data);
     }
-	
-	 // DEKADAL WORD 
+
+    public function get_advisory(){
+        $category_id = $this->input->post('id',TRUE);
+        $data = $this->Advisory_model->get_advisory($category_id);
+        echo json_encode($data);
+    }
+    
+    public function dekadal()
+    {
+
+        $data = array(
+            'change' => 82,
+            'get_all_advisory' => $this->Decadal_forecast_model->get_all_advisory()
+           );
+        $this->load->view('template', $data);
+    }
+
+     // DEKADAL WORD 
     public function dekadal_advisory_word()
     {
         header("Content-type: application/vnd.ms-word");
         header("Content-Disposition: attachment;Filename=ward.doc");
-
         $data = array(
-            
             'get_all_advisory' => $this->Decadal_forecast_model->get_all_advisory(),
             'start' => 0
-        );
-
+           );
         $this->load->view('advisory_dekadal_doc',$data);
     }
 
@@ -134,7 +131,7 @@ class Advisory extends CI_Controller
         $data = array(
             'get_all_advisory' => $this->Decadal_forecast_model->get_all_advisory(),
             'start' => 0
-        );
+           );
 
         ini_set('memory_limit', '10G');
         $html = $this->load->view('advisory_dekadal_doc', $data, true);
@@ -144,60 +141,59 @@ class Advisory extends CI_Controller
         $pdf->Output('advisory.pdf', 'D');
     }
 
-	
+
 
 
 
     //========get selected sector with ajax-------------
- 
-
     function get_sub_category(){
         $category_id = $this->input->post('id',TRUE);
         $data = $this->product_model->get_sub_category($category_id)->result();
         echo json_encode($data);
     }
+
     function get_sub_category1(){
         $category_id = $this->input->post('id',TRUE);
         $data = $this->Product_model->get_sub_category($category_id)->result();
         echo json_encode($data);
     }
     //-------------------------------------------------
-  
+
     public function create_action()
     {
-        
-                // Loop to store and display values of individual checked checkbox.
-            $datatoinsert = array(
-             'forecast_id' => $this->input->post('forecast_id',TRUE),
-             'advice' => "Seasonal",
-             'sector' => $this->input->post('sector_selected',TRUE),
-             'message_summary' => $this->input->post('summary',TRUE),
-             'region_id' => $this->input->post('region_id',TRUE)
-        );
 
-         $exists = $this->Advisory_model->check_existence($this->input->post('forecast_id',TRUE), $this->input->post('sector_selected',TRUE), $this->input->post('region_id',TRUE));
-         $times = 0;
-         foreach ($exists as $ke) {
-             $times++;
-         }
-         if($times>0){
+    // Loop to store and display values of individual checked checkbox.
+        $datatoinsert = array(
+            'forecast_id' => $this->input->post('forecast_id',TRUE),
+            'advice' => "Seasonal",
+            'sector' => $this->input->post('sector_selected',TRUE),
+            'message_summary' => $this->input->post('summary',TRUE),
+            'region_id' => $this->input->post('region_id',TRUE)
+           );
 
-             $this->session->set_flashdata('message','<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>The advisory already exists for the selected region!</div>');
-           
-         }else{
+        $exists = $this->Advisory_model->check_existence($this->input->post('forecast_id',TRUE), $this->input->post('sector_selected',TRUE), $this->input->post('region_id',TRUE));
+        $times = 0;
+        foreach ($exists as $ke) {
+            $times++;
+        }
+        if($times>0){
+
+            $this->session->set_flashdata('message','<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>The advisory already exists for the selected region!</div>');
+
+        }else{
             $this->session->set_flashdata('message','<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Advisory uploaded Successfully!</div>');
             $this->Advisory_model->insert($datatoinsert);
-         }
-        
-   $advisory = $this->Advisory_model->get_all($_SESSION['parent_id']);
+        }
+
+        $advisory = $this->Advisory_model->get_all($_SESSION['parent_id']);
     //print_r($advisory); exit();
-       $data = array(
+        $data = array(
             'change' => 5,
             'forecast_id' => $id,
             'advisory_data' => $advisory
-        );
-       redirect("index.php/Advisory/index/".$_SESSION['parent_id']);
-        
+           );
+        redirect("index.php/Advisory/index/".$_SESSION['parent_id']);
+
     }
 
     public function update($id)
@@ -211,7 +207,7 @@ class Advisory extends CI_Controller
             if($english!=NULL)
                 $msg = str_replace("<br/>", "." ,$english );
             elseif($luganda!=NULL)
-            $msg = str_replace("<br/>", "." ,$luganda);
+                $msg = str_replace("<br/>", "." ,$luganda);
             $data = array(
                 'error' => '',
                 'button' => 'Update',
@@ -224,7 +220,7 @@ class Advisory extends CI_Controller
                 'msg' => set_value('msg', $msg),
                 'audio' => set_value('audio', $row->audio),
                 'change' => 9,
-	    );
+              );
             $this->load->view('template', $data);
         } else {
             $this->session->set_flashdata('message', '<font color="red" size="5">Record Not Found</font>');
@@ -265,7 +261,7 @@ class Advisory extends CI_Controller
                             'msg' => set_value('msg', $msg),
                             'audio' => set_value('audio', $row->audio),
                             'change' => 9,
-                        );
+                           );
                         $upload = "not_OK";
                         $this->load->view('template', $data);
                     } else {
@@ -297,30 +293,25 @@ class Advisory extends CI_Controller
             if ($upload == "OK") {
                 $all = $this->input->post('msg', TRUE);
                 $all = str_replace(".", ".<br/>", $all);
-
                 $all .= "<br>";
                 if (!empty($_POST['check_list'])) {
-
                     // Loop to store and display values of individual checked checkbox.
                     foreach ($_POST['check_list'] as $selected) {
                         $all .= $selected;
                     }
-
                 }
-
-
                 $data = array(
                     'msg' => $all,
                     'file1' => $image,
-                );
+                 );
 
                 $this->Advisory_model->update($this->input->post('id', TRUE), $data);
-                 $this->session->set_flashdata('message','<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Record Updated Successfully!</div>');
+                $this->session->set_flashdata('message','<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Record Updated Successfully!</div>');
                 $advisory = $this->Advisory_model->get_all();
                 $data = array(
                     'change' => 5,
                     'advisory_data' => $advisory
-                );
+                 );
                 $this->load->view('template', $data);
             }
         }
@@ -331,15 +322,15 @@ class Advisory extends CI_Controller
     public function delete($id)
     {
         $this->Advisory_model->delete($id);
-        
+
         $advisory = $this->Advisory_model->get_all($_SESSION['parent_id']);
-       $data = array(
+        $data = array(
             'forecast_id' => $id,
             'advisory_data' => $advisory
-        );
+           );
         $this->session->set_flashdata('message','<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Advisory deleted Successfully!</div>');
-         redirect("index.php/Advisory/".$_SESSION['parent_id']);
- 
+        redirect("index.php/Advisory/".$_SESSION['parent_id']);
+
     }
 
 
@@ -352,16 +343,13 @@ class Advisory extends CI_Controller
         if (file_exists($pp)) {
             unlink($pp);
         }
-        //else{
-        // echo "path not found";
-        //}
     }
 
-   public function _rules()
+    public function _rules()
     {
-	$this->form_validation->set_rules('advisory', 'Advisory message', 'trim|required');
-	$this->form_validation->set_rules('id', 'id', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('advisory', 'Advisory message', 'trim|required');
+        $this->form_validation->set_rules('id', 'id', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
     public function excel()
@@ -386,16 +374,13 @@ class Advisory extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Ward Name");
+        xlsWriteLabel($tablehead, $kolomhead++, "Ward Name");
 
-	foreach ($this->Ward_model->get_all() as $data) {
+        foreach ($this->Ward_model->get_all() as $data) {
             $kolombody = 0;
-
-            //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->ward_name);
-
-	    $tablebody++;
+            xlsWriteLabel($tablebody, $kolombody++, $data->ward_name);
+            $tablebody++;
             $nourut++;
         }
 
@@ -407,12 +392,10 @@ class Advisory extends CI_Controller
     {
         header("Content-type: application/vnd.ms-word");
         header("Content-Disposition: attachment;Filename=Seasonal_advisory.doc");
-
         $data = array(
             'advisory_data' => $this->Advisory_model->get_all(),
             'start' => 0
-        );
-
+           );
         $this->load->view('Seasonal Advisory_doc',$data);
     }
     public function pdf()
@@ -420,7 +403,7 @@ class Advisory extends CI_Controller
         $data = array(
             'Advisory_data' => $this->Advisory_model->get_all(),
             'start' => 0
-        );
+           );
 
         ini_set('memory_limit', '10G');
         $html = $this->load->view('advisory_pdf', $data, true);
@@ -429,19 +412,16 @@ class Advisory extends CI_Controller
         $pdf->WriteHTML($html);
         $pdf->Output('Seasonal Advisory.pdf', 'D');
     }
-	
-	
-	 public function dailyadvisory_word()
+
+
+    public function dailyadvisory_word()
     {
         header("Content-type: application/vnd.ms-word");
         header("Content-Disposition: attachment;Filename=dailyadvisory.doc");
-
         $data = array(
-            
             'get_all_advisory' => $this->Daily_forecast_model->get_all_advisory(),
             'start' => 0
-        );
-
+           );
         $this->load->view('daily_advisory',$data);
     }
 
@@ -450,8 +430,7 @@ class Advisory extends CI_Controller
         $data = array(
             'get_all_advisory' => $this->Daily_forecast_model->get_all_advisory(),
             'start' => 0
-        );
-
+           );
         ini_set('memory_limit', '10G');
         $html = $this->load->view('daily_advisory', $data, true);
         $this->load->library('pdf');
@@ -460,12 +439,6 @@ class Advisory extends CI_Controller
         $pdf->Output('dailyadvisory.pdf', 'D');
     }
 
-	
-	
-	
-	
-	
-	
     public function do_upload()
     {
         $config['upload_path'] = './uploads/food_agric/';
@@ -473,10 +446,8 @@ class Advisory extends CI_Controller
         $config['max_size'] = 500000;
         $config['max_width'] = 5000000;
         $config['max_height'] = 5000000;
-
         $this->load->library('upload', $config);
     }
 
 }
 
-/* End of file Ward.php */

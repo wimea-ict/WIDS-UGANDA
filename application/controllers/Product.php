@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
- 
+
 class Product extends CI_Controller {
     function __construct(){
         parent::__construct();
@@ -8,12 +8,12 @@ class Product extends CI_Controller {
         $this->load->model('Minor_model','minor_model');
         // $this->load->model('Decadal_forecast_model');
     }
- 
+    
     function index(){
         $data['category'] = $this->product_model->get_category()->result();
         $this->load->view('product_view', $data);
     }
- 
+    
     function get_sub_category(){
         $category_id = $this->input->post('id',TRUE);
         $data = $this->product_model->get_sub_category($category_id)->result();
@@ -30,15 +30,15 @@ class Product extends CI_Controller {
         $data = $this->product_model->get_langs()->result();
     }
 
-public function viewajax()
+    public function viewajax()
     {
-                $date_from = $this->input->post('date_from',TRUE);
-                $date_to = $this->input->post('date_to',TRUE);
+        $date_from = $this->input->post('date_from',TRUE);
+        $date_to = $this->input->post('date_to',TRUE);
         $data = $this->product_model->display_records($date_from, $date_to )->result();
         echo json_encode($data);
     }
 
-    function get_sub_region(){
+    function gets_sub_region(){
         $category_id = $this->input->post('id',TRUE);
         $data = $this->product_model->get_sub_regions($category_id)->result();
         echo json_encode($data);
@@ -63,7 +63,7 @@ public function viewajax()
 
 
     function log_userfeedback(){
-    $datatoinsert = array(
+        $datatoinsert = array(
 
             'city_id' => $this->input->post('division', TRUE),
             'sector' => $this->input->post('category', TRUE),
@@ -72,8 +72,8 @@ public function viewajax()
             'timeliness' => $this->input->post('timeliness',TRUE),
             'generalComment' => $this->input->post('generalComment', TRUE),
             'contact' => $this->input->post('contact', TRUE)
-        
-        );
+            
+            );
             // $city_id = $this->input->post('division', TRUE);
             // $sector = $this->input->post('category', TRUE);
             // $accuracy = $this->input->post('accuracy',TRUE);
@@ -85,8 +85,8 @@ public function viewajax()
 
        // $query ="INSERT INTO `user_feedback`(`city_id`, `sector`, `accuracy`, `applicability`, `timeliness`, `generalComment`, `contact`) VALUES ('$city_id','$sector','$accuracy','$applicability','$timeliness','$generalComment','$contact')";
         // $this->db->query($query);
-      
-    $this->product_model->logfeedback($datatoinsert);
+        
+        $this->product_model->logfeedback($datatoinsert);
     // $this->load->view("request_service.php");
     }
     // function get_sub_category(){
