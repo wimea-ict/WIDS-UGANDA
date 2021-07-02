@@ -2,8 +2,8 @@
 
 <section class="content-header">
                     <h1>
-                        Daily
-                        <small>Single Forecast form</small>
+                        
+                        <small>Single Daily Forecast form</small>
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="<?php echo base_url() ?>index.php/Landing/index"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -36,36 +36,12 @@
 				   
 					}?>
                </select> </td>
-        <!-- </tr>
-         <tr><td> <?php //echo $division_type; ?>:</td>
-                <td colspan="4"> <select name="division" class="form-control">     -->            
-                         <?php
-					 // /if(isset($division_data)){
-						//   foreach($division_data as $fd){
-							  ?><!-- 
-                              <option value="<?php //echo $fd['id']; ?>"><?php //echo $fd['division_name']; ?></option> -->
-                              <?php 							  
-						// }
-						// }					
-					?>    
-             <!--  </select> </td>
-            </tr>   --> 
+      
         <tr>
-       		<td>Mean Temp <?php echo form_error('mean_temp') ?></td>
+       		<td>Temperature <?php echo form_error('mean_temp') ?></td>
             <td><input type="number" class="form-control" name="mean_temp" id="mean_temp" placeholder="Mean Temp" value="<?php echo $mean_temp; ?>" />
         </td>
-	     <tr><td>Max Temp <?php echo form_error('max_temp') ?></td>
-            <td><input type="number" class="form-control" name="max_temp" id="max_temp" placeholder="Max Temp" value="<?php echo $max_temp; ?>" />
-        </td>
-        </tr>
-	    <tr><td>Min Temp <?php echo form_error('min_temp') ?></td>
-            <td><input type="number" class="form-control" name="min_temp" id="min_temp" placeholder="Min Temp" value="<?php echo $min_temp; ?>" />
-        </td>
-        </tr>
-	   
-	    <tr><td>Wind speed <?php echo form_error('wind') ?></td>
-            <td><input type="text" class="form-control" name="wind" id="wind" placeholder="Wind" value="<?php echo $wind; ?>" />
-        </td>
+	
         <tr><td>Wind direction <?php echo form_error('wind_direction') ?></td>
             <td><select name="wind_direction" class="form-control">
                  <option value="Easterly">Easterly</option>
@@ -97,7 +73,7 @@
         </td>
      </tr>    
 	 <tr>
-     	<td colspan='2'><input type="submit" class="btn btn-primary" value="submit">
+     	<td colspan='2'><input type="submit" class="btn btn-primary" value="Submit">
 	    <input type="hidden" name="forecast_id" value="<?php echo $forecast_id; ?>"/>
         </td>
      </tr>

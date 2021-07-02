@@ -26,7 +26,7 @@
             ++$district_counter;
         }
         ?>
-        <h3>OVERALL USSD DISTRICT COVERAGE SINCE JANUARY, 2020 (<?php echo $district_counter?> OUT OF 135 DISTRICTS IN DATABASE)</h3>
+        <h3>OVERALL USSD DISTRICT COVERAGE SINCE JANUARY, 2020 </h3>
         <h4>Extracted on: <?php echo date('Y-m-d H:i:s');?></h4>
 
         <table class="word-table" style="margin-bottom: 10px">

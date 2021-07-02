@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-$past_120 = date('Y-m-d', strtotime('-120 days'));
+$past_30 = date('Y-m-d', strtotime('-30 days'));
 
 ?>
 
@@ -10,25 +10,21 @@ window.onload = function() {
 var chart = new CanvasJS.Chart("chartContainer", {
     animationEnabled: true,
     title:{
-        text: "USSD Sector Requests"
+        text: "Unique Web Requests"
     },
     axisY: {
         title: "Number of requests",
         includeZero: true
     },
-    data: [
-        {
+    data: [{
         type: "bar",
         yValueFormatString: "#,###",
         indexLabel: "{y}",
         indexLabelPlacement: "inside",
         indexLabelFontWeight: "bolder",
         indexLabelFontColor: "black",
-        dataPoints: <?php echo json_encode($sectors_data, JSON_NUMERIC_CHECK); ?>,
-
-        }
-        ],
-
+        dataPoints: <?php echo json_encode($graph_data, JSON_NUMERIC_CHECK); ?>
+    }]
 });
 chart.render();
  
@@ -50,7 +46,7 @@ chart.render();
         <!-- Main content -->
         <section class="content-header">
                     <h1>
-                       <small>USSD Sector Requests Report</small>
+                       <small>Web Requests Report</small>
                     </h1>
                     <ol class="breadcrumb">
                       <?php $this->session->set_flashdata('message', ''); ?>
@@ -71,9 +67,62 @@ chart.render();
                             </div>
                         </div>
                         <div class="box-body chart-responsive">
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <h5>Daily Requests: <?=$daily_count?></h5>
+                                </div>
+                                <div class="col-md-6">
+                                     <h5>Seasonal Requests: <?=$seasonal_count?></h5>
+                                </div>
+                            </div>
                            
                         </div>
-                        <div id="chartContainer" style="height: 400%; width: 100%;"></div>
+                        <div id="chartContainer" style="height: 200px; width: 100%;"></div><br>
+                        <hr>
+                        <h4><center><b>Web Visits Table</b></center></h4>
+
+
+
+
+                        <div class="table-responsive"><table class="table table-bordered " id="mytable">
+            <thead>
+                <tr>
+                    <th width="40px">No</th>    
+                    <th>Region </th>
+                    <th>City</th>
+                    <th>Public Ip</th>
+                    <th>Page Visited</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+        <tbody>
+            <?php
+            $start = 0;
+        //print_r($season_data); exit;
+            foreach ($visits_data as $row)
+            { ?>
+                <tr>
+                    <td><?php   echo ++$start; ?></td>
+                    <td><?php   echo $row['region']; ?></td>
+                    <td><?php   echo $row['city']; ?></td>
+                    <td><?php   echo $row['userip']; ?></td>
+                    <td><?php   echo $row['page']; ?></td>
+                     <td><?php   echo $row['date_visited']; ?></td>
+                 
+            </tr>
+                <?php
+            }
+            ?>
+            </tbody>
+        </table></div>
+        <script src="<?php echo base_url('assets/frameworks/jquery/jquery.min.js') ?>"></script>
+        <script src="<?php echo base_url('assets/plugins/datatables/jquery.dataTables.js') ?>"></script>
+        <script src="<?php echo base_url('assets/plugins/datatables/dataTables.bootstrap.js') ?>"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#mytable").dataTable();
+            });
+        </script>
                         <!-- /.box-body -->
                     </div>
         <!-- /.content -->

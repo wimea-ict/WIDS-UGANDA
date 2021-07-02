@@ -65,7 +65,7 @@
                 <td> <?php echo combo_function('cat_id4','weather_category','cat_name','id','cat_id')?></td>
          </tr> 
         <tr>
-       		<td>Mean Temp <?php echo form_error('mean_temp') ?></td>
+       		<td>Temperature <?php echo form_error('mean_temp') ?></td>
             <td><input type="number" required class="form-control" name="mean_temp1" id="mean_temp" placeholder="Mean Temp" value="<?php echo $mean_temp; ?>" />
             </td>
             <td><input type="number" required class="form-control" name="mean_temp2" id="mean_temp" placeholder="Mean Temp" value="<?php echo $mean_temp; ?>" />
@@ -169,7 +169,7 @@
 
          </tr>
 	 <tr>
-     	<td colspan='2'><input type="submit" class="btn btn-primary" value="SUBMIT">
+     	<td colspan='2'><input type="submit" class="btn btn-primary" value="Submit">
             <a class="btn btn-default" href="<?php echo base_url("index.php/daily_forecast/daily_forecast_data/".$this->uri->segment(3));?>">Cancel</a>
 	    <input type="hidden" name="forecast_id" value="<?php echo $forecast_id; ?>"/>
         </td>

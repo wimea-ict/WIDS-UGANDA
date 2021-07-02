@@ -82,10 +82,10 @@
            
            </tr>
 
-           <tr>
+          <!--  <tr>
              <td>Forecast Map</td>
              <td><input type="file" name="img" required></td>
-           </tr>
+           </tr> -->
 
 	   
            <tr>

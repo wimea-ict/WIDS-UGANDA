@@ -39,7 +39,7 @@
             </tr>
 
        <tr>
-       <td>Mean Temp <?php echo form_error('mean_temp') ?></td>
+       <td>Temperature <?php echo form_error('mean_temp') ?></td>
 
             <td><input type="number" class="form-control" name="mean_temp1" id="mean_temp1" placeholder="Mean Temp" value="<?php echo $mean_temp1; ?>" />
             </td>

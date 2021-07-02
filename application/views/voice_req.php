@@ -3,13 +3,13 @@
 
 <section class="content-header">
   <h1>
-    USSD SUBSCRIBERS
+    USSD VOICE MESSAGE REQUESTS
     <small>Data tables</small>
   </h1>
   <ol class="breadcrumb">
     <li><a href="<?php echo base_url() ?>index.php/Landing/index"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#"><i class="fa fa-dashboard"></i> USSD Subscription</a></li>
-    <li><a href="#"><i class="fa fa-dashboard"></i> Subscribers</a></li>
+    <li><a href="#"><i class="fa fa-dashboard"></i> USSD Management</a></li>
+    <li><a href="#"><i class="fa fa-dashboard"></i> Voice Message Requests</a></li>
   </ol>
 </section>  
 
@@ -24,10 +24,9 @@
               <tr>
                <th width="30px">No</th>
                <th>Phone</th>
-               <th>Forecast</th>
-               <th>District</th>
                <th>Language</th>
-               <th>Date</th>
+               <th>Session ID</th>
+               <th>Date Requested</th>
              </tr>
            </thead>
            <tbody>
@@ -36,9 +35,8 @@
               <tr>
                 <td><?php echo ++$start ?></td>
                 <td><?=$re->phone; ?></td>
-                <td><?=($re->forecast == 1)? "Daily Forecast":"Seasonal Forecast"; ?></td>
-                <td><?=$re->division_name; ?></td>
                 <td><?=$re->language; ?></td>
+                <td><?=$re->sessionID; ?></td>
                 <td><?=date('d F Y', strtotime($re->timestamp)); ?></td>
 
 

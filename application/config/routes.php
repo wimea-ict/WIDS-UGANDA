@@ -49,8 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-//$route['default_controller'] = 'landing';
-$route['amoko'] = 'index.php/auth/login';
+
 
 $route['default_controller'] = 'auth';
 $route['home/(:any)'] = 'auth';
@@ -60,6 +59,54 @@ $route['translate_uri_dashes'] = TRUE;
 
 
 $route['LOGIN_PAGE'] = 'examples/login';
+
+
+$route['feedback'] = '/User_feedback';
+$route['dailyAdvisory'] = '/Advisory/daily';
+$route['seasonalAdvisory'] = '/Advisory';
+$route['dekadalAdvisory'] = '/Advisory/dekadal';
+
+
+
+$route['dailyforecast'] = '/Daily_forecast';
+$route['seasonalforecast'] = '/Season';
+$route['dekadalforecast'] = '/Dekadal_forecast';
+$route['victoria'] = '/Victoria';
+
+
+
+$route['login'] = '/auth/login';
+
+$route['dashboard'] = '/landing';
+$route['logout'] = '/auth/logout';
+$route['users'] = '/Landing/Users';
+$route['possibleadvisories'] = '/Possible_advisories';
+$route['seasons'] = '/Season_names';
+$route['USSDSettings'] = '/USSD';
+$route['broadcast'] = '/Season/broadcast';
+$route['USSDDailyusers'] = '/USSD/DailyUsers';
+$route['USSDUserFeedback'] = '/USSD/UserFeedback';
+$route['monthlyforecast'] = '/monthly_forecast';
+$route['feedbackstats'] = '/graph/feedback';
+$route['ussdrequeststats'] = '/graph/ussdRequest';
+$route['ussdrequestTrend'] = '/graph/trend';
+$route['ussdrequestedsectors'] = '/graph/requested_sectors';
+$route['webvisits'] = '/graph/web_visits';
+$route['ussdsessions'] = '/graph/ussd_sessions';
+$route['regions'] = '/Region';
+$route['district'] = '/Division';
+$route['subregion'] = '/Sub_region';
+$route['majorsector'] = '/index.php/Major_Sector';
+$route['minorsector'] = '/Minor_sector';
+$route['districtcoverage'] = '/district_coverage';
+$route['hourlyusers'] = '/USSD/ussd_hourly_users';
+$route['frequentusers'] = '/Landing/frequent_users';
+$route['voicerequests'] = '/USSD/Voice';
+$route['subscriptions'] = '/USSD/Subscriptions';
+// $route['dekadalAdvisory'] = '/Advisory/dekadal';
+
+
+
 
 //$route['admin'] = 'admin/dashboard';
  

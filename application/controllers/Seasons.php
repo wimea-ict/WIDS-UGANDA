@@ -23,7 +23,6 @@ class Seasons extends CI_Controller
             'seasons_data' => $seasons,
 			'change' => 67
         );
-
         $this->load->view('template', $data);
 	
 	}

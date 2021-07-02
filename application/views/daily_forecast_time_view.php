@@ -20,7 +20,7 @@
                 <div class='box-header'>
                   <h3 class='box-title'>List of Daily Forecast Periods <?php
                    if($_SESSION['usertype'] == "wimea" || $_SESSION['usertype'] == "forecast"){
-				  echo anchor('index.php/season/create/','Create',array('class'=>'btn btn-danger btn-sm'));
+				  //echo anchor('index.php/season/create/','Create',array('class'=>'btn btn-danger btn-sm'));
 				   }else{
 
 				   }?>

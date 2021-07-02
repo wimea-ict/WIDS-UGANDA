@@ -1,161 +1,170 @@
 <!-- Main content -->
 
 <script type="text/javascript">
-    function HandleOption(){
+  function HandleOption(){
 
-      var SelectBox = document.getElementById('lang');
-      var UserOption = SelectBox.options[SelectBox.selectedIndex].value;
-      if(UserOption == 'English'){
-        document.getElementById('DisplayOption').style.visibility = 'visible';
-      }
-      else{
-        document.getElementById('DisplayOption').style.visibility = 'collapse';
-      }
-      return false;
+    var SelectBox = document.getElementById('lang');
+    var UserOption = SelectBox.options[SelectBox.selectedIndex].value;
+    if(UserOption == 'English'){
+      document.getElementById('DisplayOption').style.visibility = 'visible';
     }
+    else{
+      document.getElementById('DisplayOption').style.visibility = 'collapse';
+    }
+    return false;
+  }
 </script>
-
-
-
-
 <section class="content-header">
-                    <h1>
-                        USSD HOURLY USERS
-                        <small>Report</small>
-                    </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="<?php echo base_url() ?>index.php/Landing/index"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li><a href="#"><i class="fa fa-dashboard"></i>USSD USERS LIST</a></li>
-                    </ol>
-                </section>
-        <section class='content'>
-          <div class='row'>
-            <div class='col-xs-12'>
-              <div class='box'>
-                <div class='box-header'>
+  <h1>
+    USSD HOURLY USERS
+    <small>Report</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo base_url() ?>index.php/Landing/index"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="#"><i class="fa fa-dashboard"></i>USSD USERS LIST</a></li>
+  </ol>
+</section>
+<section class='content'>
+  <div class='row'>
+    <div class='col-xs-12'>
+      <div class='box'>
+        <div class='box-header'>
 
-                  <h3 class='box-title'>USSD HOURLY USERS</h3>
-<!------------------ Amoko -->
+          <h3 class='box-title'>USSD HOURLY USERS</h3>
+          <!------------------ Amoko -->
 
-                      <div class='box box-primary'>
-        <form action="" method="post" enctype="multipart/form-data" >
-          <div class="table-responsive"> <table class='table table-bordered'>
-
-           
-            <tr><td>Date Range:</td>
-              <td colspan="2"> 
-                Date<br>
-                <input type="date" name="date_from" id="date_from" required>
-             </td>
-            
-             
-           </tr>  
-
-           <tr><td>Hours</td>
-              <td> 
-                Start Time:<br>
-                <input type="time" name="time_from" id="time_from" required>
-             </td>
-             <td>
-               End Time: <br>
-               <input type="time" name="time_to" id="time_to" required>
-             </td>
-             <td ><input type="submit" value="Generate Chart" name="submit" id="submit" class="btn btn-primary"></td>
-           </tr>        
-        
-      
-
-    </table></div>
-  </form>
-    </div><!-- /.box-body -->
-    <div class='box-body'   >
-      <?php
-      if(isset($_POST['submit'])){
-       
-        $day = $_POST['date_from'];
+          <div class='box box-primary'>
+            <form action="" method="post" enctype="multipart/form-data" >
+              <div class="table-responsive"> <table class='table table-bordered'>
 
 
-        $time_from = $_POST['time_from'];
-        $time_to = $_POST['time_to'];
+                <tr><td>Date Range:</td>
+                  <td> 
+                    Date<br>
+                    <input class="form-control" type="date" name="date_from" id="date_from" required>
+                  </td>
+                  <td>
+                   Forecast: <br>
+                   <select name="forecast" class="form-control">
+                     <option value="0">All</option>
+                     <option value="Daily Forecast">Daily Forrecast</option>
+                     <option value="Seasonal Forecast">Seasonal Forecast</option>
+                     <option value="Marine Forecast">Marine Forecast</option>
+                   </select>
+                 </td>
 
-        $hr_from = substr($time_from, 0,2);
 
-        $hr_to = substr($time_to, 0,2);
+                </tr>  
+
+                <tr><td>Hours</td>
+                  <td> 
+                    Start Time:<br>
+                    <input class="form-control" type="time" name="time_from" id="time_from" required>
+                  </td>
+                  <td>
+                   End Time: <br>
+                   <input class="form-control" type="time" name="time_to" id="time_to" required>
+                 </td>
+                 <td ><br><input  type="submit" value="Generate Chart" name="submit" id="submit" class="btn btn-primary"></td>
+               </tr>        
+
+
+
+             </table></div>
+           </form>
+         </div><!-- /.box-body -->
+         <div class='box-body'   >
+          <?php
+          if(isset($_POST['submit'])){
+
+            $day = $_POST['date_from'];
+            $time_from = $_POST['time_from'];
+            $time_to = $_POST['time_to'];
+
+            $forecast = $_POST['forecast'];
+
+
+            $hr_from = substr($time_from, 0,2);
+
+            $hr_to = substr($time_to, 0,2);
         // echo $_POST['date_from'];
         // echo $hr_from;
 
-        $diff = $hr_to - $hr_from;
+            $diff = $hr_to - $hr_from;
 
-        
-        $dataPoints = array();
-        $rects = array();
-        for ($i=$diff; $i >=0 ; $i--) { 
-            $qry = "SELECT COUNT(DISTINCT phone) AS count_users FROM ussdtransaction_new WHERE ussdtransaction_new.date LIKE '$day $hr_from%'";
-            $query=$this->db->query($qry);
-            foreach ($query->result_array()  as $dd) {
-              $rects["y"] = $dd['count_users'];
+
+            $dataPoints = array();
+            $rects = array();
+            for ($i=$diff; $i >=0 ; $i--) { 
+              $qry = "SELECT COUNT(DISTINCT phone) AS count_users FROM ussdtransaction_new WHERE ussdtransaction_new.date LIKE '$day $hr_from%'";
+              if(strlen($forecast)>5){
+                $qry .= " AND menuvalue = '".$forecast."'";
+              }
+              $query=$this->db->query($qry);
+              foreach ($query->result_array()  as $dd) {
+                $rects["y"] = $dd['count_users'];
+              }
+              $rects["label" ] = $hr_from;
+              $hr_from ++;
+
+              $dataPoints[] = $rects;
+              unset($rects);
             }
-            $rects["label" ] = $hr_from;
-            $hr_from ++;
-            
-            $dataPoints[] = $rects;
-            unset($rects);
-        }
-         ?>
-         
+            ?>
 
 
-  <script>
-    window.onload = function () {
-     
-    var chart = new CanvasJS.Chart("chartContainer", {
-      animationEnabled: true,
-        title: {
-            text: "USSD-WIDS Daily Usage Trend (<?=$diff?> Hours)"
-        },
-        axisY: {
-            title: "Number of Users",
-            includeZero: false
-        },
-         axisX: {
-            title: "Hour (24Hour)",
-            valueFormatString: "DD MMM"
-        },
-        data: [{
-            type: "area",
-            xValueFormatString: "DD MMM",
-    color: "#0080FF",
-            dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-        }]
-    });
-    chart.render();
-     
-    }
-    </script>
-         <div id="chartContainer" style="height: 450px; max-width: 100%; margin: 0px auto;"></div>
-     <?php }
 
-     ?>
+            <script>
+              window.onload = function () {
+
+                var chart = new CanvasJS.Chart("chartContainer", {
+                  animationEnabled: true,
+                  title: {
+                    text: "USSD-WIDS Daily Usage Trend (<?=$diff?> Hours)"
+                  },
+                  axisY: {
+                    title: "Number of Users",
+                    includeZero: false
+                  },
+                  axisX: {
+                    title: "Hour (24Hour)",
+                    valueFormatString: "DD MMM"
+                  },
+                  data: [{
+                    type: "area",
+                    xValueFormatString: "DD MMM",
+                    color: "#0080FF",
+                    dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+                  }]
+                });
+                chart.render();
+
+              }
+            </script>
+            <div id="chartContainer" style="height: 450px; max-width: 100%; margin: 0px auto;"></div>
+          <?php }
+
+          ?>
 
          <!-- <div id="sector"></div>
-         <div id="chartContainer" style="height: 400px; max-width: 1000px; margin: 0px auto;"></div> -->
-          <div class="box-body chart-responsive">
-
-            
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-<!-- <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script> -->
+           <div id="chartContainer" style="height: 400px; max-width: 1000px; margin: 0px auto;"></div> -->
+           <div class="box-body chart-responsive">
 
 
-        <script src="<?php echo base_url('assets/frameworks/jquery/jquery.min.js') ?>"></script>
-        <script src="<?php echo base_url('assets/plugins/datatables/jquery.dataTables.js') ?>"></script>
-        <script src="<?php echo base_url('assets/plugins/datatables/dataTables.bootstrap.js') ?>"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
+            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+            <!-- <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script> -->
+
+
+            <script src="<?php echo base_url('assets/frameworks/jquery/jquery.min.js') ?>"></script>
+            <script src="<?php echo base_url('assets/plugins/datatables/jquery.dataTables.js') ?>"></script>
+            <script src="<?php echo base_url('assets/plugins/datatables/dataTables.bootstrap.js') ?>"></script>
+            <script type="text/javascript">
+              $(document).ready(function () {
                 $("#mytable").dataTable();
-            });
-        </script>
+              });
+            </script>
 
-    
+
    <!--  <script type="text/javascript">
         $(document).ready(function(){
  
@@ -194,13 +203,13 @@
              
         });
 
-    </script>   -->
-    <?php// echo $date_from;?>
-                    </div><!-- /.box-body -->
-              </div><!-- /.box -->
-            </div><!-- /.col -->
-          </div><!-- /.row -->
+      </script>   -->
+      <?php// echo $date_from;?>
+    </div><!-- /.box-body -->
+  </div><!-- /.box -->
+</div><!-- /.col -->
+</div><!-- /.row -->
 
-        </section><!-- /.content -->
+</section><!-- /.content -->
 
 

@@ -33,12 +33,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 ?>
             <div class="login-logo">
-                <a href="#"><b>Weather Information Dissemination System</b> </a>
+                <a href="#"><b><span style="color:green">W</span>eather <span style="color:green">I</span>nformation <span style="color:green">D</span>issemination <span style="color:green">S</span>ystem</b> </a>
             </div>
 
             <div class="login-box-body">
 	<div style = "text-align: right;" ><a href="<?php echo base_url() ?>" ><button class="btn" ><i class="fa fa-close"></i></button></a></div>
-                <p class="login-box-msg"><?php echo "Log In"; ?></p>
+                <p class="login-box-msg"><b><?php echo "Log In to WIDS"; ?></b></p>
                <?php if($this->session->flashdata('error')){?>
 			      <?php echo $this->session->flashdata('error');?> 
 		             <?php }  
@@ -67,10 +67,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                 <?php echo form_close();?>
 
-<p><a href="forgot_password">forgot password?<?php echo lang('login_forgot_password');?></a></p>
-<?php if ($forgot_password == TRUE): ?>
-                <?php echo anchor('#', lang('auth_forgot_password')); ?><br />
-<?php endif; ?>
+<p><a href="<?php echo base_url();?>index.php/Forgot_password">Forgot password?</a></p>
+
 
             </div>
         </div>

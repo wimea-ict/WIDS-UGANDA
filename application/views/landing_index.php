@@ -65,8 +65,24 @@ for ($i=30; $i >=0 ; $i--) {
 
      <section class="content-header" style="margin-top: -50px">
         <div>
-        <h2>Home
-            <small>System Statistics</small>                        
+
+            <?php
+// I'm India so my timezone is Asia/Calcutta
+date_default_timezone_set('Africa/Nairobi');
+
+// 24-hour format of an hour without leading zeros (0 through 23)
+$Hour = date('G');
+
+if ( $Hour >= 5 && $Hour <= 11 ) {
+    echo "<b> Good Morning, <i>".ucwords($_SESSION['first_name'].' '.$_SESSION['last_name']).'</i></b>';
+} else if ( $Hour >= 12 && $Hour <= 18 ) {
+    echo "<b> Good Afternoon, <i>".ucwords($_SESSION['first_name'].' '.$_SESSION['last_name']).'</i></b>';
+} else if ( $Hour >= 19 || $Hour <= 4 ) {
+    echo "Good Evening, <i>".ucwords($_SESSION['first_name'].' '.$_SESSION['last_name']).'</i></b>';
+}
+?>
+        <h2>
+            <small>System Statistics </small>                        
         <small class="pull-right">
        <?php if($_SESSION['usertype'] != 'wimea' && $_SESSION['first_time_login']==1){?> 
        <a href="<?php echo base_url(); ?>index.php/Auth/change_pass"><button type="button" class="btn"><strong>Change Password</strong></button></a> 
@@ -167,14 +183,14 @@ for ($i=30; $i >=0 ; $i--) {
                 <div class="info-box-content">
                        <?php
 
-                              // $dd = "SELECT * FROM totalview";
-                              // $ddd = $this->db->query($dd);
-                              // foreach ($ddd->result_array() as $web_users) {
-                              //   $count_web_users = $web_users['totalvisit'];
-                              // }
+                              $dd = "SELECT * FROM totalview";
+                              $ddd = $this->db->query($dd);
+                              foreach ($ddd->result_array() as $web_users) {
+                                $count_web_users = $web_users['totalvisit'];
+                              }
                                 ?>
                     <span class="info-box-text">Web Visits</span>
-                    <span class="info-box-number"><?php //echo $count_web_users; ?></span>
+                    <span class="info-box-number"><?php echo $count_web_users; ?></span>
                 </div>
                 <!-- /.info-box-content -->
             </div>

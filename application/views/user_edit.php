@@ -47,28 +47,24 @@
             <td>   <input required type="text" name="username" id="username" class="form-control" value="<?php
 			    $reg6 = $this->db->get_where('users',array('id'=>$id));
 			 
-			  foreach($reg6->result() as $rr) { echo $rr->username; } ?>" >        </td>
-        <tr>
+			  foreach($reg6->result() as $rr) { echo $rr->username; } ?>" >        
+      </td>
+       </tr> 
+       <?php if ($_SESSION['usertype'] == 'administrator'){?>
+       <tr>
             <td>User type</td>
             <td>
             <select name="usertype" id = "usertype" class="form-control" >
-              <option value="forecast" <?php echo  set_select('usertype', 'forecast', TRUE); ?> > Forecast Administrator</option>
-              <option value="water" <?php echo  set_select('usertype', 'water'); ?>>Water Advisory Administrator</option>
-              <option value="food" <?php echo  set_select('usertype', 'food'); ?>>Food Advisory administrator</option>
-              <option value="agriculture" <?php echo  set_select('usertype', 'agriculture'); ?>>Agriculture Advisory Administrator</option>
-              <option value="health" <?php echo  set_select('usertype', 'health'); ?>>Health Advisory Administrator</option>
+              <option value="forecast" > Forecaster</option>
+              <option value="administrator" >Super Administrator</option>
+              
             </select>
             </td>
         </tr>
-	    <!-- <tr><td>Password<?php echo form_error('pass') ?></td>
-            <td>   <input required type="password" name="pass" id="pass" class="form-control" value="<?php
-			    $reg7 = $this->db->get_where('users',array('id'=>$id));
-			 
-			  foreach($reg7->result() as $rr) { echo $rr->password; } ?>" >        </td>
-        </tr> -->
-	    <!-- <tr><td>Confirm Password <?php echo form_error('passconf') ?></td>
-            <td>   <input type="password" name="passconf" id="passconf" class="form-control" placeholder="Password">        </td>
-        </tr> -->
+        <?php
+      }
+        ?>
+	    
         <input type="hidden" name="id" value="<?php echo $id; ?>" /> 
 	    <tr><td colspan='2'><button type="submit" class="btn btn-primary">Update</button>
 	    <a href="<?php echo site_url('index.php/Landing/Users') ?>" class="btn btn-default">Cancel</a>

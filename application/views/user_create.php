@@ -1,3 +1,39 @@
+<style>
+            #frmCheckPassword {
+                border-top: #F0F0F0 2px solid;
+                background: ;
+                padding: 10px;
+            }
+
+            .demoInputBox {
+                padding: 7px;
+                border: #F0F0F0 1px solid;
+                border-radius: 4px;
+            }
+
+            #password-strength-status {
+                padding: 5px 10px;
+                color: #FFFFFF;
+                border-radius: 4px;
+                margin-top: 5px;
+            }
+
+            .medium-password {
+                background-color: #b7d60a;
+                border: #BBB418 1px solid;
+            }
+
+            .weak-password {
+                background-color: #ce1d14;
+                border: #AA4502 1px solid;
+            }
+
+            .strong-password {
+                background-color: #12CC1A;
+                border: #0FA015 1px solid;
+            }
+        </style>
+        
 <section class='content'>
           <div class='row'>
             <div class='col-xs-12'>
@@ -33,28 +69,34 @@
 
 	    <tr><td>Choose Username <?php echo form_error('username') ?></td>
             <td>   <input type="text" name="username" id="username" class="form-control" placeholder="e.g mwesigab" value="<?=set_value('username')?>" required/> 
-              <input type="hidden" name="usertype" id = "usertype" value="forecast">
+              <!-- <input type="hidden" name="usertype" id = "usertype" value="forecast"> -->
                    </td>
-       <!--  <tr>
+        <?php if ($_SESSION['usertype'] == 'administrator'){?>
+        <tr>
             <td>User type</td>
             <td>
             <select name="usertype" id = "usertype" class="form-control" >
-              <option value="forecast" <?php //echo  set_select('usertype', 'forecast', TRUE); ?> > Forecast Administrator</option>
-              <option value="water" <?php //echo  set_select('usertype', 'water'); ?>>Water Advisory Administrator</option>
-              <option value="food" <?php //echo  set_select('usertype', 'food'); ?>>Food Advisory administrator</option>
-              <option value="agriculture" <?php //echo  set_select('usertype', 'agriculture'); ?>>Agriculture Advisory Administrator</option>
-              <option value="health" <?php //echo  set_select('usertype', 'health'); ?>>Health Advisory Administrator</option>
-              <option value="famersrep" <?php //echo  set_select('usertype', 'famersrep'); ?>>Farmers' Representative</option>
+              <option value="forecast" > Forecaster</option>
+              <option value="administrator" >Super Administrator</option>
+              
             </select>
             </td>
-        </tr> -->
+        </tr>
+        <?php
+      }
+        ?>
+
+
+
 	    <tr><td>Password<?php echo form_error('pass') ?></td>
-            <td>   <input type="password" name="pass" id="pass" class="form-control" placeholder="Enter your Password" value="<?=set_value('pass')?>"/>        </td>
+            <td>   <input type="password" name="pass" id="pass" class="form-control demoInputBox" onKeyUp="checkPasswordStrength();" placeholder="Enter your Password" value="<?=set_value('pass')?>"/> 
+             <div id="password-strength-status"></div>     
+              </td>
         </tr>
 	    <tr><td>Confirm Password <?php echo form_error('passconf') ?></td>
             <td>   <input type="password" name="passconf" id="passconf" class="form-control" placeholder="Confirm Your Password" value="<?=set_value('pass_conf')?>"/>        </td>
         </tr>
-	    <tr><td colspan='2'><button type="submit" class="btn btn-primary">Create</button>
+	    <tr><td colspan='2'><button type="submit" id='submit' class="btn btn-primary" onKeyUp="checkPasswordStrength();">CREATE ACCOUNT</button>
 	    <a href="<?php echo site_url('index.php/Landing/Users') ?>" class="btn btn-default">Cancel</a>
             </td>
         </tr>
@@ -64,3 +106,28 @@
             </div><!-- /.col -->
           </div><!-- /.row -->
         </section><!-- /.content -->
+         <script>
+        function checkPasswordStrength() {
+            var number = /([0-9])/;
+            var alphabets = /([a-zA-Z])/;
+            var special_characters = /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/;
+            if ($('#pass').val().length < 6) {
+                $('#password-strength-status').removeClass();
+                $('#password-strength-status').addClass('weak-password');
+                $('#password-strength-status').html("Weak (should be atleast 6 characters.)");
+                $('#submit').prop('disabled', true);
+            } else {
+                if ($('#pass').val().match(number) && $('#pass').val().match(alphabets) && $('#pass').val().match(special_characters)) {
+                    $('#password-strength-status').removeClass();
+                    $('#password-strength-status').addClass('strong-password');
+                    $('#password-strength-status').html("Strong");
+                     $('#submit').prop('disabled', false);
+                } else {
+                    $('#password-strength-status').removeClass();
+                    $('#password-strength-status').addClass('medium-password');
+                    $('#password-strength-status').html("Medium (should include alphabets, numbers and special characters.)");
+                     $('#submit').prop('disabled', false);
+                }
+            }
+        }
+    </script>

@@ -75,18 +75,20 @@
         </td>
       </tr> 
        
-           <tr>
+          <!--  <tr>
           <td>Duty Forecaster:</td>
             <td><input type="text" class="form-control" name="dutyforecaster" required /></td>        
-        </tr>   <?php } ?>  
+        </tr>   -->
+
+         <?php } ?>  
         <tr>
           <td>Date of issue:</td>
             <td><input type="date" value="<?php echo $issuedate ?>" class="form-control" name="issuedate" required /></td>        
         </tr> 
          <tr>
-          <td>Validity Time:</td>
+          <td>Validity Period:</td>
              
-            <td><input type="text" name="validitytime" value="<?=$Validity ?>" class="form-control" required placeholder ="e.g 6:00 am" /></td>        
+            <td><input type="text" name="validitytime" value="<?=$Validity ?>" class="form-control" required placeholder ="e.g 6:00 am -12:00 pm" /></td>        
         </tr>  
 
         <tr>

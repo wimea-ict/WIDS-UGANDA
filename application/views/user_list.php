@@ -21,14 +21,14 @@
                   <h3 class='box-title'>ACTIVE USER LIST <?php
                   //have to replace the forecast usertype to user??
                    if($_SESSION['usertype'] == "wimea" || $_SESSION['usertype'] == "forecast"){
-				  echo anchor('index.php/Landing/create_user/','Create',array('class'=>'btn btn-danger btn-sm'));
+				  //echo anchor('index.php/Landing/create_user/','Create',array('class'=>'btn btn-danger btn-sm'));
 				   }else{
 					   
 				   }?>
 		<?php //echo anchor(site_url('index.php/season/excel'), ' <i class="fa fa-file-excel-o"></i> Excel', 'class="btn btn-primary btn-sm"'); ?>
 		<?php
         $link = "/index.php/Landing/create_user";
-         echo anchor(site_url($link), '<i class="fa fa-user-plus"></i>  Add User', 'class="btn btn-success btn-sm"'); ?>
+         echo anchor(site_url($link), '<i class="fa fa-user-plus"></i>  Add New User', 'class="btn btn-success btn-sm"'); ?>
 		<?php //echo anchor(site_url('index.php/season/pdf'), '<i class="fa fa-file-pdf-o"></i> PDF', 'class="btn btn-primary btn-sm"'); ?></h3>
                 </div><!-- /.box-header --> <!--style=" overflow-y: scroll;"-->
                 <div class='box-body'   >
@@ -39,22 +39,17 @@
 		    <th>Username</th>
 			<th>First Name</th>
             <th>Last Name</th>
-		    <th>email</th>
-		    <th>type</th>
-             <th>phone</th>
-		   
+		    <th>Email</th>
+		    <th>Role</th>
+             <th>Phone No.</th>
+		   <th>Action</th>
                 </tr>
             </thead>
 	    <tbody>
             <?php
             $start = 0;
-            foreach ($this->Landing_model->get_all() as $users)
+            foreach ($system_users as $users)
             {
-			// $reg = $this->db->get_where('region',array('id'=>$decadal_forecast->region));
-            //   $audio = "<span class='glyphicon glyphicon-music'></span>";
-            //   $graph = "<span class='glyphicon glyphicon-picture'></span>";
-            //     $graph2 = str_replace("uploads_decadal/","",$decadal_forecast->graph);
-            //     $audio2 = str_replace("uploads_decadal/","",$decadal_forecast->audio);
                 ?>
                 <tr>
 		    <td><?php echo ++$start ?></td>
@@ -67,11 +62,9 @@
 			
 		    <td style="text-align:center" width="140px" disabled>
 			<?php 
-             echo anchor(site_url('index.php/Landing/update_user/'.$users->id),'<i class="fa fa-pencil-square-o"></i>',array('title'=>'Edit','class'=>'btn btn-danger btn-sm')); 
+             echo anchor(site_url('index.php/Landing/update_user/'.$users->id),'<i class="fa fa-pencil-square-o"></i>',array('title'=>'Edit','class'=>'btn btn-primary btn-sm')); 
 			echo ' '; 
-			 if($_SESSION['usertype'] == "wimea" || $_SESSION['usertype'] == "forecast"){
-                echo anchor(site_url('index.php/Landing/deactivate_user/'.$users->id),'<i class="fa fa-eye"></i>',array('title'=>'Deactivate','class'=>'btn btn-danger btn-sm')); 			
-			 }
+			
 			 ?>
 		    </td>
 	        </tr>

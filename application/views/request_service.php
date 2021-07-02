@@ -1,3 +1,29 @@
+<?php    
+
+function get_client_ip()
+{
+	$ipaddress = '';
+	if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+		$ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+	} else if (isset($_SERVER['REMOTE_ADDR'])) {
+		$ipaddress = $_SERVER['REMOTE_ADDR'];
+	} else {
+		$ipaddress = 'UNKNOWN';
+	}
+
+	return $ipaddress;
+}
+
+$PublicIP = get_client_ip();
+$user_ip=get_client_ip();
+$json     = @file_get_contents("http://ipinfo.io/$PublicIP/geo");
+$json     = json_decode($json, true);
+$visitor_country  = $json['country'];
+$visitor_region   = $json['region'];
+$visitor_city     = $json['city'];
+?>
+
+
 <!DOCTYPE html>
 <html><head>
 	<meta charset="utf-8">
@@ -56,6 +82,13 @@
 
         		}
 
+        	</style>
+
+        	<style>
+        		.hide_lang_selection{
+        			display: none;
+        			background-color: unset;
+        		}
         	</style>
         	<script type="text/javascript">
         		$(document).ready(function(){
@@ -123,9 +156,9 @@
         									</select> 
         								</li>
 
-        								<li><?php echo anchor(site_url('index.php/Map/index'), "<span class='glyphicon glyphicon-globe'></span>" . strtoupper('Live Map'));?></li>
+        								<li><?php echo anchor(site_url('Map'), "<span class='glyphicon glyphicon-globe'></span>" . strtoupper('Live Map'));?></li>
 
-        								<li><?php echo anchor(site_url('index.php/auth/load_login'), "<span class='glyphicon glyphicon-log-in'></span> " . strtoupper($this->lang->line('msg_login')));?></li>
+        								<li><?php echo anchor(site_url('login'), "<span class='glyphicon glyphicon-log-in'></span> " . strtoupper($this->lang->line('msg_login')));?></li>
         							</ul>
         						</div>
 
@@ -138,9 +171,7 @@
         			<!-- Perfect location -->
         			<div class="content-wrapper" style="overflow-y: scroll;height: 75vh">
         				<div class="col-md-12" style="background-color: #ecf0f5;" >
-        					<section class="content-header" style="background-color:lavender ;padding-bottom: 10px">
-        						<h1 style="text-align: center;"></h1>
-        					</section>
+        					
         					<?php   
          //Get Division_Name for currently displaying information
         					if(isset($division_name)){
@@ -163,9 +194,15 @@
 
         					<!-- SELECTED DAILY FORECAST CARD STARTS HERE -->
         					<?php 
-        					if($category1 == "Daily Forecast"){ ?>
+        					if($category1 == "Daily Forecast"){ 
+
+                                //LOG USER SEASONAL VISIT
+        						$INSERT = "INSERT into pageview (`page`, `userip`, `country`, `region`, `city`) values('Daily Forecast','$user_ip','$visitor_country','$visitor_region', '$visitor_city')";
+        						$this->db->query($INSERT);
+
+        						?>
         						<div id="daily_forecast" >
-        							<a  href ="<?php site_url('index.php/auth/index') ?>" style="float: right;" class="glyphicon glyphicon-remove-sign"> 
+        							<a  href ="<?php site_url('auth') ?>" style="float: right;" class="glyphicon glyphicon-remove-sign"> 
         							</a>
         							<!-- Daily forecast from user request -->
         							<h4>
@@ -206,45 +243,45 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                   <?php 
-                                                   if(isset($daily_forecast_region_data_24)){
-                                                      foreach($daily_forecast_region_data_24 as $fd){
-                                                         $next_day_with_time = date('Y-m-d g:ia', strtotime(date('Y-m-d', strtotime(' +1 day',strtotime($fd->forecasted))).'6:00pm'));
-                                                         if( (strtotime(date('Y-m-d g:ia')) >= strtotime($fd->forecasted)) && (strtotime(date('Y-m-d g:ia')) <= strtotime($next_day_with_time)) ){
-                                                            ?>
-                                                            <tr>
-                                                               <td scope="row" data-label="Time">
+                                                	<?php 
+                                                	if(isset($daily_forecast_region_data_24)){
+                                                		foreach($daily_forecast_region_data_24 as $fd){
+                                                			$next_day_with_time = date('Y-m-d g:ia', strtotime(date('Y-m-d', strtotime(' +1 day',strtotime($fd->forecasted))).'6:00pm'));
+                                                			if( (strtotime(date('Y-m-d g:ia')) >= strtotime($fd->forecasted)) && (strtotime(date('Y-m-d g:ia')) <= strtotime($next_day_with_time)) ){
+                                                				?>
+                                                				<tr>
+                                                					<td scope="row" data-label="Time">
 
-                                                                  <?php
-                                                                  $day1 = date("l", strtotime($fd->forecasted));
-                                                                  $next_day = date('Y-m-d', strtotime(' +1 day',strtotime($fd->forecasted))); 
-                                                                  $day2 = date("l", strtotime($next_day));
-                                                                  $dd = "SELECT * FROM forecast_time WHERE id='$fd->timing'";
-                                                                  $ddd = $this->db->query($dd);
-                                                                  foreach ($ddd->result_array() as $rowss) {
+                                                						<?php
+                                                						$day1 = date("l", strtotime($fd->forecasted));
+                                                						$next_day = date('Y-m-d', strtotime(' +1 day',strtotime($fd->forecasted))); 
+                                                						$day2 = date("l", strtotime($next_day));
+                                                						$dd = "SELECT * FROM forecast_time WHERE id='$fd->timing'";
+                                                						$ddd = $this->db->query($dd);
+                                                						foreach ($ddd->result_array() as $rowss) {
 
-                                                                     if(($rowss['id'] == 2) || ($rowss['id'] == 3) || ($rowss['id'] == 1)){
-                                                                        echo "<b>".ucwords($day2)."</b><br>";
-                                                                    }else{
-                                                                        echo "<b>".ucwords($day1)."</b><br>";
-                                                                    }
-                                                                    echo ucwords($rowss['period_name'])."<br>( ".ucwords($rowss['from_time'])."-".ucwords($rowss['to_time'])." )";
+                                                							if(($rowss['id'] == 2) || ($rowss['id'] == 3) || ($rowss['id'] == 1)){
+                                                								echo "<b>".ucwords($day2)."</b><br>";
+                                                							}else{
+                                                								echo "<b>".ucwords($day1)."</b><br>";
+                                                							}
+                                                							echo ucwords($rowss['period_name'])."<br>( ".ucwords($rowss['from_time'])."-".ucwords($rowss['to_time'])." )";
 
 
-                                                                } ?>
-                                                            </td>
+                                                						} ?>
+                                                					</td>
 
-                                                            <td data-label="Weather" >
-                                                              <figure>
-                                                                 <svg class="icon" style="width: 100px;height: 70px;" viewbox="0 0 100 100">
-                                                                    <?php if(ucwords($rowss['period_name']) == "Evening" || ucwords($rowss['period_name']) == "Early Morning") echo '<use xlink:href="#moon" x="-20" y="-15"/>';
-                                                                    else echo '<use xlink:href="#sun" x="-12" y="-18"/>';
-                                                                    echo $fd->svg_data; ?>
-                                                                </svg>
-                                                            </figure>
+                                                					<td data-label="Weather" >
+                                                						<figure>
+                                                							<svg class="icon" style="width: 100px;height: 70px;" viewbox="0 0 100 100">
+                                                								<?php if(ucwords($rowss['period_name']) == "Evening" || ucwords($rowss['period_name']) == "Early Morning") echo '<use xlink:href="#moon" x="-20" y="-15"/>';
+                                                								else echo '<use xlink:href="#sun" x="-12" y="-18"/>';
+                                                								echo $fd->svg_data; ?>
+                                                							</svg>
+                                                						</figure>
 
-                                                            <?php echo ucwords($fd->cat_name)  ?>
-                                                        </td>
+                                                						<?php echo ucwords($fd->cat_name)  ?>
+                                                					</td>
                             <!-- <td data-label="Max Temp"><?php  //if($fd->max_temp==0){print('-');}else{echo $fd->max_temp; ?> &deg;C <?php //} ?></td>
                             	<td data-label="Min Temp"><?php //if($fd->min_temp==0){print('-');}else{echo $fd->min_temp;?> &deg;C <?php// }  ?></td> -->
                             	<td data-label="Temperature"><?php echo $fd->mean_temp; ?> &deg;C</td>  
@@ -380,155 +417,162 @@
                 						<td>Advice</td><td><?=$advice['advice'] ?></td>
                 					</tr>
                 					<tr> <td><?= ucwords($this->lang->line('msg_sector')); ?></td><td><?=$advice['message_summary'] ?></td> </tr>
-                                    </table><?= $this->lang->line('msg_nodata'); ?>
-                                </div>
-                                <?php $flag = true; endforeach;} if($flag == false){echo "<p>".$this->lang->line('msg_nodata')."</p>"; }?>
-                            </div>
-                        </div>      
+                					</table><?= $this->lang->line('msg_nodata'); ?>
+                				</div>
+                				<?php $flag = true; endforeach;} if($flag == false){echo "<p>".$this->lang->line('msg_nodata')."</p>"; }?>
+                			</div>
+                		</div>      
 
-                    <?php  }else{ echo "<p>".$this->lang->line('msg_nodata')."</p>"; } } ?> 
+                	<?php  }else{ echo "<p>".$this->lang->line('msg_nodata')."</p>"; } } ?> 
                 </div>
 
             <?php  }else if($category1 == "Dekadal Forecast"){ ?>
 
-               Dekadal Pending
-               <?php
-           }else if($category1 == "Victoria Forecast"){
-               ?>
+            	Dekadal Pending
+            	<?php
+            }else if($category1 == "Victoria Forecast"){
+            	?>
 
-               <div id="daily_forecast">
-                  <a  href ="<?php site_url('index.php/auth/index') ?>" style="float: right;" class="glyphicon glyphicon-remove-sign"> </a>
-                  <?php 
+            	<div id="daily_forecast">
+            		<a  href ="<?php site_url('auth') ?>" style="float: right;" class="glyphicon glyphicon-remove-sign"> </a>
+            		<?php 
             //print_r($requested_landing_site); print($submitted);
 
-                  foreach($requested_landing_site as $row){ 
-                     $landing_site = $row['site_name'];
+            		foreach($requested_landing_site as $row){ 
+            			$landing_site = $row['site_name'];
 
-                 }
+            		}
 
-                 ?> 
-                 <h4><b>24-HOUR FISHERMEN FORECAST FOR <?=$landing_site?> LANDING SITE</b></h4>
-                 <div style="background-color: cornflowerblue;height: 2.5px;margin-top: 10px; width: 100%;"></div>
-                 <?php $dt = ""; $cd = 0;
+            		?> 
+            		<h4><b>24-HOUR FISHERMEN FORECAST FOR <?=$landing_site?> LANDING SITE</b></h4>
+            		<div style="background-color: cornflowerblue;height: 2.5px;margin-top: 10px; width: 100%;"></div>
+            		<?php $dt = ""; $cd = 0;
                 //print_r($victoria_forecast);
-                 foreach($victoria_forecast_request as $dd){ 
-                     $dt = $dd['forecast_date'];
-                     if((date('Y-m-d') >= $dt) && (strtotime(date('Y-m-d')) <= strtotime(date('Y-m-d', strtotime($dt. '+1 day'))))){
-                        $cd = 1;
-                    }
-                } 
-                ?>
-                <?php  if(isset($victoria_forecast_request) && sizeof($victoria_forecast)>1 && $cd == 1){ $counter = 0;?>
-                 <?php foreach($victoria_forecast_request as $dd){ ?>  
-                    <p style="font-weight: bold;font-size: 16px;padding-top: 10px;"> <?= $this->lang->line('msg_issue'); ?>: <?php
-                    echo date('jS F Y', strtotime($dd['issue_date']));?> </p>
-                    <p>Advice :&nbsp; <?php echo $dd['advice'] ?></p>
-                    <p style="font-weight: bold;font-size: 16px;padding-top: 10px;"> Map Showing Position of the Zones</p>
-                    <div style="display: flex; justify-content: center;">
-                       <img class=figures_only" style="width: 60%;height: 60%" src="<?php echo site_url('assets/frameworks/adminlte/img')."/".$dd['map'] ?>">
-                   </div>
+            		foreach($victoria_forecast_request as $dd){ 
+            			$dt = $dd['forecast_date'];
+            			if((date('Y-m-d') >= $dt) && (strtotime(date('Y-m-d')) <= strtotime(date('Y-m-d', strtotime($dt. '+1 day'))))){
+            				$cd = 1;
+            			}
+            		} 
+            		?>
+            		<?php  if(isset($victoria_forecast_request) && sizeof($victoria_forecast)>1 && $cd == 1){ $counter = 0;?>
+            			<?php foreach($victoria_forecast_request as $dd){ ?>  
+            				<p style="font-weight: bold;font-size: 16px;padding-top: 10px;"> <?= $this->lang->line('msg_issue'); ?>: <?php
+            				echo date('jS F Y', strtotime($dd['issue_date']));?> </p>
+            				<p>Advice :&nbsp; <?php echo $dd['advice'] ?></p>
+            				<p style="font-weight: bold;font-size: 16px;padding-top: 10px;"> Map Showing Position of the Zones</p>
+            				<div style="display: flex; justify-content: center;">
+            					<img class=figures_only" style="width: 60%;height: 60%" src="<?php echo site_url('assets/frameworks/adminlte/img')."/".$dd['map'] ?>">
+            				</div>
 
 
-                   <?php break; } ?> 
+            				<?php break; } ?> 
 
-                   <table class="table table-bordered">
-                       <?php $ct = 0; foreach($victoria_forecast_request as $dd){ $ct++; ?> 
+            				<table class="table table-bordered">
+            					<?php $ct = 0; foreach($victoria_forecast_request as $dd){ $ct++; ?> 
 
-                          <?php if($ct == 1 ) { ?>
-                             <tr>
-                                <td colspan="8"><h4><b>Landing Site: <?=$dd['site_name']?>, <?php echo $dd['zone'] ?> Zone, <?=$dd['district']?> District</b></h4></td>
-                            </tr>
-                            <tr>
-                                <td style="width: 15%"><b>Highlight</b></td>
-                                <td colspan="7"><p><?php echo $dd['highlights'] ?></p></td>
-                            </tr>
-                            <tr style="font-weight: bold;">
-                                <td>Period</td>
-                                <td>Wind Strength</td>
-                                <td>Wind Direction</td>
-                                <td>Wave Height</td>
-                                <td>Weather</td>
-                                <td>Rainfall Distribution</td>
-                                <td>Visibility</td>
-                                <td>Hazards</td>
-                            </tr>
-                        <?php } ?>
+            						<?php if($ct == 1 ) { ?>
+            							<tr>
+            								<td colspan="8"><h4><b>Landing Site: <?=$dd['site_name']?>, <?php echo $dd['zone'] ?> Zone, <?=$dd['district']?> District</b></h4></td>
+            							</tr>
+            							<tr>
+            								<td style="width: 15%"><b>Highlight</b></td>
+            								<td colspan="7"><p><?php echo $dd['highlights'] ?></p></td>
+            							</tr>
+            							<tr style="font-weight: bold;">
+            								<td>Period</td>
+            								<td>Wind Strength</td>
+            								<td>Wind Direction</td>
+            								<td>Wave Height</td>
+            								<td>Weather</td>
+            								<td>Rainfall Distribution</td>
+            								<td>Visibility</td>
+            								<td>Hazards</td>
+            							</tr>
+            						<?php } ?>
 
-                        <?php  if($ct == 4) $ct=0;  ?>
-                        <tr>
-                         <td style="width: 15%"><b><?php echo $dd['day_time']; ?></b></td>
-                         <td style="width: 15%"><img style="width: 60px" src="<?php echo site_url('assets/icons')."/".$dd['wind_strength']; ?>"><?=$dd['wind_strength_name'] ?></td>
-                         <td style="width: 15%"><img style="width: 60px" src="<?php echo site_url('assets/icons')."/".$dd['wind_direction']; ?>"><?=$dd['wind_direction_name'] ?></td>
-                         <td style="width: 15%"><img style="width: 60px" src="<?php echo site_url('assets/icons')."/".$dd['wave_height']; ?>"><?=$dd['wave_height_name'] ?></td>
-                         <td style="width: 15%"><img style="width: 60px" src="<?php echo site_url('assets/icons')."/".$dd['weather']; ?>"><?=$dd['weather_name'] ?></td>
-                         <td style="width: 15%"><img style="width: 60px" src="<?php echo site_url('assets/icons')."/".$dd['rainfall_dist']; ?>"><?=$dd['rainfall_dist_name'] ?></td>
-                         <td style="width: 15%"><img style="width: 60px" src="<?php echo site_url('assets/icons')."/".$dd['visibility']; ?>"><?=$dd['visibility_name'] ?></td>
-                         <td style="width: 15%; background: <?php echo $dd['harzard']; ?>"></td>
-                     </tr>
-                 <?php } ?> 
-                 <tr>
-                  <td style="width: 15%; background: #0F0"></td>
-                  <td colspan="7">No severe weather is expected.</td>
-              </tr>
-              <tr>
-                  <td style="width: 15%; background: #FFA500"></td>
-                  <td colspan="7">Potentially dangerous weather is expected. <b>Be prepared.</b></td>
-              </tr>
-              <tr>
-                  <td style="width: 15%; background: #F00"></td>
-                  <td colspan="7">Dangerous and potentially life-threatening weather conditions are expected. <b>Take immediate action to ensure your safety</b></td>
-              </tr>
-          </table>
-      <?php }else { echo "<p style='padding-top:10px'>Data has not yet been uploaded. Please try again later.</p>";} ?>  
-
-
-      <div class="row">
-        <h4 class="sponsors"><b><i><?= $this->lang->line('msg_brought_to_you'); ?>:</i></b></h4>
-        <section class="customer-logos slider">
-           <div class="slide" > <img  src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/mak.jpg"></div>
-           <div class="slide"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/norad3.png"></div>
-           <div class="slide" ><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/unma.png"></div>
-           <div class="slide" > <img  src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/mak.jpg"></div>
-           <div class="slide"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/norad3.png"></div>
-           <div class="slide"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/unma.png"></div>
-           <div class="slide" > <img  src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/norad3.png"></div>
-       </section>
-   </div>
-</div>
-
-<!-- LOGOS -->
-
-<?php }else if($category1 == "Seasonal Forecast"){?>
-
-  <div id="seasonal_forecast">
-     <a  href ="<?php site_url('index.php/auth/index') ?>" style="float: right;" class="glyphicon glyphicon-remove-sign"> </a>
-     <h4><b><?=strtoupper($this->lang->line('msg_seasonal_forecast')) ?> - <?php $dist=$divisio_name; echo strtoupper($divisio_name); ?>
-     <div style="background-color: cornflowerblue;height: 3px;margin-top: 2%; width: 100%;"></div></b>
- </h4>
+            						<?php  if($ct == 4) $ct=0;  ?>
+            						<tr>
+            							<td style="width: 15%"><b><?php echo $dd['day_time']; ?></b></td>
+            							<td style="width: 15%"><img style="width: 60px" src="<?php echo site_url('assets/icons')."/".$dd['wind_strength']; ?>"><?=$dd['wind_strength_name'] ?></td>
+            							<td style="width: 15%"><img style="width: 60px" src="<?php echo site_url('assets/icons')."/".$dd['wind_direction']; ?>"><?=$dd['wind_direction_name'] ?></td>
+            							<td style="width: 15%"><img style="width: 60px" src="<?php echo site_url('assets/icons')."/".$dd['wave_height']; ?>"><?=$dd['wave_height_name'] ?></td>
+            							<td style="width: 15%"><img style="width: 60px" src="<?php echo site_url('assets/icons')."/".$dd['weather']; ?>"><?=$dd['weather_name'] ?></td>
+            							<td style="width: 15%"><img style="width: 60px" src="<?php echo site_url('assets/icons')."/".$dd['rainfall_dist']; ?>"><?=$dd['rainfall_dist_name'] ?></td>
+            							<td style="width: 15%"><img style="width: 60px" src="<?php echo site_url('assets/icons')."/".$dd['visibility']; ?>"><?=$dd['visibility_name'] ?></td>
+            							<td style="width: 15%; background: <?php echo $dd['harzard']; ?>"></td>
+            						</tr>
+            					<?php } ?> 
+            					<tr>
+            						<td style="width: 15%; background: #0F0"></td>
+            						<td colspan="7">No severe weather is expected.</td>
+            					</tr>
+            					<tr>
+            						<td style="width: 15%; background: #FFA500"></td>
+            						<td colspan="7">Potentially dangerous weather is expected. <b>Be prepared.</b></td>
+            					</tr>
+            					<tr>
+            						<td style="width: 15%; background: #F00"></td>
+            						<td colspan="7">Dangerous and potentially life-threatening weather conditions are expected. <b>Take immediate action to ensure your safety</b></td>
+            					</tr>
+            				</table>
+            			<?php }else { echo "<p style='padding-top:10px'>Data has not yet been uploaded. Please try again later.</p>";} ?>  
 
 
+            			<div class="row">
+            				<h4 class="sponsors"><b><i><?= $this->lang->line('msg_brought_to_you'); ?>:</i></b></h4>
+            				<section class="customer-logos slider">
+            					<div class="slide" > <img  src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/mak.jpg"></div>
+            					<div class="slide"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/norad3.png"></div>
+            					<div class="slide" ><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/unma.png"></div>
+            					<div class="slide" > <img  src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/mak.jpg"></div>
+            					<div class="slide"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/norad3.png"></div>
+            					<div class="slide"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/unma.png"></div>
+            					<div class="slide" > <img  src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/norad3.png"></div>
+            				</section>
+            			</div>
+            		</div>
 
- <?php 
+            		<!-- LOGOS -->
+
+            	<?php }else if($category1 == "Seasonal_Forecast"){
+
+                    //LOG USER SEASONAL VISIT
+            		$INSERT = "INSERT into pageview (`page`, `userip`, `country`, `region`, `city`) values('Seasonal Forecast','$user_ip','$visitor_country','$visitor_region', '$visitor_city')";
+            		$this->db->query($INSERT);
 
 
- $months  = array('JANUARY','FEBRUARY','MARCH','APRIL', 'MAY','JUNE','JULY', 'AUGUST', 'SEPTEMBER','OCTOBER','NOVEMBER', 'DECEMBER');
- $flag = false;$count = 0; foreach ($seasonal_data as $Seasonal) : 
- $season = "unknown";
+            		?>
+
+            		<div id="seasonal_forecast">
+            			<a  href ="<?php site_url('index.php/auth/index') ?>" style="float: right;" class="glyphicon glyphicon-remove-sign"> </a>
+            			<h4><b><?=strtoupper($this->lang->line('msg_seasonal_forecast')) ?> - <?php $dist=$divisio_name; echo strtoupper($divisio_name); ?>
+            			<div style="background-color: cornflowerblue;height: 3px;margin-top: 2%; width: 100%;"></div></b>
+            		</h4>
+
+
+
+            		<?php 
+
+
+            		$months  = array('JANUARY','FEBRUARY','MARCH','APRIL', 'MAY','JUNE','JULY', 'AUGUST', 'SEPTEMBER','OCTOBER','NOVEMBER', 'DECEMBER');
+            		$flag = false;$count = 0; foreach ($seasonal_data as $Seasonal) : 
+            		$season = "unknown";
               //-----COMMENTED OUT 'JF' season is not available
- if((date('m') == 1) || (date('m') == 2)) $season = 'MAM';
- else if((date('m') == 3) || (date('m') == 4)  || (date('m') == 5) ) $season = 'MAM';
- else if ((date('m') == 6) || (date('m') == 7)  || (date('m') == 8) ) $season = 'JJA';
- else $season = 'SOND';
+            		if((date('m') == 1) || (date('m') == 2)) $season = 'MAM';
+            		else if((date('m') == 3) || (date('m') == 4)  || (date('m') == 5) ) $season = 'MAM';
+            		else if ((date('m') == 6) || (date('m') == 7)  || (date('m') == 8) ) $season = 'JJA';
+            		else $season = 'SOND';
 
               // Thie check the year and season we are currently in before desiding to display anything
- if(date('Y') == $Seasonal['year'] &&( ($Seasonal['abbreviation']) == $season)){
+            		if(date('Y') == $Seasonal['year'] &&( ($Seasonal['abbreviation']) == $season)){
                 // Set flag to true since there is data for that season in the database
-     $flag = true;
-     if($count == 0){ 
-        ?>
+            			$flag = true;
+            			if($count == 0){ 
+            				?>
 
-        <p style="font-weight: bold;font-size: 16px;">Issue Date: <?php
-        echo date('jS F Y', strtotime($Seasonal['issuetime']));
+            				<p style="font-weight: bold;font-size: 16px;">Issue Date: <?php
+            				echo date('jS F Y', strtotime($Seasonal['issuetime']));
                     // echo $date_struct[2].' '.$months[$date_struct[1]-1].' '.$date_struct[0]  ?></p> 
                     <p class="season_head"><?php $m = '';
                     if( $Seasonal['abbreviation'] == 'SOND') $m = 'SEPTEMBER-OCTOBER-NOVEMBER AND DECEMBER'; 
@@ -539,15 +583,11 @@
                     <p class="season_sub_head">1.0  Overiew</p>
                     
 
-                    <?php
-                    if (ucwords($this->session->userdata('site_lang')) == "English") {
-                    	?>
+                  
                     	<p class="season_content"><?php echo $Seasonal['overview']; ?></p>
-                    	<?php	
-                    }
-                    ?>
-                    <!-- <p class="season_sub_head">2.0  General Forecast</p>
-                    	<p class="season_content"><?php //echo $Seasonal['general_forecast']  ?></p> -->
+                    	
+                    <p class="season_sub_head">2.0  General Forecast</p>
+                    	<p class="season_content"><?php echo $Seasonal['general_forecast']  ?></p>
                     	<p align="center"><img class="figures_only" src="<?php echo base_url() ?>assets/frameworks/adminlte/img/<?php echo $Seasonal['map'] ?>" height="50%" width="50%"></p><br>
                     	<p class="season_sub_head">2.1.0  <?php echo $Seasonal['region_name']  ?> Region</p>
                     	<p class="season_sub_head">2.2.1   <?php echo $Seasonal['sub_region_name']  ?></p>
@@ -615,7 +655,7 @@
 
                     							</table> 
                     						</div>
-                    						<?php $flag = true; endforeach; if($flag == false){echo "<p>".$this->lang->line('msg_nodata')."</p>"; }?>
+                    						<?php $flag = true; endforeach; if($flag == false){echo "<p> vvvvv".$this->lang->line('msg_nodata')."</p>"; }?>
                     					</div>
                     					<!-- /.box-body -->
                     				</div>
@@ -659,112 +699,134 @@
 
 
                     		?>
-
-
                     		<script type="text/javascript">
-             //        			$(document).ready(function () {
-             //        				var unique_id = $.gritter.add({
-					        //     // (string | mandatory) the heading of the notification
-					        //     title: '<?=$name?>',
-					        //     // (string | mandatory) the text inside the notification
-					        //     text: ' <b/><b/><br/> <?php  
-					        //     echo"<tr>  ";
-					        //     echo "<td>".$desc."</td>";
+                    			$(document).ready(function () {
+                     				var unique_id = $.gritter.add({
+					            // (string | mandatory) the heading of the notification
+					            title: '<?=$name?>',
+					            // (string | mandatory) the text inside the notification
+					            text: ' <b/><b/><br/> <?php  
+					            echo"<tr>  ";
+					            echo "<td>".$desc."</td>";
 
 
-					        //     ?>  ',
-					        //     // (string | optional) the image to display on the left
+					            ?>  ',
+					            // (string | optional) the image to display on the left
 
-					        //     image: '<?php //echo base_url() ?>assets/frameworks/adminlte/img/rain.png?>',
-					        //     // (bool | optional) if you want it to fade out on its own or just sit there
-					        //     sticky: false,
-					        //     // (int | optional) the time you want it to be alive for before fading out
-					        //     time: '20000',
-					        //     // (string | optional) the class name you want to apply to that specific message
-					        //     class_name: 'my-sticky-class'
-					        // });
+					            image: '<?php //echo base_url() ?>assets/frameworks/adminlte/img/rain.png?>',
+					            // (bool | optional) if you want it to fade out on its own or just sit there
+					            sticky: false,
+					            // (int | optional) the time you want it to be alive for before fading out
+					            time: '20000',
+					             // (string | optional) the class name you want to apply to that specific message
+					            class_name: 'my-sticky-class'
+					         });
 
-             //        				return false;
-             //        			});
+                    				return false;
+                    			});
          </script>
 
          <div class="tabs" style="margin-top: 10px;">
-             <ul class="tabs-list">
-                <li class="active"><a href="#tab1"><?=ucwords($this->lang->line('msg_daily_forecast')) ?> </a></li>
-                <!-- <li ><a href="#tab2">Dekadal Forecast</a></li> -->
-                <li ><a href="#tab3"><?=ucwords($this->lang->line('msg_seasonal_forecast')) ?></a></li>
-                <?php
-                
+         	<ul class="tabs-list">
+         		<?php  
+         		$now = time();
+         		$today = date('Y-m-d');
 
 
-                if ($_SESSION['site_lang'] == "english" || $_SESSION['site_lang'] == null) {
-
-                   if (sizeof($season_updates) > 0) {
-                      foreach ($season_updates as $key) {
-                         ?>
-                         <li style="background-color: green;" ><a href="#tab5"><?php echo $key['month'];?> Forecast</a></li>
-                         <?php
-                     } }
-                     ?>
-                     <li ><a href="#tab4">Victoria Forecast</a></li>
-
-
-                     <?php
-
-                     if (sizeof($monthly_data_home) > 0) {
-                       ?>
-                       <li ><a href="#tab6">Monthly Forecast</a></li>
-                       <?php
-                   }
-                   ?>
-
-                   <?php
-               }
-
-               ?>
-           </ul>
+         		$forecast_date = date('Y-m-d', strtotime('-1 day'));
+         		if ($now >= strtotime('18:00:00') && $now <= strtotime('23:59:59')){
+         			$current_date_time =  "Evening";
+         			$forecast_date = $today;
+         			$forecast_time_id = 4;
+         		}else if ($now >= strtotime('00:00:00') && $now <= strtotime('05:59:59')){
+         			$current_date_time =  "Early Morning";
+         			$forecast_time_id = 1;
+         			$forecast_date = date( 'Y-m-d', strtotime( $today . ' -1 day' ));
+         		}else if ($now >= strtotime('06:00:00') && $now <= strtotime('11:59:59')){
+         			$current_date_time =  "Late Morning";
+         			$forecast_time_id = 2;
+         			$forecast_date = date( 'Y-m-d', strtotime( $today . ' -1 day' ) );
+         		}else{
+         			$current_date_time =  "Afternoon";
+         			$forecast_time_id = 3;
+         			$forecast_date = date( 'Y-m-d', strtotime( $today . ' -1 day' ) );
+         		}
 
 
+         		?>
+         		<li class="active"><a href="#tab1"><?=ucwords($this->lang->line('msg_daily_forecast')) ?></a></li>
+         		<!-- <li ><a href="#tab2">Dekadal Forecast</a></li> -->
+         		<?php
 
-           <div id="tab1" class="tab active" >
-               <div id="daily_forecast">
+         		//if (sizeof($seasonal_advice_home) > 0) {
+         		?>
+         		<li ><a href="#tab3"><?=ucwords($this->lang->line('msg_seasonal_forecast')) ?></a></li>
+         		<?php
+         		//}
+                //--show victoria forecast only in english
+         		if ($_SESSION['site_lang'] == "english" || $_SESSION['site_lang'] == null) {
 
-                  <?php //print_r($season_updates);?>
+         			if (isset($season_updates)) {
+         				foreach ($season_updates as $key) {
+         					?>
+         					<li style="background-color: green;" ><a href="#tab5"><?php echo $key['month'];?> Forecast</a></li>
+         					<?php
+         				} }
+         				?>
+         				<li ><a href="#tab4">Victoria Forecast</a></li>
 
-                  <h4><b><?=strtoupper($this->lang->line('msg_daily_forecast')) ?> - <?php $ct = 0; foreach($daily_forcast_division as $fd){$ct++;if($ct == 1){ $dist = strtoupper($fd->division_name); echo strtoupper($fd->division_name);}}  ?>
-                  <div style="background-color: cornflowerblue;height: 2.5px;margin-top: 10px; width: 100%;"></div></b>
-              </h4>
+         				<?php
+
+         				if (sizeof($monthly_data_home) > 0) {
+         					?>
+         					<li ><a href="#tab6">Monthly Forecast</a></li>
+         					<?php
+         				}
+         				?>
+
+         				<?php
+         			}
+
+         			?>
+         		</ul>
 
 
 
-              <!-- END OF 6 HOURLY -->
+         		<div id="tab1" class="tab active" >
+         			<div id="daily_forecast">
 
+         				<?php //print_r($season_updates);?>
 
-              <?php $count = 0;
-              foreach($daily_forecast_region_data_24 as $fd){$now = $today; $count ++;}
+         				<h4><b><?=strtoupper($this->lang->line('msg_daily_forecast')) ?> - <?php $ct = 0; foreach($daily_forcast_division as $fd){$ct++;if($ct == 1){ $dist = strtoupper($fd->division_name); echo strtoupper($fd->division_name);}}  ?>
+         				<div style="background-color: cornflowerblue;height: 2.5px;margin-top: 10px; width: 100%;"></div></b>
+         			</h4>
+         			<!-- END OF 6 HOURLY -->
+
+         			<?php $count = 0;
+         			foreach($daily_forecast_region_data_24 as $fd){$now = $today; $count ++;}
 
            // Very important
-              $day1 = date("l", strtotime($fd->forecasted));
-              $next_day = date('Y-m-d', strtotime(' +1 day',strtotime($fd->forecasted))); 
-              $day2 = date("l", strtotime($next_day));
+         			$day1 = date("l", strtotime($fd->forecasted));
+         			$next_day = date('Y-m-d', strtotime(' +1 day',strtotime($fd->forecasted))); 
+         			$day2 = date("l", strtotime($next_day));
 
             // East African timezone
-              date_default_timezone_set('Africa/Nairobi');
-              $actual_time = date('Y-m-d g:ia');
+         			date_default_timezone_set('Africa/Nairobi');
+         			$actual_time = date('Y-m-d g:ia');
 
             //This is the forecast 's next day at 6:00pm when the forecast expires
-              $next_day_with_time = date('Y-m-d g:ia', strtotime($next_day.'6:00pm'));
+         			$next_day_with_time = date('Y-m-d g:ia', strtotime($next_day.'6:00pm'));
 
-              if( (strtotime(date('Y-m-d g:ia')) >= strtotime($fd->forecasted)) && (strtotime(date('Y-m-d g:ia')) <= strtotime($next_day_with_time))  ){ ?>
+         			if( (strtotime(date('Y-m-d g:ia')) >= strtotime($fd->forecasted)) && (strtotime(date('Y-m-d g:ia')) <= strtotime($next_day_with_time))  ){ ?>
 
-                  <h5><b><?= $this->lang->line('msg_issue'); ?>:</b>&nbsp; <?php echo date('jS F Y', strtotime( $fd->issuedate))?></h5>
-                  <p><h5 style="color: cornflowerblue;"><b><?= $this->lang->line('msg_summary'); ?>:</b></h5>
-                     <?php echo $fd->weather;?></p>
-                     <table class="table table-bordered" >
-                        <thead>
-                           <tr>
-                              <th scope="col"><?= $this->lang->line('msg_time'); ?></th>
-                              <th scope="col"><?= $this->lang->line('msg_weather'); ?></th>
+         				<h5><b><?= $this->lang->line('msg_issue'); ?>:</b>&nbsp; <?php echo date('jS F Y', strtotime( $fd->issuedate))?></h5>
+         				<p><h5 style="color: cornflowerblue;"><b><?= $this->lang->line('msg_summary'); ?>:</b></h5>
+         					<?php echo $fd->weather;?></p>
+         					<table class="table table-bordered" >
+         						<thead>
+         							<tr>
+         								<th scope="col"><?= $this->lang->line('msg_time'); ?></th>
+         								<th scope="col"><?= $this->lang->line('msg_weather'); ?></th>
                     <!-- <th scope="col">Max Temp</th>
                     	<th scope="col">Min Temp</th> -->
                     	<th scope="col"><?= $this->lang->line('msg_temperature'); ?></th>
@@ -858,12 +920,6 @@
 
 
          <!-- LOGOS -->
-
-
-
-
-
-
 
      <?php  }else{
                 // echo "<p>".$this->lang->line('msg_nodata')."</p>";
@@ -982,13 +1038,11 @@
         </div>
     </div>
 
-
-
     <div id="tab3" class="tab">
     	<div id="seasonal_forecast">
     		<h4><b><?=strtoupper($this->lang->line('msg_seasonal_forecast')) ?> - <?php $ct = 0; foreach($daily_forcast_division as $fd){$ct++;if($ct == 1){ $dist = strtoupper($fd->division_name); echo strtoupper($fd->division_name);}}  ?>
     		<div style="background-color: cornflowerblue;height: 3px;margin-top: 10px; width: 100%;"></div></b></h4>
-    		<?php $count = 0; $flag = false; foreach ($seasonal_data_home as $Seasonal){ ?> <?php $count++; 
+    		<?php  $count = 0; $flag = false; foreach ($seasonal_data_home as $Seasonal){ ?> <?php $count++; 
     			$months  = array('JANUARY','FEBRUARY','MARCH','APRIL', 'MAY','JUNE','JULY', 'AUGUST', 'SEPTEMBER','OCTOBER','NOVEMBER', 'DECEMBER');
     			$date_struct = explode('-', $Seasonal['issuetime']);
                           // New code to check the season we are in before displaying data for the season currently available in the database
@@ -1014,16 +1068,12 @@
     	</p>
 
     	<p class="season_sub_head">1.0  Overiew</p>
-    	<?php
-    	if (ucwords($this->session->userdata('site_lang')) == "English") {
-    		?>
+
     		<p class="season_content"><?php echo $Seasonal['overview']; ?></p>
-    		<?php	
-    	}
-    	?>
+    	
 
     	<p class="season_sub_head">2.0  General Forecast</p>
-    	<!--  <p class="season_content"><?php //echo $Seasonal['general_forecast']; ?></p> -->
+    	 <p class="season_content"><?php echo $Seasonal['general_forecast']; ?></p> 
     	<p align="center"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/img/<?php echo $Seasonal['map'];?>" height="50%" width="50%"></p><br>
     	<p class="season_sub_head">2.1.0  <?php echo $Seasonal['region_name']; ?> Region</p>
     	<p class="season_sub_head">2.2.1   <?php echo $Seasonal['sub_region_name']; ?></p>
@@ -1086,138 +1136,135 @@
 
     			</div>
 
-        <!--    <div class="row" style="">
-            <div class="col-sm-12">
-             <h4><?= $this->lang->line('msg_brought_to_you'); ?>:</h4> 
-             <table>
-               <
-             </table>
-              <img src="<?php //echo base_url() ?>assets/frameworks/adminlte/logo/norad.png" height="20%" width="20%">
 
-           
-              <img src="<?php //echo base_url() ?>assets/frameworks/adminlte/logo/unma.png" height="20%" width="20%">
-            
-              <img src="<?php //echo base_url() ?>assets/frameworks/adminlte/logo/mak.jpg" height="20%" width="20%">
-            </div>
-             
-           </div>
-       -->
-
-       <!-- ADDED NEW ADVISORIES DISPLAY-------- -->
-       <!-- END OF BUTTON TO TRIGGER FEEDBACK FORM -->
-       <?php  $flag = true;  } } } if(($count < 1) || ($flag == false)) echo "<p>".$this->lang->line('msg_nodata')."</p>";
-       ?>
-   </div>
-</div>
-
-
-
-
-
-
-<div id="tab2" class="tab">
-	<div id="seasonal_forecast">
-		<h4>TEN DAY FORECAST FOR <?php $ct = 0; foreach($daily_forcast_division as $fd){$ct++;if($ct == 1){ $dist = strtoupper($fd->division_name); echo strtoupper($fd->division_name);}}  ?>
-		<?php 
-		$dekadal_forecast_data= $this->Decadal_forecast_model->get_dekadal_forecast_area(2);
+    			<!-- ADDED NEW ADVISORIES DISPLAY-------- -->
+    			<!-- END OF BUTTON TO TRIGGER FEEDBACK FORM -->
+    			<?php  $flag = true;  } } } if(($count < 1) || ($flag == false)) echo "<p>".$this->lang->line('msg_nodata')."</p>";
+    			?>
+    		</div>
+    	</div>
+    	<div id="tab2" class="tab">
+    		<div id="seasonal_forecast">
+    			<h4>TEN DAY FORECAST FOR <?php $ct = 0; foreach($daily_forcast_division as $fd){$ct++;if($ct == 1){ $dist = strtoupper($fd->division_name); echo strtoupper($fd->division_name);}}  ?>
+    			<?php 
+    			$dekadal_forecast_data= $this->Decadal_forecast_model->get_dekadal_forecast_area(2);
         // print_r($dekadal_forecast_data);exit();
 
-		$count = 0; $flag = false;$today_data = date('Y-m-d');
-		foreach($dekadal_forecast_data as $dekadal){
+    			$count = 0; $flag = false;$today_data = date('Y-m-d');
+    			foreach($dekadal_forecast_data as $dekadal){
 
-			$count++;
-			if(($count == 1) && (($today_data >=  $dekadal['date_from'])&& ($today_data <=  $dekadal['date_to']) ) ){
-				?>
-				REGION: (<?php echo date('jS ', strtotime( $dekadal['date_from']))." - ".date('jS ', strtotime( $dekadal['date_to'])).', '.date('F Y', strtotime( $dekadal['date_to'])); ?>)
-				<div style="background-color: cornflowerblue;height: 3px;margin-top: 10px; width: 90%;"></div>
-			<?php } }?>
-		</h4>
+    				$count++;
+    				if(($count == 1) && (($today_data >=  $dekadal['date_from'])&& ($today_data <=  $dekadal['date_to']) ) ){
+    					?>
+    					REGION: (<?php echo date('jS ', strtotime( $dekadal['date_from']))." - ".date('jS ', strtotime( $dekadal['date_to'])).', '.date('F Y', strtotime( $dekadal['date_to'])); ?>)
+    					<div style="background-color: cornflowerblue;height: 3px;margin-top: 10px; width: 90%;"></div>
+    				<?php } }?>
+    			</h4>
 
-	</div>
-</div>
+    		</div>
+    	</div>
 
-<!------------------- MONTHLY FORECAST INFORMATION SECTION 2021 ----------------------------->
- <div id="tab6" class="tab">
-        <div id="seasonal_forecast">
-            <h4><b>RAINFALL OUTLOOK FOR  <?php $ct = 0; foreach($monthly_data_home as $fd){$ct++;if($ct == 1){ $dist = strtoupper($fd->month_from); echo strtoupper($fd['month_from']).' & '.strtoupper($fd['month_to']).' '. strtoupper($fd['year']);}}  ?>
-            <div style="background-color: cornflowerblue;height: 3px;margin-top: 10px; width: 100%;"></div></b>
-           </h4>
 
-            <?php $count = 0; $flag = false; foreach ($monthly_data_home as $monthly){ ?> <?php $count++; 
-               
+    	<!------------------- MONTHLY FORECAST INFORMATION SECTION 2021 ----------------------------->
+    	<div id="tab6" class="tab">
+    		<div id="seasonal_forecast">
+    			<h4><b>RAINFALL OUTLOOK FOR  <?php $ct = 0; foreach($monthly_data_home as $fd){$ct++;if($ct == 1){ $dist = strtoupper($fd->month_from); echo strtoupper($fd['month_from']).' & '.strtoupper($fd['month_to']).' '. strtoupper($fd['year']);}}  ?>
+    			<div style="background-color: cornflowerblue;height: 3px;margin-top: 10px; width: 100%;"></div></b>
+    		</h4>
 
-                $months  = array('JANUARY','FEBRUARY','MARCH','APRIL', 'MAY','JUNE','JULY', 'AUGUST', 'SEPTEMBER','OCTOBER','NOVEMBER', 'DECEMBER');
-                $date_struct = explode('-', $Seasonal['issuetime']);
+    		<?php $count = 0; $flag = false; foreach ($monthly_data_home as $monthly){ ?> <?php $count++; 
+
+
+    			$months  = array('JANUARY','FEBRUARY','MARCH','APRIL', 'MAY','JUNE','JULY', 'AUGUST', 'SEPTEMBER','OCTOBER','NOVEMBER', 'DECEMBER');
+    			$date_struct = explode('-', $Seasonal['issuetime']);
                           // New code to check the season we are in before displaying data for the season currently available in the database
-                $season = "unknown";
-                if((date('m') == 1) || (date('m') == 2)) $season = 'MAM';
-                else 
-                    if((date('m') == 3) || (date('m') == 4)  || (date('m') == 5) ) $season = 'MAM';
-                else if ((date('m') == 6) || (date('m') == 7)  || (date('m') == 8) ) $season = 'JJA';
-                else $season = 'SOND';
+    			$season = "unknown";
+    			if((date('m') == 1) || (date('m') == 2)) $season = 'MAM';
+    			else 
+    				if((date('m') == 3) || (date('m') == 4)  || (date('m') == 5) ) $season = 'MAM';
+    			else if ((date('m') == 6) || (date('m') == 7)  || (date('m') == 8) ) $season = 'JJA';
+    			else $season = 'SOND';
 
 
 
               // Thie check the year and season we are currently in before desiding to display anything
-                if(date('Y') == $monthly['year'] ){
-                    if($count == 1){ 
-                        ?>
-                        <p style="font-weight: bold;font-size: 16px;">Issue Date:<span><?php
-                        echo date('jS F Y', strtotime($monthly['issue_date']));?></span>  </p>
+    			if(date('Y') == $monthly['year'] ){
+    				if($count == 1){ 
+    					?>
+    					<p style="font-weight: bold;font-size: 16px;">Issue Date:<span><?php
+    					echo date('jS F Y', strtotime($monthly['issue_date']));?></span>  </p>
 
 
-        <p class="season_sub_head">1.0  Summary</p>
-            <p class="season_content"><?php echo $monthly['summary']; ?></p>
+    					<p class="season_sub_head">1.0  Summary</p>
+    					<p class="season_content"><?php echo $monthly['summary']; ?></p>
 
-        <p class="season_sub_head">2.0  Introduction</p>
-          <p class="season_content"><?php echo $monthly['introduction']; ?></p> 
-        
-
-        <p class="season_sub_head">2.1.0  Rainfall Outlook for <?php echo $monthly['month_from'].' & '.$monthly['month_to'].' '. $monthly['year'];; ?> </p>
-        <p class="season_content"><?php echo $monthly['weather_outlook']; ?></p> 
-        <p align="center"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/img/<?php echo $monthly['forecast_map'];?>" height="50%" width="50%"></p><br>
-     
-
-                    <!-------ADDED NEW ADVISORIES DISPLAY-------- -->
-                    <div class="box box-default collapsed-box">
-                        <div class="box-header with-border">
-                            <button style ="background-color: green;" type="button" class="btn btn-primary" data-widget="collapse" style="margin-top: 15px;width: 180px"><i  class="fa fa-plus" >VIEW ADVISORIES</i>
-                            </button>
-                            <button style ="background-color: red;" type="button" class="btn btn-primary" data-widget="collapse" style="margin-top: 15px;width: 180px"><i  class="fa fa-plus" >VIEW IMPACTS</i>
-                            </button>
-                            
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <?php  if(isset($monthly_advice_home)) foreach ($monthly_advice_home as $advice) : 
-                            ?>
-
-                            <div id="advisory"><table class="advice_table">
-                                <tr style="background-color: powderblue;"> <td>Sector</td><td><?=$advice['minor_name'] ?></td></tr>
-                                <tr> <td>Message</td><td><?=$advice['message_summary'] ?></td> </tr>
-
-                            </table> 
-                        </div>
-                        <?php $flag = true; endforeach; if($flag == false){echo "<p>".$this->lang->line('msg_nodata')."</p>"; }?>
-                    </div>
-                    <!-- /.box-body -->
-                </div>
+    					<p class="season_sub_head">2.0  Introduction</p>
+    					<p class="season_content"><?php echo $monthly['introduction']; ?></p> 
 
 
-                <div class="row">
-                    <h4 class="sponsors"><b><i><?= $this->lang->line('msg_brought_to_you'); ?>:</i></b></h4>
-                    <section class="customer-logos slider">
-                        <div class="slide" > <img  src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/mak.jpg"></div>
-                        <div class="slide"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/norad3.png"></div>
-                        <div class="slide" ><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/unma.png"></div>
-                        <div class="slide" > <img  src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/mak.jpg"></div>
-                        <div class="slide"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/norad3.png"></div>
-                        <div class="slide"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/unma.png"></div>
-                        <div class="slide" > <img  src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/norad3.png"></div>
-                    </section>
+    					<p class="season_sub_head">2.1.0  Rainfall Outlook for <?php echo $monthly['month_from'].' & '.$monthly['month_to'].' '. $monthly['year'];; ?> </p>
+    					<p class="season_content"><?php echo $monthly['weather_outlook']; ?></p> 
+    					<p align="center"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/img/<?php echo $monthly['forecast_map'];?>" height="50%" width="50%"></p><br>
+
+    					<?php
+    					if (sizeof($monthly_impacts_home) > 0) { ?>
+    						<p class="season_sub_head">2.1.1  Potential impacts expected during <?php echo $monthly['month_from'].' & '.$monthly['month_to'].' ,'. $monthly['year'];; ?> </p>
+    						<p class="season_content">
+    							<?php
+    							foreach ($monthly_impacts_home as $row) {  ?>
+    								<?php echo $row['impact']; ?>
+
+    								<?php 
+    							}
+
+    							?>
+
+    						</p> 
+
+    						<?php	
+    					}
+
+    					?>
+
+    					<!-------ADDED NEW ADVISORIES DISPLAY-------- -->
+    					<div class="box box-default collapsed-box">
+    						<div class="box-header with-border">
+    							<button style ="background-color: green;" type="button" class="btn btn-primary" data-widget="collapse" style="margin-top: 15px;width: 180px"><i  class="fa fa-plus" >VIEW ADVISORIES</i>
+    							</button>
 
 
-                </div>
+    						</div>
+    						<!-- /.box-header -->
+    						<div class="box-body">
+    							<?php  if(isset($monthly_advice_home)) foreach ($monthly_advice_home as $advice) : 
+    							?>
+
+    							<div id="advisory"><table class="advice_table">
+    								<tr style="background-color: powderblue;"> <td>Sector</td><td><?=$advice['minor_name'] ?></td></tr>
+    								<tr> <td>Message</td><td><?=$advice['message_summary'] ?></td> </tr>
+
+    							</table> 
+    						</div>
+    						<?php $flag = true; endforeach; if($flag == false){echo "<p>".$this->lang->line('msg_nodata')."</p>"; }?>
+    					</div>
+    					<!-- /.box-body -->
+    				</div>
+
+
+    				<div class="row">
+    					<h4 class="sponsors"><b><i><?= $this->lang->line('msg_brought_to_you'); ?>:</i></b></h4>
+    					<section class="customer-logos slider">
+    						<div class="slide" > <img  src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/mak.jpg"></div>
+    						<div class="slide"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/norad3.png"></div>
+    						<div class="slide" ><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/unma.png"></div>
+    						<div class="slide" > <img  src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/mak.jpg"></div>
+    						<div class="slide"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/norad3.png"></div>
+    						<div class="slide"><img src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/unma.png"></div>
+    						<div class="slide" > <img  src="<?php echo base_url() ?>assets/frameworks/adminlte/logo/norad3.png"></div>
+    					</section>
+
+
+    				</div>
 
         <!--    <div class="row" style="">
             <div class="col-sm-12">
@@ -1509,12 +1556,8 @@
 						<label for="colFormLabel" class="col-sm-4 col-form-label"><?= $this->lang->line('msg_weather_forecast')?></label>
 						<div class="col-sm-8">
 							<select name="CategoryName" id="CategoryName" class = "form-control" >
-
 								<option><?= $this->lang->line('msg_daily_forecast')?></option>
 								<option><?= $this->lang->line('msg_seasonal_forecast')?></option>
-
-
-
 								<!-- <option>DEKADAL FORECAST</option> -->
 							</select>
 						</div>
@@ -1719,7 +1762,7 @@
 			<?php }
 
 			?><br/>
-			<form method="post" action="<?php site_url('index.php/auth/index') ?>">
+			<form method="post" action="<?php site_url('auth') ?>">
 
 				<input type="hidden" name="session_language" value="<?php echo $this->session->userdata('site_lang')?>">
 				<div class="control-group">
@@ -1730,21 +1773,18 @@
 					<select name = 'product' id="product" class="form-control" required>
 						<option value= "Select Product"  ><?=ucwords($this->lang->line('msg_select_Category')) ?></option>
 						<option value= "Daily Forecast"  ><?=ucwords($this->lang->line('msg_daily_forecast')) ?> </option>
-						<option value= "Seasonal Forecast" ><?=ucwords($this->lang->line('msg_seasonal_forecast')) ?></option>
+						<option value= "Seasonal_Forecast" ><?=ucwords($this->lang->line('msg_seasonal_forecast')) ?></option>
 
 						<?php
-						if ($_SESSION['site_lang'] == "english") {?>
+						if (($_SESSION['site_lang'] == "english") || ($_SESSION['site_lang']  == null)) {?>
 							<option value= "Victoria Forecast" >MARINE FORECAST</option>
-						<?php }
+							<?php 
+						}
 						?>
 
 					</select>
-
 				</div>
 			</div><br/>
-
-
-
 			<div class="test1 control-group">
 				<label class="control-label" for="option" id="opt_type"> <?= ucwords($this->lang->line('msg_select_ditrict')); ?></label>
 				<div class="controls">                             
@@ -1755,16 +1795,57 @@
 				</div>
 			</div>
 
+			<?php
+			if (($_SESSION['site_lang'] != "luganda")) {?>
+
+				<div class="Seasonal_Forecast hide_lang_selection">
+					<div class="test1 control-group">
+						<label class="control-label" for="Forecast Language"> Forecast Language</label>
+						<div class="controls">                             
+							<select name = "forecast_language" id="" class = "form-control" required>
+								
+								<?php
+								if (sizeof($season_available_lang) > 0) {
+									foreach ($season_available_lang as $row) {
+										?>
+										<option value="<?=$row['id']?>"><?=$row['language']?></option>  
+
+										<?php
+									}
+								}else{
+									?>
+									<option value="1">English</option> 
+									<?php
+								}
+								?>
+
+
+
+							</select>
+						</div>
+
+
+					</div>
+
+				</div>
+				<?php
+			}
+			?>
+
+
+
+
+
+
 			<br/>
 			<div class="control-group">
 				<div class="controls">
-					<center><button type="submit" name="request_s" class="btn btn-info"><i class="fa fa-hand-rock-o" aria-hidden="true"></i>&nbsp; <?php echo ucwords($this->lang->line('msg_request')); ?></button></center><br><br>
-
-
+					<center><button type="submit" name="request_s" class="btn btn-info"><i class="fa fa-hand-rock-o" aria-hidden="true"></i>&nbsp; <?php echo ucwords($this->lang->line('msg_request')); ?></button></center>
 				</div>
 			</form>
-
 		</div>
+
+
 	</section>
 	<section style="position: absolute; 
 	bottom: 50px;">
@@ -1788,30 +1869,31 @@
 
 <script>
 	$(document).ready(function(){
-		$('#feedback_button').click(function(){
+        // $("feedback_button").on('click', function(){
+        //     alert("nania")
+        // })
+        $('#feedback_button').click(function(){
+        	var division = $('#districtName').val();
+        	var category = $('#CategoryName').val();
+        	var accuracy = $('#accuracy').val();
+        	var applicability = $('#applicability').val();
+        	var timeliness = $('#timeliness').val();
+        	var generalComment = $('#generalComment').val();
+        	var contact = $('#contact').val();
 
-			var division = $('#districtName').val();
-			var category = $('#CategoryName').val();
-			var accuracy = $('#accuracy').val();
-			var applicability = $('#applicability').val();
-			var timeliness = $('#timeliness').val();
-			var generalComment = $('#generalComment').val();
-			var contact = $('#contact').val();
+        	var div = "qwertyu";
 
-			var div = "qwertyu";
-
-			if(generalComment != ""){
-
-            // alert(division); 
-            $.ajax({
-            	url : "<?php echo base_url().'index.php/Product/log_userfeedback'?>",
-            	method : "POST",
-            	data: {'division': division, 'category':category, 'accuracy': accuracy, 'applicability' : applicability, 'timeliness': timeliness, 'generalComment' : generalComment, 'contact' : contact},
+        	if(generalComment != "" || contact != ""){
+        		$.ajax({
+        			url : "<?=base_url().'index.php/User_feedback/save_feedback' ?>",
+        			method : "POST",
+        			data: {'division': division, 'category':category, 'accuracy': accuracy, 'applicability' : applicability, 'timeliness': timeliness, 'generalComment' : generalComment, 'contact' : contact},
                     // async : true,
                     // dataType : 'json',
                     success: function(data){
 
                     	alert("Well received. Thank you  for your feedback");
+                        // alert(data)
 
 
                     },
@@ -1820,16 +1902,14 @@
                     }
                 });
 
-        }
-        else{
-        	alert("We really appreciate your comment. Please provide a comment !!!");
-        	return false;
+        	}else{
+        		alert("We really appreciate your comment. Please provide a comment !!!");
+        		return false;
+        	}
 
-        }
+        });
 
-    });
-
-	})
+    })
 </script>
 
 <!-- victoria modal -->
@@ -1948,7 +2028,7 @@
 
 			$("#opt_type").html(opt);
 			$("#division").html(options);
-		}else if(selection=="Seasonal Forecast"){
+		}else if(selection=="Seasonal_Forecast"){
 
 			var opt = "<?= ucwords($this->lang->line('msg_select_ditrict')); ?>";
 			var options="<option value = > <?= ucwords($this->lang->line('msg_select_your_ditrict')); ?></option>";
@@ -1964,6 +2044,7 @@
 			?>
 
 			$("#opt_type").html(opt);
+			$("#opt_type2").html(opt);
 			$("#division").html(options);
 		}else if(selection== "Victoria Forecast"){
 			var opt = "Select Landing Site";
@@ -1999,6 +2080,22 @@
 
 
 
+</script>
+
+<script>
+	$(document).ready(function(){
+		$("#product").change(function(){
+			$(this).find("option:selected").each(function(){
+				var optionValue = $(this).attr("value");
+				if(optionValue){
+					$(".hide_lang_selection").not("." + optionValue).hide();
+					$("." + optionValue).show();
+				} else{
+					$(".hide_lang_selection").hide();
+				}
+			});
+		}).change();
+	});
 </script>
 
 
@@ -2038,21 +2135,29 @@
 }
 </script>
 
+
+<!-- handle language display div -->
+
+
 <?php
     //Visitor counter
-$user_ip=$_SERVER['REMOTE_ADDR'];
+
 $dd = "SELECT userip from pageview where page='home' and userip='".$user_ip."'";
 $check_ip = $this->db->query($dd);
        // echo  $user_ip;exit();
+
 
 if($check_ip->num_rows() >=1)
 {
 	$UPDATE = "UPDATE totalview set totalvisit = totalvisit+1 where page='home'";
 	$this->db->query($UPDATE);
+
+ // $INSERT = "INSERT into pageview (`page`, `userip`, `country`, `region`, `city`) values('home','$user_ip','$visitor_country','$visitor_region', '$visitor_city')";
+ // $this->db->query($INSERT);
 }
 else
 {
-	$INSERT = "INSERT into pageview (page, userip) values('home','$user_ip')";
+	$INSERT = "INSERT into pageview (`page`, `userip`, `country`, `region`, `city`) values('home','$user_ip','$visitor_country','$visitor_region', '$visitor_city')";
 	$this->db->query($INSERT);
 
 	$UPDATE = "UPDATE totalview set totalvisit = totalvisit+1 where page='home'";
