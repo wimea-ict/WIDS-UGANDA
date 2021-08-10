@@ -195,6 +195,24 @@ function get_home_advice(){
   return $query->result_array();
 }
 
+function get_home_impacts(){
+ $month_to = "unknown";
+  if((date('m') == 1) || (date('m') == 2)) $month_to = 'February';
+  else 
+    if((date('m') == 3) || (date('m') == 4)  || (date('m') == 5) ) $month_to = 'May';
+  else if ((date('m') == 6) || (date('m') == 7)  || (date('m') == 8) ) $month_to = 'August';
+  else $season = 'December';
+
+   $this->db->select('monthly_impacts.impact,  monthly_forecast.month_from, monthly_forecast.month_to');
+  $this->db->from('monthly_impacts');
+  $this->db->join('monthly_forecast','monthly_forecast.id = monthly_impacts.forecast_id'); 
+    $this->db->where("monthly_forecast.month_to",$month_to );
+    $this->db->where("monthly_forecast.year",date('Y') );
+  $this->db->order_by('monthly_impacts.id', $this->order);   
+
+  $query=$this->db->get();   
+  return $query->result_array();
+}
 
 
 

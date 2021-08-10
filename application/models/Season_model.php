@@ -327,7 +327,38 @@ public  function get_forecast_area($id=NULL){
     
     }
 
+
+    //get this season's available languages
+
+    function get_season_available_languages()
+    {  
+
+      $season = "unknown";
+       if((date('m') == 1) || (date('m') == 2)) $season = 'MAM';
+                           else 
+                            if((date('m') == 3) || (date('m') == 4)  || (date('m') == 5) ) $season = 'MAM';
+                          else if ((date('m') == 6) || (date('m') == 7)  || (date('m') == 8) ) $season = 'JJA';
+                          else $season = 'SOND';
+
+     
+        $this->db->select('ussdmenulanguage.language, ussdmenulanguage.id');
+        $this->db->DISTINCT('ussdmenulanguage.language, ussdmenulanguage.id');
+        $this->db->from('ussdmenulanguage');
+        $this->db->join('area_seasonal_forecast','area_seasonal_forecast.language_id = ussdmenulanguage.id');
+        $this->db->join('seasonal_forecast','area_seasonal_forecast.forecast_id = seasonal_forecast.id');
+        $this->db->join('season_months','seasonal_forecast.season_id = season_months.id');
+        $this->db->where('season_months.abbreviation',$season);
+       $this->db->where('seasonal_forecast.year',date('Y'));
+        $this->db->order_by('ussdmenulanguage.language','ASC');
+       $query=$this->db->get();   
+       return $query->result_array();
+    
+    }
+
+
     function get_advice($division, $session_lang){
+
+    	$year = date('Y');
        $season = "unknown";
                           if((date('m') == 1) || (date('m') == 2)) $season = 'MAM';
                            else 
@@ -348,6 +379,7 @@ public  function get_forecast_area($id=NULL){
         $this->db->where('division.id',$division);
         $this->db->where('major_sector.language_id',$session_lang);
            $this->db->where('season_months.abbreviation',$season);
+           $this->db->where('seasonal_forecast.year',$year);
         $this->db->group_by('advisory.id');
         $qy =  $this->db->get_compiled_select();
     
@@ -364,6 +396,7 @@ public  function get_forecast_area($id=NULL){
                   $this->db->where('division.id', $division);
                     $this->db->where('abbreviation', $season);
                     $this->db->where('ussdmenulanguage.id', $session_lang);
+                    $this->db->where('seasonal_forecast.year',$year);
                      $this->db->where('advisory.region_id', 1);
                      $this->db->group_by('advisory.id');
                       $qy1 =  $this->db->get_compiled_select();
