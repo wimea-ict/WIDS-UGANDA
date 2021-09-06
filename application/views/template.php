@@ -682,6 +682,9 @@ if($_SESSION['user_logged'] == FALSE){
                 }else if($change == 137){
                   $this->load->view('voice_req');
                 }
+                else if($change == 138){
+                  $this->load->view('upload_time_statistics');
+                }
 
 
                 ?>

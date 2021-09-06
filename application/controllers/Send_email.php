@@ -16,7 +16,7 @@ class Send_email extends CI_Controller {
 
 
      $from = $this->config->item('smtp_user');
-        $to = "eagerbeaverdevelopers@gmail.com";
+        $to = "lwangaaksam@gmail.com";
         $subject = 'HELLO';
         $message = "YOOOOOO";
 

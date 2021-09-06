@@ -17,7 +17,7 @@ class Daily_forecast extends CI_Controller
         $this->load->model('Impacts_model');
         $this->load->model('Forecast_impact_model');
         $this->load->model('Daily_forecast_time_model');
-         $this->load->library('session');
+        $this->load->library('session');
 		$this->load->model('Division_model');//Season_names_model
 		$this->load->model('Season_names_model');
         $this->load->model('Product_model');

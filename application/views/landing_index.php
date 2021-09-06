@@ -16,29 +16,30 @@ for ($i=30; $i >=0 ; $i--) {
 }
      
     ?>
-    <!DOCTYPE HTML>
-    <html>
-    <head>
+<!DOCTYPE HTML>
+<html>
+
+<head>
     <script>
-    window.onload = function () {
-     
-    var chart = new CanvasJS.Chart("chartContainer", {
-        title: {
-            text: "USSD-WIDS Daily Usage Trend (30 days)"
-        },
-        axisY: {
-            title: "Number of Users"
-        },
-         axisX: {
-            title: "Date"
-        },
-        data: [{
-            type: "line",
-            dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-        }]
-    });
-    chart.render();
-     
+    window.onload = function() {
+
+        var chart = new CanvasJS.Chart("chartContainer", {
+            title: {d
+                text: "USSD-WIDS Daily Usage Trend (30 days)"
+            },
+            axisY: {
+                title: "Number of Users"
+            },
+            axisX: {
+                title: "Date"
+            },
+            data: [{
+                type: "line",
+                dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+            }]
+        });
+        chart.render();
+
     }
     </script>
     <?php 
@@ -58,12 +59,13 @@ for ($i=30; $i >=0 ; $i--) {
      
     ?>
 
+d
+    <link rel="stylesheet"
+        href="<?php echo base_url() ?>assets/<?php echo $this->config->item('theme');?>/plugins/morris/morris.css">
 
-<link rel="stylesheet" href="<?php echo base_url() ?>assets/<?php echo $this->config->item('theme');?>/plugins/morris/morris.css">
+    <!--<div class="content-wrapper"> -->
 
-<!--<div class="content-wrapper"> -->
-
-     <section class="content-header" style="margin-top: -50px">
+    <section class="content-header" style="margin-top: -50px">
         <div>
 
             <?php
@@ -81,85 +83,87 @@ if ( $Hour >= 5 && $Hour <= 11 ) {
     echo "Good Evening, <i>".ucwords($_SESSION['first_name'].' '.$_SESSION['last_name']).'</i></b>';
 }
 ?>
-        <h2>
-            <small>System Statistics </small>                        
-        <small class="pull-right">
-       <?php if($_SESSION['usertype'] != 'wimea' && $_SESSION['first_time_login']==1){?> 
-       <a href="<?php echo base_url(); ?>index.php/Auth/change_pass"><button type="button" class="btn"><strong>Change Password</strong></button></a> 
-       <?php }?>                         
-        </small>
-        </h2>
+            <h2>
+                <small>System Statistics </small>
+                <small class="pull-right">
+                    <?php if($_SESSION['usertype'] != 'wimea' && $_SESSION['first_time_login']==1){?>
+                    <a href="<?php echo base_url(); ?>index.php/Auth/change_pass"><button type="button"
+                            class="btn"><strong>Change Password</strong></button></a>
+                    <?php }?>
+                </small>
+            </h2>
         </div>
 
-      </section>  
+    </section>
 
-<section class="content" id="dashboard-content">
+    <section class="content" id="dashboard-content">
 
 
-    <!-- Info boxes -->
-    <div class="row">
-    <?php if($_SESSION['usertype']=='wimea' && $_SESSION['first_time_login']==0){?>
-        <div class="col-md-4 col-sm-6 col-xs-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-aqua"><i class="ion ion-ios-person-outline"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">SYSTEM USERS</span>
-                    <span class="info-box-number"><?php echo $count_users; ?></span>
-                    
+        <!-- Info boxes -->
+        <div class="row">
+            <?php if($_SESSION['usertype']=='wimea' && $_SESSION['first_time_login']==0){?>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-aqua"><i class="ion ion-ios-person-outline"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">SYSTEM USERS</span>
+                        <span class="info-box-number"><?php echo $count_users; ?></span>
+
+                    </div>
+                    <!-- /.info-box-content -->
                 </div>
-                <!-- /.info-box-content -->
+                <!-- /.info-box -->
             </div>
-            <!-- /.info-box -->
-        </div>
-        <!-- /.col -->
-        <div class="col-md-4 col-sm-6 col-xs-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-red"><i class="ion-android-people"></i></span>
+            <!-- /.col -->
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-red"><i class="ion-android-people"></i></span>
 
-                <div class="info-box-content">
-                <a href="<?php echo base_url(); ?>index.php/Landing/ussdcount"><span class="info-box-text">USSD USERS</span></a>
-                    <span class="info-box-number"><?php echo $ussd_count; ?></span>
+                    <div class="info-box-content">
+                        <a href="<?php echo base_url(); ?>index.php/Landing/ussdcount"><span class="info-box-text">USSD
+                                USERS</span></a>
+                        <span class="info-box-number"><?php echo $ussd_count; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
                 </div>
-                <!-- /.info-box-content -->
+                <!-- /.info-box -->
             </div>
-            <!-- /.info-box -->
-        </div>
-        <div class="col-md-4 col-sm-6 col-xs-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-red"><i class="ion ion-ios-people-outline"></i></span>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-red"><i class="ion ion-ios-people-outline"></i></span>
 
-                <div class="info-box-content">
-                    <span class="info-box-text">SOCIETY FORECAST HELP</span>
-                    <span class="info-box-number"><?php echo $count_feedback; ?></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">SOCIETY FORECAST HELP</span>
+                        <span class="info-box-number"><?php echo $count_feedback; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
                 </div>
-                <!-- /.info-box-content -->
+                <!-- /.info-box -->
             </div>
-            <!-- /.info-box -->
-        </div>
-                <?php }?>
-        <!-- /.col -->
+            <?php }?>
+            <!-- /.col -->
 
-        <!-- fix for small devices only -->
-        <div class="clearfix visible-sm-block"></div>
+            <!-- fix for small devices only -->
+            <div class="clearfix visible-sm-block"></div>
 
-        <div class="col-md-4 col-sm-6 col-xs-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-green"><i class="glyphicon glyphicon-phone"></i></span>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="glyphicon glyphicon-phone"></i></span>
 
-                <div class="info-box-content">
-                    <span class="info-box-text">USSD REQUESTS</span>
-                    <span class="info-box-number"><?php echo $count_daily_forecast; ?></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">USSD REQUESTS</span>
+                        <span class="info-box-number"><?php echo $count_daily_forecast; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
                 </div>
-                <!-- /.info-box-content -->
+                <!-- /.info-box -->
             </div>
-            <!-- /.info-box -->
-        </div>
-       
-        <!-- /.col -->
-        <div class="col-md-4 col-sm-6 col-xs-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-green"><i class="fa fa-users"></i></span>
-                 <?php
+
+            <!-- /.col -->
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="fa fa-users"></i></span>
+                    <?php
 
                               $dd = "SELECT COUNT(DISTINCT phone) AS count_users FROM ussdtransaction_new";
                               $ddd = $this->db->query($dd);
@@ -167,21 +171,21 @@ if ( $Hour >= 5 && $Hour <= 11 ) {
                                 $count_users = $rowss['count_users'];
                               }
                                 ?>
-                <div class="info-box-content">
-                    <span class="info-box-text">USSD UNIQUE USERS</span>
-                    <span class="info-box-number"><?php echo $count_users; ?></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">USSD UNIQUE USERS</span>
+                        <span class="info-box-number"><?php echo $count_users; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
                 </div>
-                <!-- /.info-box-content -->
+                <!-- /.info-box -->
             </div>
-            <!-- /.info-box -->
-        </div>
-        <!-- /.col -->
-         <div class="col-md-4 col-sm-6 col-xs-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-orange"><i class="ion-android-cloud-circle"></i></span>
+            <!-- /.col -->
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-orange"><i class="ion-android-cloud-circle"></i></span>
 
-                <div class="info-box-content">
-                       <?php
+                    <div class="info-box-content">
+                        <?php
 
                               $dd = "SELECT * FROM totalview";
                               $ddd = $this->db->query($dd);
@@ -189,64 +193,140 @@ if ( $Hour >= 5 && $Hour <= 11 ) {
                                 $count_web_users = $web_users['totalvisit'];
                               }
                                 ?>
-                    <span class="info-box-text">Web Visits</span>
-                    <span class="info-box-number"><?php echo $count_web_users; ?></span>
+                        <span class="info-box-text">Web Visits</span>
+                        <span class="info-box-number"><?php echo $count_web_users; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
                 </div>
-                <!-- /.info-box-content -->
+                <!-- /.info-box -->
             </div>
-            <!-- /.info-box -->
+
+
+            <!-- fix for small devices only -->
+            <div class="clearfix visible-sm-block"></div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="ion-android-contacts"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Number of users</span>
+                        <span class="info-box-number"><?php echo $count_season; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="ion ion-android-globe"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Regions</span>
+                        <span class="info-box-number"><?php echo $count_region; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-orange"><i class="ion-ios-partlysunny-outline"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">DISTRICTS</span>
+                        <span class="info-box-number"><?php echo $count_division; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="ion-android-cloud-circle"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Number of Timely Daily forecast</span>
+                        <span class="info-box-number"><?php echo $timely_daily_forecast; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="ion-ios-partlysunny-outline"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Number of Timely Monthly forecast</span>
+                        <span class="info-box-number"><?php echo $timely_monthly_forecast; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="ion-ios-cloud-outline"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Number of Timely Seasonal forecast</span>
+                        <span class="info-box-number"><?php echo $timely_seasonal_forecast; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="ion-android-cloud-circle"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Number of Late Daily forecast</span>
+                        <span class="info-box-number"><?php echo $late_daily_forecast; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="ion-ios-partlysunny-outline"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Number of Late Monthly forecast</span>
+                        <span class="info-box-number"><?php echo $late_monthly_forecast; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="ion-ios-cloud-outline"></i></span>
+
+                    <div class="info-box-content">
+                      
+                        <span class="info-box-text">Number of Late Seasonal forecast</span>
+                        <span class="info-box-number"><?php echo $late_seasonal_forecast; ?></span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+
+            <!-- /.row -->
         </div>
 
+        <div class="row">
 
-    <!-- fix for small devices only -->
-    <div class="clearfix visible-sm-block"></div>
+            <!-- Main content -->
+            <!-- Main content -->
 
-    <div class="col-md-4 col-sm-6 col-xs-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-green"><i class="ion-android-contacts"></i></span>
-
-            <div class="info-box-content">
-                <span class="info-box-text">Number of users</span>
-                <span class="info-box-number"><?php echo $count_season; ?></span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-    </div>
-    <div class="col-md-4 col-sm-6 col-xs-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-green"><i class="ion ion-android-globe"></i></span>
-
-            <div class="info-box-content">
-                <span class="info-box-text">Regions</span>
-                <span class="info-box-number"><?php echo $count_region; ?></span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-    </div>
-    <!-- /.col -->
-    <div class="col-md-4 col-sm-6 col-xs-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-orange"><i class="ion-ios-partlysunny-outline"></i></span>
-
-            <div class="info-box-content">
-                <span class="info-box-text">DISTRICTS</span>
-                <span class="info-box-number"><?php echo $count_division; ?></span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-    </div>
-    <!-- /.row -->
-</div>
-    <div class="row">
-        
-        <!-- Main content -->
-        <!-- Main content -->
-
-        <section class="content col-md-12" >
-            <div class="row">
+            <section class="content col-md-12">
+                <div class="row">
 
 
                     <!-- BAR CHART -->
@@ -276,21 +356,21 @@ if ( $Hour >= 5 && $Hour <= 11 ) {
 
                 </div>
                 <!-- /.box -->
-        </section>
-    </div>
+            </section>
+        </div>
         <!-- /.content -->
 
-</section>
+    </section>
 
-<!-- /.content -->
+    <!-- /.content -->
 
-<!-- Morris.js charts -->
-<script src="<?php echo base_url() ?>assets/plugins/morris/raphael.min.js"></script>
-<script src="<?php echo base_url() ?>assets/plugins/morris/morris.min.js"></script>
-<!-- Sparkline -->
-<script src="<?php echo base_url() ?>assets/plugins/sparkline/jquery.sparkline.min.js"></script>
+    <!-- Morris.js charts -->
+    <script src="<?php echo base_url() ?>assets/plugins/morris/raphael.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/morris/morris.min.js"></script>
+    <!-- Sparkline -->
+    <script src="<?php echo base_url() ?>assets/plugins/sparkline/jquery.sparkline.min.js"></script>
 
-<!-- jQuery Knob Chart -->
-<script src="<?php echo base_url() ?>assets/plugins/knob/jquery.knob.js"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="<?php echo base_url() ?>assets/plugins/knob/jquery.knob.js"></script>
 
-<script src="<?php echo base_url() ?>assets/plugins/chartjs/Chart.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/chartjs/Chart.min.js"></script>

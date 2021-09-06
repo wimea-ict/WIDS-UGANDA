@@ -94,6 +94,13 @@ public function index() {
     $this->data['memory_usepercent'] = $this->Landing_model->memory_usepercent(TRUE, FALSE);
     $this->data['seasons'] = $this->Season_model->get_all();
     $this->data['no_data'] = $this->Season_model->no_data(); 
+    $this->data['timely_daily_forecast']=$this->Landing_model->timely_forecast();
+    $this->data['late_daily_forecast']=$this->Landing_model->late_daily_forecast();
+    $this->data['timely_seasonal_forecast']=$this->Landing_model->timely_seasonal();
+    $this->data['late_seasonal_forecast']=$this->Landing_model->late_seasonal();
+    $this->data['timely_monthly_forecast']=$this->Landing_model->timely_month();
+    $this->data['late_monthly_forecast']=$this->Landing_model->late_month();
+    
 
     // USSD daily user number
     $user_nums=array();
