@@ -242,7 +242,7 @@ $message ="";
     default:
     $message = "No  time selected ";
     break;
-         } 
+         
          //sending emails
     $from = $this->config->item('smtp_user');
     $to = $this->Email_model->get_by_id();
@@ -261,7 +261,7 @@ $message ="";
                 show_error($this->email->print_debugger());
            }
    }
-
+ }
 /* For the seasonal forecast reminders 
    seasonal forecast reminders
 */
@@ -372,7 +372,7 @@ $message ="";
        
         }
        //##############################
-    }
+    
      //#####################
        elseif($this->Email_model->get_monthly_upload_status()){
         $items = $this->Email_model->get_monthly_upload_status();
@@ -401,6 +401,7 @@ $message ="";
       }
 
 }
+   }
 }
 
 
