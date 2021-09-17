@@ -20,6 +20,7 @@ class Email_cronjob extends CI_Controller
 public function index(){
 date_default_timezone_set("Africa/Kampala");
 $month =date("m");
+$nextmonth = date("m", strtotime ("+1 month"));
 $current_full_date = date("Y-d-m");
 $tomorrow = date("Y-m-d", strtotime('tomorrow'));
 $yesterday = date("Y-m-d", strtotime('-1 day'));
@@ -34,6 +35,38 @@ $message ="";
         $this->Email_model->daily_early_morning_upload_status();
         if(! $this->Email_model->daily_early_morning_upload_status()){
             $message = " The  $current_full_date 6 hourly Early_Morning forecast was not uploaded";
+
+        }
+    $from = $this->config->item('smtp_user');
+    $to = $this->Email_model->get_by_id();
+    $subject = 'WIDS-upload Reminder';
+        
+      foreach ($to as $row) {
+            
+            $this->email->from($from);
+            $this->email->to($row);
+            $this->email->subject($subject);
+            $this->email->message($message);
+            $this->email->set_newline("\r\n");
+            if ($this->email->send()) {
+                echo ' Email sucess   ';
+            } else {
+                show_error($this->email->print_debugger());
+           }
+   }
+        $this->Email_model->daily_late_morning_upload_status();
+        if(! $this->Email_model->daily_late_morning_upload_status()){
+        $message = " This is a reminder for the $current_full_date Late_morning forecast";
+        } elseif($this->Email_model->daily_late_morning_upload_status()){
+            $items = $this->Email_model->daily_late_morning_upload_status();
+            $time = $items[0]['time'];
+            $uploadtime = $items[0]['uploadtime'];
+            if($time > date("5:30:00")){
+                 $message = "The  $current_full_date Late_morning forecast was uploded at $uploadtime " ;
+
+             } else{
+                $message = "The $current_full_date Late_morning forecast was uploded at $uploadtime ";
+             }
 
         }
         $from = $this->config->item('smtp_user');
@@ -53,21 +86,6 @@ $message ="";
                 show_error($this->email->print_debugger());
            }
    }
-        $this->Email_model->daily_late_morning_upload_status();
-        if(! $this->Email_model->daily_late_morning_upload_status()){
-        $message = " This is a reminder for the next Late_morning forecast";
-        } elseif($this->Email_model->daily_late_morning_upload_status()){
-            $items = $this->Email_model->daily_late_morning_upload_status();
-            $time = $items[0]['time'];
-            $uploadtime = $items[0]['uploadtime'];
-            if($time > date("5:30:00")){
-                 $message = "The  $current_full_date Late_morning forecast was uploded at $uploadtime " ;
-
-             } else{
-                $message = "The $current_full_date Late_morning forecast was uploded at $uploadtime ";
-             }
-
-        }
      break;
 
      case $time >= date("11:00:00") && $time <= date("16:59:00") :
@@ -75,10 +93,10 @@ $message ="";
         if(!$this->Email_model->daily_late_morning_upload_status()){
             $message = " The $current_full_date Late_Morning forecast was not uploaded";
         } 
+
     $from = $this->config->item('smtp_user');
     $to = $this->Email_model->get_by_id();
-    $subject = 'WIDS-upload Reminder';
-        
+    $subject = 'WIDS-upload Reminder'; 
       foreach ($to as $row) {
             
             $this->email->from($from);
@@ -87,7 +105,7 @@ $message ="";
             $this->email->message($message);
             $this->email->set_newline("\r\n");
             if ($this->email->send()) {
-                echo ' daily 24 hourly sucess   ';
+                echo 'Email success   ';
             } else {
                 show_error($this->email->print_debugger());
            }
@@ -108,6 +126,24 @@ $message ="";
                 $message = "The $current_full_date afternoon forecast was uploded at $uploadtime ";
              }
             }
+
+            $from = $this->config->item('smtp_user');
+    $to = $this->Email_model->get_by_id();
+    $subject = 'WIDS-upload Reminder';
+        
+      foreach ($to as $row) {
+            
+            $this->email->from($from);
+            $this->email->to($row);
+            $this->email->subject($subject);
+            $this->email->message($message);
+            $this->email->set_newline("\r\n");
+            if ($this->email->send()) {
+                echo ' Email sucess   ';
+            } else {
+                show_error($this->email->print_debugger());
+           }
+   }
      break;
      
         case $time >= date("17:00:00") && $time <= date("22:59:00") :
@@ -128,7 +164,7 @@ $message ="";
             $this->email->message($message);
             $this->email->set_newline("\r\n");
             if ($this->email->send()) {
-                echo ' daily 24 hourly sucess   ';
+                echo ' Email sucess   ';
             } else {
                 show_error($this->email->print_debugger());
            }
@@ -159,7 +195,7 @@ $message ="";
             $this->email->message($message);
             $this->email->set_newline("\r\n");
             if ($this->email->send()) {
-                echo ' daily 24 hourly sucess   ';
+                echo ' 24hly email sucess   ';
             } else {
                 show_error($this->email->print_debugger());
            }
@@ -179,6 +215,24 @@ $message ="";
                 $message = "The $current_full_date evening forecast was uploded at $uploadtime ";
              }
             }
+
+            $from = $this->config->item('smtp_user');
+    $to = $this->Email_model->get_by_id();
+    $subject = 'WIDS-upload Reminder';
+        
+      foreach ($to as $row) {
+            
+            $this->email->from($from);
+            $this->email->to($row);
+            $this->email->subject($subject);
+            $this->email->message($message);
+            $this->email->set_newline("\r\n");
+            if ($this->email->send()) {
+                echo ' Email sucess   ';
+            } else {
+                show_error($this->email->print_debugger());
+           }
+   }
         
      break;
 
@@ -200,7 +254,7 @@ $message ="";
             $this->email->message($message);
             $this->email->set_newline("\r\n");
             if ($this->email->send()) {
-                echo ' daily sucess   ';
+                echo ' Email sucess   ';
             } else {
                 show_error($this->email->print_debugger());
            }
@@ -221,6 +275,24 @@ $message ="";
                 $message = "The $tomorrow Early morning forecast was uploded at $uploadtime ";
              }
             }
+
+            $from = $this->config->item('smtp_user');
+    $to = $this->Email_model->get_by_id();
+    $subject = 'WIDS-upload Reminder';
+        
+      foreach ($to as $row) {
+            
+            $this->email->from($from);
+            $this->email->to($row);
+            $this->email->subject($subject);
+            $this->email->message($message);
+            $this->email->set_newline("\r\n");
+            if ($this->email->send()) {
+                echo ' Email sucess   ';
+            } else {
+                show_error($this->email->print_debugger());
+           }
+   }
      break;
      case $time >= date("00:01:00")  && $time <= date("04:59:00") :
         $this->Email_model->daily_early_morning_upload_status();
@@ -238,10 +310,29 @@ $message ="";
                 $message = "The $current_full_date  Early morning forecast was uploded at $uploadtime ";
              }
             }
+
+    $from = $this->config->item('smtp_user');
+    $to = $this->Email_model->get_by_id();
+    $subject = 'WIDS-upload Reminder';
+        
+      foreach ($to as $row) {
+            
+            $this->email->from($from);
+            $this->email->to($row);
+            $this->email->subject($subject);
+            $this->email->message($message);
+            $this->email->set_newline("\r\n");
+            if ($this->email->send()) {
+                echo ' Email sucess   ';
+            } else {
+                show_error($this->email->print_debugger());
+           }
+   }
      break;
+
     default:
     $message = "No  time selected ";
-    break;
+    
          
          //sending emails
     $from = $this->config->item('smtp_user');
@@ -256,7 +347,7 @@ $message ="";
             $this->email->message($message);
             $this->email->set_newline("\r\n");
             if ($this->email->send()) {
-                echo ' daily sucess   ';
+                echo ' Email sucess   ';
             } else {
                 show_error($this->email->print_debugger());
            }
@@ -265,6 +356,7 @@ $message ="";
 /* For the seasonal forecast reminders 
    seasonal forecast reminders
 */
+   if ($time >= date("05:00:00") &&  $time <= date("10:59:00")) {
 
    if ($month ==  2){ //Feb
     if($date > 25 && ($date <= 28 || $date <=29)){
@@ -340,16 +432,18 @@ $message ="";
                 show_error($this->email->print_debugger());
            }
    }
-   
+}
 
    /* For the monthly forecast reminders 
    monthly forecast reminders
 */
    // $lmonth = date("t-m");
    if ($day_of_month == date("t-m")){
+   if(($time >= date("05:00:00") &&  $time <= date("10:59:00"))|| ($time >= date("17:00:00") && $time <= date("22:59:00")))
+   {
     $this->Email_model->get_monthly_upload_status();
        if(! $this->Email_model->get_monthly_upload_status()){
-           $message = " This is a reminder for the next monthly forecast";
+           $message = " This is a reminder for the $nextmonth monthly forecast";
        
            $from = $this->config->item('smtp_user');
            $to = $this->Email_model->get_by_id();
@@ -378,8 +472,8 @@ $message ="";
         $items = $this->Email_model->get_monthly_upload_status();
         //$time = $items[0]['uploadtime'];
         $uploadtime = $items[0]['uploadtime'];  
-        $message =" The next monthly  forecast was uploaded at $uploadtime";
-    
+        $message =" The $nextmonth monthly forecast was uploaded at $uploadtime";
+       
      //$this->Sending_emails();
 
        $from = $this->config->item('smtp_user');
@@ -399,10 +493,12 @@ $message ="";
                    show_error($this->email->print_debugger());
               }
       }
+    }
 
 }
    }
 }
+
 
 
 
