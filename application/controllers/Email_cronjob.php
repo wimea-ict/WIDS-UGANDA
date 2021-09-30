@@ -20,7 +20,7 @@ class Email_cronjob extends CI_Controller
 public function index(){
 date_default_timezone_set("Africa/Kampala");
 $month =date("m");
-$nextmonth = date("m", strtotime ("+1 month"));
+$nextmonth = date("M", strtotime ("+1 month"));
 $current_full_date = date("Y-d-m");
 $tomorrow = date("Y-m-d", strtotime('tomorrow'));
 $yesterday = date("Y-m-d", strtotime('-1 day'));
