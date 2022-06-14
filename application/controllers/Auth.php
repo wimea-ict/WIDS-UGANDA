@@ -421,10 +421,10 @@ class Auth extends CI_Controller
         //-------------Table 9 ---------------------
         array_push($q, "
       CREATE TABLE `ci_news` (
-      `ne_id` NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      `ne_id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
       `ne_title` varchar(300) NOT NULL,
       `ne_slug` varchar(50) NOT NULL,
-      `ne_desc` text NOT NULL COMMENT 'نص الخبر',
+      `ne_desc` text NOT NULL COMMENT, 
       `ne_img` varchar(255) NOT NULL,
       `ne_views` int(11) NOT NULL,
       `ne_created` varchar(50) NOT NULL
@@ -789,10 +789,10 @@ class Auth extends CI_Controller
       (53, 'USSD SUBSCRIPTIONS', '/index.php/Landing/Users', 'fa fa-tablet', 1, 0, 'one'),
       (54, 'Monthly Forecast', '/index.php/monthly_forecast', 'fa fa-cloud', 1, 1, 'one'),
       (55, 'SUBSCRIPTION MESSAGES', 'index.php/USSD/Subscription_messages', 'icon-envelope', 1, 53, 'one'),
-      (56, 'Voice Message Requests', '/index.php/USSD/Voice', 'fa fa-bar-chart', 1, 43, 'one');
-      (57, 'Upload Time', 'index.php/graph/uploadTime', '', 1, 16, 'one'),
+      (56, 'Voice Message Requests', '/index.php/USSD/Voice', 'fa fa-bar-chart', 1, 43, 'one'),
+      (57, 'Upload Time', 'index.php/graph/uploadTime', '', 1, 16, 'one');"
 
-      ");
+      );
         //---------------Table 29 -----------
         array_push($q, "CREATE TABLE `victoria_area_data` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
